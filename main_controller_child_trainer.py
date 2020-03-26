@@ -262,6 +262,7 @@ def train():
                     actual_step = global_step
                 epoch = actual_step // ops["num_train_batches"]
                 curr_time = time.time()
+                #qui io sto eseguendo ogni epoca di addestramento del figlio (o del controller, vedi sotto)
                 if global_step % FLAGS.log_every == 0:
                     log_string = ""
                     log_string += "epoch = {:<6d}".format(epoch)
@@ -274,7 +275,7 @@ def train():
                     log_string += "   mins = {:<10.2f}".format(
                         float(curr_time - start_time) / 60)
                     print(log_string)
-
+                # valuta il controller dopo un numero di epoche pari alla dimensione di batch (così che ogni figlio è addestrato su un singolo batch
                 if actual_step % ops["eval_every"] == 0:
                     if (FLAGS.controller_training and
                             epoch % FLAGS.controller_train_every == 0):
