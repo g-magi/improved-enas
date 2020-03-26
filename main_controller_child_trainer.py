@@ -224,6 +224,7 @@ def train():
 
     g = tf.Graph()
     with g.as_default():
+        #in questa parte avviene la costruzione dei modelli, delle data ops (?), del controller e dei sampler	
         ops =get_ops(images, labels)
         child_ops = ops["child"]
         controller_ops = ops["controller"]
@@ -239,7 +240,7 @@ def train():
         if FLAGS.controller_training and FLAGS.controller_sync_replicas:
             sync_replicas_hook = controller_ops["optimizer"].make_session_run_hook(True)
             hooks.append(sync_replicas_hook)
-
+        #comincia la sessione di addestramento
         print("-" * 80)
         print("Starting session")
         config = tf.ConfigProto(allow_soft_placement=True)
@@ -275,7 +276,8 @@ def train():
                     log_string += "   mins = {:<10.2f}".format(
                         float(curr_time - start_time) / 60)
                     print(log_string)
-                # valuta il controller dopo un numero di epoche pari alla dimensione di batch (così che ogni figlio è addestrato su un singolo batch)
+                # valuta il controller dopo un numero di step uguale al numero di batch di training, che è uguale a [training_data_amount+batch_size-1/batch_size], in questo caso [55000+128-1/127] = 430)
+                #l'idea del mio miglioramento è di fermarmi dopo un numero minore di step e dare il valore predetto. Non dovrebbe essere super complicato.
                 if actual_step % ops["eval_every"] == 0:
                     if (FLAGS.controller_training and
                             epoch % FLAGS.controller_train_every == 0):
