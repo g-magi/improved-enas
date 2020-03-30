@@ -230,7 +230,7 @@ def train():
 	# 
 	g = tf.Graph()
 	with g.as_default():
-		#in questa parte avviene la costruzione dei modelli, delle data ops (?), del controller e dei sampler	
+		#in questa parte avviene la costruzione dei modelli, delle data ops (?), del controller e dei sampler
 		ops =get_ops(images, labels)
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
@@ -288,7 +288,7 @@ def train():
 				
 				# 
 				
-				if actual_step % ops["eval_every"] == 0:
+				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
 					if (FLAGS.controller_training and
 							epoch % FLAGS.controller_train_every == 0):
 						print("Epoch {}: Training controller".format(epoch))
