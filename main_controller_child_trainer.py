@@ -6,6 +6,7 @@ import time
 import tensorflow as tf
 import numpy as np
 import keras
+import pandas as pd
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
@@ -226,10 +227,7 @@ def train():
 	n_data = np.shape(images["train"])[0]
 	print("Number of training data: %d" % (n_data))
 
-	# inizializzo l'LSTM
-	
-
-
+	# 
 	g = tf.Graph()
 	with g.as_default():
 		#in questa parte avviene la costruzione dei modelli, delle data ops (?), del controller e dei sampler	
@@ -272,6 +270,7 @@ def train():
 				epoch = actual_step // ops["num_train_batches"]
 				curr_time = time.time()
 				#qui io sto eseguendo ogni epoca di addestramento del figlio (o del controller, vedi sotto)
+				#ogni FLAGS.log_every (50 default) mostro i dati dello step corrente
 				if global_step % FLAGS.log_every == 0:
 					log_string = ""
 					log_string += "epoch = {:<6d}".format(epoch)
@@ -286,6 +285,9 @@ def train():
 					print(log_string)
 				# valuta il controller dopo un numero di step uguale al numero di batch di training, che è uguale a [training_data_amount+batch_size-1/batch_size], in questo caso [55000+128-1/127] = 430)
 				#l'idea del mio miglioramento è di fermarmi dopo un numero minore di step e dare il valore predetto. Non dovrebbe essere super complicato.
+				
+				# 
+				
 				if actual_step % ops["eval_every"] == 0:
 					if (FLAGS.controller_training and
 							epoch % FLAGS.controller_train_every == 0):
@@ -304,8 +306,6 @@ def train():
 							]
 							loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops)
 							controller_step = sess.run(controller_ops["train_step"])
-
-							# raccolgo i dati correnti e effettuo uno step di training dell'LSTM
 							if ct_step % FLAGS.log_every == 0:
 								curr_time = time.time()
 								log_string = ""
