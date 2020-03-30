@@ -227,7 +227,13 @@ def train():
 	n_data = np.shape(images["train"])[0]
 	print("Number of training data: %d" % (n_data))
 
-	# 
+	## creo il dataframe che conterrà tutte le configurazioni e le sequenze di accuratezze
+	# che vengono usate durante la fase 1 dell'addestramento 
+	
+	configurations_df = pd.DataFrame(columns=["config_data","time_series"])
+	
+	##
+	
 	g = tf.Graph()
 	with g.as_default():
 		#in questa parte avviene la costruzione dei modelli, delle data ops (?), del controller e dei sampler
