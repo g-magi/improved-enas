@@ -256,19 +256,47 @@ def train():
 		print("-" * 80)
 		print("Starting session")
 		config = tf.ConfigProto(allow_soft_placement=True)
+		current_child_step = 0
+		current_prediction_phase = "training_predictor"
 		with tf.train.SingularMonitoredSession(
 				config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
 			while True:
-				# questa sezione effettua l'op di training, quindi in teoria è sufficiente impedirgli di eseguire questa parte 
-				run_ops = [
+				# se siamo nella fase di addestramento del predittore
+				if(current_prediction_phase is "training_predictor"):
+					# esegui l'addestramento del figlio normalmente
+					run_ops = [
 					child_ops["loss"],
 					child_ops["lr"],
 					child_ops["grad_norm"],
 					child_ops["train_acc"],
 					child_ops["train_op"]]
-				loss, lr, gn, tr_acc, _ = sess.run(run_ops)
+					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
+					
+					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
+					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
+					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
+					
+					
+				# se invece il predittore è addestrato
+				elif(current_prediction_phase is "predicting_accuracy")
+					# il figlio viene addestrato normalmente solo per il primo quarto degli step
+					if(current_child_step/ops["eval_every"] <= 0.25):
+						run_ops = [
+						child_ops["loss"],
+						child_ops["lr"],
+						child_ops["grad_norm"],
+						child_ops["train_acc"],
+						child_ops["train_op"]]
+						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
+					
+					#TODO: registrare i dati dei primi step
+					#TODO: basandosi sui dati registrati, predire il valore finale
+					#TODO: una volta predetto un valore si salta la sezione di predizione
+				
+				
 				global_step = sess.run(child_ops["global_step"])
+				current_child_step += 1
 
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
@@ -296,6 +324,7 @@ def train():
 				# 
 				
 				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
+					current_child_step = 0;
 					if (FLAGS.controller_training and
 							epoch % FLAGS.controller_train_every == 0):
 						print("Epoch {}: Training controller".format(epoch))
