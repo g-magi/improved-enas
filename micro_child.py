@@ -806,6 +806,8 @@ class MicroChild(Model):
 		self.valid_shuffle_acc = tf.equal(valid_shuffle_preds, y_valid_shuffle)
 		self.valid_shuffle_acc = tf.to_int32(self.valid_shuffle_acc)
 		self.valid_shuffle_acc = tf.reduce_sum(self.valid_shuffle_acc)
+		
+		## accuracy
 
 	def connect_controller(self, controller_model):
 		if self.fixed_arc is None:
