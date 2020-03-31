@@ -260,6 +260,7 @@ def train():
 				config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
 			while True:
+				# questa sezione effettua l'op di training, quindi in teoria è sufficiente impedirgli di eseguire questa parte 
 				run_ops = [
 					child_ops["loss"],
 					child_ops["lr"],

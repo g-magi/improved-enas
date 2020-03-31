@@ -221,6 +221,10 @@ class MicroController(Controller):
 
 	return arc_seq, entropy, log_prob, last_c, last_h
 
+	## funzione che permette di settare la reward a ciò che voglio io, invece di eseguire self.valid_acc
+  def set_predicted_reward(self, reward):
+	self.reward = reward
+
   def build_trainer(self, child_model):
 	child_model.build_valid_rl()
 	self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
