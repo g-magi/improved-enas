@@ -241,8 +241,8 @@ def train():
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
 
-		saver = tf.train.Saver(max_to_keep=2)
-		checkpoint_saver_hook = tf.train.CheckpointSaverHook(
+		saver = tf.compat.v1.train.Saver(max_to_keep=2)
+		checkpoint_saver_hook = tf.compat.v1.train.CheckpointSaverHook(
 			FLAGS.output_dir, save_steps=child_ops["num_train_batches"], saver=saver)
 
 		hooks = [checkpoint_saver_hook]
