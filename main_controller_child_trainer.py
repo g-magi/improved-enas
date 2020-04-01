@@ -3,7 +3,7 @@ import shutil
 import sys
 import time
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 import keras
 import pandas as pd
@@ -23,7 +23,7 @@ import data_utils
 from micro_controller import MicroController
 from micro_child import MicroChild
 
-flags = tf.compat.v1.app.flags
+flags = tf.app.flags
 FLAGS = flags.FLAGS
 
 
@@ -241,8 +241,8 @@ def train():
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
 
-		saver = tf.compat.v1.train.Saver(max_to_keep=2)
-		checkpoint_saver_hook = tf.compat.v1.train.CheckpointSaverHook(
+		saver = tf.train.Saver(max_to_keep=2)
+		checkpoint_saver_hook = tf.train.CheckpointSaverHook(
 			FLAGS.output_dir, save_steps=child_ops["num_train_batches"], saver=saver)
 
 		hooks = [checkpoint_saver_hook]
@@ -410,4 +410,4 @@ def main(_):
 	train()
 
 if __name__ == "__main__":
-	tf.compat.v1.app.run()
+	tf.app.run()
