@@ -277,8 +277,10 @@ def train():
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					
 					saved_performance_df = saved_performance_df.append([epoch,current_child_step,tr_acc,loss],ignore_index = True)
-					if current_child_step%10==0:
-						print(saved_performance_df.tail(1))
+					if current_child_step%50==0:
+						temp_last_stats = saved_performance_df.tail(1)
+						with pd.option_context('display.max_rows', 1, 'display.max_columns', 10):  # more options can be specified also
+							print(temp_last_stats)
 					
 					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
