@@ -10,125 +10,124 @@ from utils import get_train_ops
 from common_ops import stack_lstm
 
 class MicroController(Controller):
-  def __init__(self,
-			   search_for="both",
-			   search_whole_channels=False,
-			   num_branches=6,
-			   num_cells=6,
-			   lstm_size=32,
-			   lstm_num_layers=2,
-			   lstm_keep_prob=1.0,
-			   tanh_constant=None,
-			   op_tanh_reduce=1.0,
-			   temperature=None,
-			   lr_init=1e-3,
-			   lr_dec_start=0,
-			   lr_dec_every=100,
-			   lr_dec_rate=0.9,
-			   l2_reg=0,
-			   entropy_weight=None,
-			   clip_mode=None,
-			   grad_bound=None,
-			   use_critic=False,
-			   bl_dec=0.999,
-			   optim_algo="adam",
-			   sync_replicas=False,
-			   num_aggregate=None,
-			   num_replicas=None,
-			   name="controller",
-			   **kwargs):
+	def __init__(self,
+				   search_for="both",
+				   search_whole_channels=False,
+				   num_branches=6,
+				   num_cells=6,
+				   lstm_size=32,
+				   lstm_num_layers=2,
+				   lstm_keep_prob=1.0,
+				   tanh_constant=None,
+				   op_tanh_reduce=1.0,
+				   temperature=None,
+				   lr_init=1e-3,
+				   lr_dec_start=0,
+				   lr_dec_every=100,
+				   lr_dec_rate=0.9,
+				   l2_reg=0,
+				   entropy_weight=None,
+				   clip_mode=None,
+				   grad_bound=None,
+				   use_critic=False,
+				   bl_dec=0.999,
+				   optim_algo="adam",
+				   sync_replicas=False,
+				   num_aggregate=None,
+				   num_replicas=None,
+				   name="controller",
+				   **kwargs):
+		print("-" * 80)
+		print("Building ConvController")
+		self.search_for = search_for
+		self.search_whole_channels = search_whole_channels
+		self.num_cells = num_cells
+		self.num_branches = num_branches
+		self.lstm_size = lstm_size
+		self.lstm_num_layers = lstm_num_layers
+		self.lstm_keep_prob = lstm_keep_prob
+		self.tanh_constant = tanh_constant
+		self.op_tanh_reduce = op_tanh_reduce
+		self.temperature = temperature
+		self.lr_init = lr_init
+		self.lr_dec_start = lr_dec_start
+		self.lr_dec_every = lr_dec_every
+		self.lr_dec_rate = lr_dec_rate
+		self.l2_reg = l2_reg
+		self.entropy_weight = entropy_weight
+		self.clip_mode = clip_mode
+		self.grad_bound = grad_bound
+		self.use_critic = use_critic
+		self.bl_dec = bl_dec
 
-	print("-" * 80)
-	print("Building ConvController")
-	self.search_for = search_for
-	self.search_whole_channels = search_whole_channels
-	self.num_cells = num_cells
-	self.num_branches = num_branches
-	self.lstm_size = lstm_size
-	self.lstm_num_layers = lstm_num_layers
-	self.lstm_keep_prob = lstm_keep_prob
-	self.tanh_constant = tanh_constant
-	self.op_tanh_reduce = op_tanh_reduce
-	self.temperature = temperature
-	self.lr_init = lr_init
-	self.lr_dec_start = lr_dec_start
-	self.lr_dec_every = lr_dec_every
-	self.lr_dec_rate = lr_dec_rate
-	self.l2_reg = l2_reg
-	self.entropy_weight = entropy_weight
-	self.clip_mode = clip_mode
-	self.grad_bound = grad_bound
-	self.use_critic = use_critic
-	self.bl_dec = bl_dec
+		self.optim_algo = optim_algo
+		self.sync_replicas = sync_replicas
+		self.num_aggregate = num_aggregate
+		self.num_replicas = num_replicas
+		self.name = name
+		self._create_params()
+		arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
+		arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
+		self.sample_arc = (arc_seq_1, arc_seq_2)
+		self.sample_entropy = entropy_1 + entropy_2
+		self.sample_log_prob = log_prob_1 + log_prob_2
 
-	self.optim_algo = optim_algo
-	self.sync_replicas = sync_replicas
-	self.num_aggregate = num_aggregate
-	self.num_replicas = num_replicas
-	self.name = name
-	self._create_params()
-	arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
-	arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
-	self.sample_arc = (arc_seq_1, arc_seq_2)
-	self.sample_entropy = entropy_1 + entropy_2
-	self.sample_log_prob = log_prob_1 + log_prob_2
+	def _create_params(self):
+		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
+		with tf.variable_scope(self.name, initializer=initializer): 
+			with tf.variable_scope("lstm"):
+				self.w_lstm = []
+				for layer_id in range(self.lstm_num_layers): 
+					with tf.variable_scope("layer_{}".format(layer_id)):
+						w = tf.get_variable("w", [2 * self.lstm_size, 4 * self.lstm_size]) 
+						self.w_lstm.append(w) 
 
-  def _create_params(self):
-	initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
-	with tf.variable_scope(self.name, initializer=initializer): 
-	  with tf.variable_scope("lstm"):
-		self.w_lstm = []
-		for layer_id in range(self.lstm_num_layers): 
-		  with tf.variable_scope("layer_{}".format(layer_id)):
-			w = tf.get_variable("w", [2 * self.lstm_size, 4 * self.lstm_size]) 
-			self.w_lstm.append(w) 
+			self.g_emb = tf.get_variable("g_emb", [1, self.lstm_size]) 
+			with tf.variable_scope("emb"):
+				self.w_emb = tf.get_variable("w", [self.num_branches, self.lstm_size]) 
+			with tf.variable_scope("softmax"):
+				self.w_soft = tf.get_variable("w", [self.lstm_size, self.num_branches]) 
+				b_init = np.array([10.0, 10.0] + [0] * (self.num_branches - 2),
+								  dtype=np.float32) 
+				self.b_soft = tf.get_variable(
+				  "b", [1, self.num_branches],
+				  initializer=tf.constant_initializer(b_init)) 
 
-	  self.g_emb = tf.get_variable("g_emb", [1, self.lstm_size]) 
-	  with tf.variable_scope("emb"):
-		self.w_emb = tf.get_variable("w", [self.num_branches, self.lstm_size]) 
-	  with tf.variable_scope("softmax"):
-		self.w_soft = tf.get_variable("w", [self.lstm_size, self.num_branches]) 
-		b_init = np.array([10.0, 10.0] + [0] * (self.num_branches - 2),
-						  dtype=np.float32) 
-		self.b_soft = tf.get_variable(
-		  "b", [1, self.num_branches],
-		  initializer=tf.constant_initializer(b_init)) 
+				b_soft_no_learn = np.array(
+				  [0.25, 0.25] + [-0.25] * (self.num_branches - 2), dtype=np.float32)
+				b_soft_no_learn = np.reshape(b_soft_no_learn, [1, self.num_branches]) 
+				self.b_soft_no_learn = tf.constant(b_soft_no_learn, dtype=tf.float32) 
 
-		b_soft_no_learn = np.array(
-		  [0.25, 0.25] + [-0.25] * (self.num_branches - 2), dtype=np.float32)
-		b_soft_no_learn = np.reshape(b_soft_no_learn, [1, self.num_branches]) 
-		self.b_soft_no_learn = tf.constant(b_soft_no_learn, dtype=tf.float32) 
+			with tf.variable_scope("attention"):
+				self.w_attn_1 = tf.get_variable("w_1", [self.lstm_size, self.lstm_size]) 
+				self.w_attn_2 = tf.get_variable("w_2", [self.lstm_size, self.lstm_size]) 
+				self.v_attn = tf.get_variable("v", [self.lstm_size, 1]) 
 
-	  with tf.variable_scope("attention"):
-		self.w_attn_1 = tf.get_variable("w_1", [self.lstm_size, self.lstm_size]) 
-		self.w_attn_2 = tf.get_variable("w_2", [self.lstm_size, self.lstm_size]) 
-		self.v_attn = tf.get_variable("v", [self.lstm_size, 1]) 
+	def _build_sampler(self, prev_c=None, prev_h=None, use_bias=False):
+		"""Build the sampler ops and the log_prob ops."""
 
-  def _build_sampler(self, prev_c=None, prev_h=None, use_bias=False):
-	"""Build the sampler ops and the log_prob ops."""
+		print("-" * 80)
+		print("Build controller sampler")
 
-	print("-" * 80)
-	print("Build controller sampler")
+		anchors = tf.TensorArray(
+		  tf.float32, size=self.num_cells + 2, clear_after_read=False) 
+		anchors_w_1 = tf.TensorArray(
+		  tf.float32, size=self.num_cells + 2, clear_after_read=False) 
+		arc_seq = tf.TensorArray(tf.int32, size=self.num_cells * 4) 
+		if prev_c is None: 
+			assert prev_h is None, "prev_c and prev_h must both be None"
+			prev_c = [tf.zeros([1, self.lstm_size], tf.float32)
+					for _ in range(self.lstm_num_layers)]
+			prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
+					for _ in range(self.lstm_num_layers)] 
+		inputs = self.g_emb 
 
-	anchors = tf.TensorArray(
-	  tf.float32, size=self.num_cells + 2, clear_after_read=False) 
-	anchors_w_1 = tf.TensorArray(
-	  tf.float32, size=self.num_cells + 2, clear_after_read=False) 
-	arc_seq = tf.TensorArray(tf.int32, size=self.num_cells * 4) 
-	if prev_c is None: 
-		assert prev_h is None, "prev_c and prev_h must both be None"
-		prev_c = [tf.zeros([1, self.lstm_size], tf.float32)
-				for _ in range(self.lstm_num_layers)]
-		prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
-				for _ in range(self.lstm_num_layers)] 
-	inputs = self.g_emb 
-
-	for layer_id in range(2):
-		next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
-		prev_c, prev_h = next_c, next_h
-		anchors = anchors.write(layer_id, tf.zeros_like(next_h[-1])) 
-		anchors_w_1 = anchors_w_1.write(
-		layer_id, tf.matmul(next_h[-1], self.w_attn_1))
+		for layer_id in range(2):
+			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
+			prev_c, prev_h = next_c, next_h
+			anchors = anchors.write(layer_id, tf.zeros_like(next_h[-1])) 
+			anchors_w_1 = anchors_w_1.write(
+			layer_id, tf.matmul(next_h[-1], self.w_attn_1))
 
 	def _condition(layer_id, *args):
 		return tf.less(layer_id, self.num_cells + 2) 
