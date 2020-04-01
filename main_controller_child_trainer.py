@@ -276,7 +276,7 @@ def train():
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					
-					temp_current_performance_df = pd.DataFrame([epoch,current_child_step,tr_acc,loss], columns=saved_performance_columns)
+					temp_current_performance_df = pd.DataFrame(data=[[epoch,current_child_step,tr_acc,loss]], columns=saved_performance_columns)
 					saved_performance_df = saved_performance_df.append(temp_current_performance_df)
 					if current_child_step%50==0:
 						with pd.option_context('display.max_rows', 1, 'display.max_columns', len(saved_performance_columns)):
