@@ -230,8 +230,8 @@ def train():
 
 	## creo il dataframe che conterrà tutte le configurazioni e le sequenze di accuratezze
 	# che vengono usate durante la fase 1 dell'addestramento 
-	
-	saved_performance_df = pd.DataFrame(columns=["epoch","step","child_acc","child_loss"])
+	saved_performance_columns = ["epoch","step","acc","loss"]
+	saved_performance_df = pd.DataFrame(columns = saved_performance_columns)
 	epoch = 0;
 	##
 	
@@ -276,11 +276,11 @@ def train():
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					
-					saved_performance_df = saved_performance_df.append([epoch,current_child_step,tr_acc,loss],ignore_index = True)
+					temp_current_performance_df = pd.DataFrame([epoch,current_child_step,tr_acc,loss], columns=saved_performance_columns)
+					saved_performance_df = saved_performance_df.append(temp_current_performance_df)
 					if current_child_step%50==0:
-						temp_last_stats = saved_performance_df.tail(1)
-						with pd.option_context('display.max_rows', 1, 'display.max_columns', 10):  # more options can be specified also
-							print(temp_last_stats)
+						with pd.option_context('display.max_rows', 1, 'display.max_columns', len(saved_performance_columns)):
+							print(temp_current_performance_df)
 					
 					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
