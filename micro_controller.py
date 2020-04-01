@@ -116,85 +116,85 @@ class MicroController(Controller):
 	  tf.float32, size=self.num_cells + 2, clear_after_read=False) 
 	arc_seq = tf.TensorArray(tf.int32, size=self.num_cells * 4) 
 	if prev_c is None: 
-	  assert prev_h is None, "prev_c and prev_h must both be None"
-	  prev_c = [tf.zeros([1, self.lstm_size], tf.float32)
+		assert prev_h is None, "prev_c and prev_h must both be None"
+		prev_c = [tf.zeros([1, self.lstm_size], tf.float32)
 				for _ in range(self.lstm_num_layers)]
-	  prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
+		prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
 				for _ in range(self.lstm_num_layers)] 
 	inputs = self.g_emb 
 
 	for layer_id in range(2):
-	  next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
-	  prev_c, prev_h = next_c, next_h
-	  anchors = anchors.write(layer_id, tf.zeros_like(next_h[-1])) 
-	  anchors_w_1 = anchors_w_1.write(
+		next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
+		prev_c, prev_h = next_c, next_h
+		anchors = anchors.write(layer_id, tf.zeros_like(next_h[-1])) 
+		anchors_w_1 = anchors_w_1.write(
 		layer_id, tf.matmul(next_h[-1], self.w_attn_1))
 
 	def _condition(layer_id, *args):
-	  return tf.less(layer_id, self.num_cells + 2) 
+		return tf.less(layer_id, self.num_cells + 2) 
 
 	def _body(layer_id, inputs, prev_c, prev_h, anchors, anchors_w_1, arc_seq,
 			  entropy, log_prob):
 	  
-	  indices = tf.range(0, layer_id, dtype=tf.int32) 
-	  start_id = 4 * (layer_id - 2) 
-	  prev_layers = []
-	  for i in range(2): 
+		indices = tf.range(0, layer_id, dtype=tf.int32) 
+		start_id = 4 * (layer_id - 2) 
+		prev_layers = []
+		for i in range(2): 
+			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
+			prev_c, prev_h = next_c, next_h
+			query = anchors_w_1.gather(indices)
+			query = tf.reshape(query, [layer_id, self.lstm_size]) 
+			query = tf.tanh(query + tf.matmul(next_h[-1], self.w_attn_2))
+			query = tf.matmul(query, self.v_attn) 
+			logits = tf.reshape(query, [1, layer_id])
+			if self.temperature is not None: 
+			  logits /= self.temperature
+			if self.tanh_constant is not None: 
+			  logits = self.tanh_constant * tf.tanh(logits)
+			index = tf.multinomial(logits, 1)
+			index = tf.to_int32(index)
+			index = tf.reshape(index, [1])
+			arc_seq = arc_seq.write(start_id + 2 * i, index) 
+			curr_log_prob = tf.nn.sparse_softmax_cross_entropy_with_logits(
+			  logits=logits, labels=index)
+			log_prob += curr_log_prob
+			curr_ent = tf.stop_gradient(tf.nn.softmax_cross_entropy_with_logits(
+			  logits=logits, labels=tf.nn.softmax(logits)))
+			entropy += curr_ent
+			prev_layers.append(anchors.read(tf.reduce_sum(index)))
+			inputs = prev_layers[-1]
+
+
+		for i in range(2):  
+			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
+			prev_c, prev_h = next_c, next_h
+			logits = tf.matmul(next_h[-1], self.w_soft) + self.b_soft
+			if self.temperature is not None:
+				logits /= self.temperature
+			if self.tanh_constant is not None:
+				op_tanh = self.tanh_constant / self.op_tanh_reduce
+				logits = op_tanh * tf.tanh(logits)
+			if use_bias:
+				logits += self.b_soft_no_learn
+			op_id = tf.multinomial(logits, 1)
+			op_id = tf.to_int32(op_id)
+			op_id = tf.reshape(op_id, [1])
+			arc_seq = arc_seq.write(start_id + 2 * i + 1, op_id)
+			curr_log_prob = tf.nn.sparse_softmax_cross_entropy_with_logits(
+			  logits=logits, labels=op_id)
+			log_prob += curr_log_prob
+			curr_ent = tf.stop_gradient(tf.nn.softmax_cross_entropy_with_logits(
+			  logits=logits, labels=tf.nn.softmax(logits)))
+			entropy += curr_ent
+			inputs = tf.nn.embedding_lookup(self.w_emb, op_id)
+
+
 		next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
-		prev_c, prev_h = next_c, next_h
-		query = anchors_w_1.gather(indices)
-		query = tf.reshape(query, [layer_id, self.lstm_size]) 
-		query = tf.tanh(query + tf.matmul(next_h[-1], self.w_attn_2))
-		query = tf.matmul(query, self.v_attn) 
-		logits = tf.reshape(query, [1, layer_id])
-		if self.temperature is not None: 
-		  logits /= self.temperature
-		if self.tanh_constant is not None: 
-		  logits = self.tanh_constant * tf.tanh(logits)
-		index = tf.multinomial(logits, 1)
-		index = tf.to_int32(index)
-		index = tf.reshape(index, [1])
-		arc_seq = arc_seq.write(start_id + 2 * i, index) 
-		curr_log_prob = tf.nn.sparse_softmax_cross_entropy_with_logits(
-		  logits=logits, labels=index)
-		log_prob += curr_log_prob
-		curr_ent = tf.stop_gradient(tf.nn.softmax_cross_entropy_with_logits(
-		  logits=logits, labels=tf.nn.softmax(logits)))
-		entropy += curr_ent
-		prev_layers.append(anchors.read(tf.reduce_sum(index)))
-		inputs = prev_layers[-1]
+		anchors = anchors.write(layer_id, next_h[-1])
+		anchors_w_1 = anchors_w_1.write(layer_id, tf.matmul(next_h[-1], self.w_attn_1))
+		inputs = self.g_emb
 
-
-	  for i in range(2):  
-		next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
-		prev_c, prev_h = next_c, next_h
-		logits = tf.matmul(next_h[-1], self.w_soft) + self.b_soft
-		if self.temperature is not None:
-		  logits /= self.temperature
-		if self.tanh_constant is not None:
-		  op_tanh = self.tanh_constant / self.op_tanh_reduce
-		  logits = op_tanh * tf.tanh(logits)
-		if use_bias:
-		  logits += self.b_soft_no_learn
-		op_id = tf.multinomial(logits, 1)
-		op_id = tf.to_int32(op_id)
-		op_id = tf.reshape(op_id, [1])
-		arc_seq = arc_seq.write(start_id + 2 * i + 1, op_id)
-		curr_log_prob = tf.nn.sparse_softmax_cross_entropy_with_logits(
-		  logits=logits, labels=op_id)
-		log_prob += curr_log_prob
-		curr_ent = tf.stop_gradient(tf.nn.softmax_cross_entropy_with_logits(
-		  logits=logits, labels=tf.nn.softmax(logits)))
-		entropy += curr_ent
-		inputs = tf.nn.embedding_lookup(self.w_emb, op_id)
-
-
-	  next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
-	  anchors = anchors.write(layer_id, next_h[-1])
-	  anchors_w_1 = anchors_w_1.write(layer_id, tf.matmul(next_h[-1], self.w_attn_1))
-	  inputs = self.g_emb
-
-	  return (layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
+		return (layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
 			  arc_seq, entropy, log_prob)
 
 	loop_vars = [
@@ -222,48 +222,48 @@ class MicroController(Controller):
 	return arc_seq, entropy, log_prob, last_c, last_h
 
 	## funzione che permette di settare la reward a ciò che voglio io, invece di eseguire self.valid_acc
-  def set_predicted_reward(self, reward):
-	self.reward = reward
+	def set_predicted_reward(self, reward):
+		self.reward = reward
 
-  def build_trainer(self, child_model):
-	child_model.build_valid_rl()
-	self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
-					  tf.to_float(child_model.batch_size))
-	self.reward = self.valid_acc 
+	def build_trainer(self, child_model):
+		child_model.build_valid_rl()
+		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
+						  tf.to_float(child_model.batch_size))
+		self.reward = self.valid_acc 
 
-	if self.entropy_weight is not None:
-	  self.reward += self.entropy_weight * self.sample_entropy
+		if self.entropy_weight is not None:
+			self.reward += self.entropy_weight * self.sample_entropy
 
-	self.sample_log_prob = tf.reduce_sum(self.sample_log_prob) 
-	self.baseline = tf.Variable(0.0, dtype=tf.float32, trainable=False)
-	baseline_update = tf.assign_sub(
-	  self.baseline, (1 - self.bl_dec) * (self.baseline - self.reward)) 
+		self.sample_log_prob = tf.reduce_sum(self.sample_log_prob) 
+		self.baseline = tf.Variable(0.0, dtype=tf.float32, trainable=False)
+		baseline_update = tf.assign_sub(
+		  self.baseline, (1 - self.bl_dec) * (self.baseline - self.reward)) 
 
-	with tf.control_dependencies([baseline_update]):
-	  self.reward = tf.identity(self.reward)
+		with tf.control_dependencies([baseline_update]):
+			self.reward = tf.identity(self.reward)
 
-	self.loss = self.sample_log_prob * (self.reward - self.baseline)
-	self.train_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="train_step")
+		self.loss = self.sample_log_prob * (self.reward - self.baseline)
+		self.train_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="train_step")
 
-	tf_variables = [var for var in tf.trainable_variables() if var.name.startswith(self.name)]
-	print("-" * 80)
-	for var in tf_variables:
-	  print(var)
+		tf_variables = [var for var in tf.trainable_variables() if var.name.startswith(self.name)]
+		print("-" * 80)
+		for var in tf_variables:
+			print(var)
 
-	self.train_op, self.lr, self.grad_norm, self.optimizer = get_train_ops(
-	  self.loss,
-	  tf_variables,
-	  self.train_step,
-	  clip_mode=self.clip_mode,
-	  grad_bound=self.grad_bound,
-	  l2_reg=self.l2_reg,
-	  lr_init=self.lr_init,
-	  lr_dec_start=self.lr_dec_start,
-	  lr_dec_every=self.lr_dec_every,
-	  lr_dec_rate=self.lr_dec_rate,
-	  optim_algo=self.optim_algo,
-	  sync_replicas=self.sync_replicas,
-	  num_aggregate=self.num_aggregate,
-	  num_replicas=self.num_replicas)
+		self.train_op, self.lr, self.grad_norm, self.optimizer = get_train_ops(
+		  self.loss,
+		  tf_variables,
+		  self.train_step,
+		  clip_mode=self.clip_mode,
+		  grad_bound=self.grad_bound,
+		  l2_reg=self.l2_reg,
+		  lr_init=self.lr_init,
+		  lr_dec_start=self.lr_dec_start,
+		  lr_dec_every=self.lr_dec_every,
+		  lr_dec_rate=self.lr_dec_rate,
+		  optim_algo=self.optim_algo,
+		  sync_replicas=self.sync_replicas,
+		  num_aggregate=self.num_aggregate,
+		  num_replicas=self.num_replicas)
 
-	self.skip_rate = tf.constant(0.0, dtype=tf.float32)
+		self.skip_rate = tf.constant(0.0, dtype=tf.float32)
