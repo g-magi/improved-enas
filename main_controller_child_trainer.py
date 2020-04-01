@@ -288,15 +288,16 @@ def train():
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					#
-					# come test, alla 2^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
-					if epoch==1 and current_prediction_phase is "training_predictor":
+					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
+					if epoch==0 and current_prediction_phase is "training_predictor":
 						current_prediction_phase = "predicting_accuracy"
+						print("Predictor engaged, only training for ",ops["eval_every"]/4," steps")
 					
 					##ENDTODO
 					
 					
 				# se invece il predittore è addestrato
-				elif current_prediction_phase is "predicting_accuracy":
+				if current_prediction_phase is "predicting_accuracy":
 					# il figlio viene addestrato normalmente solo per il primo quarto degli step
 					if current_child_step/ops["eval_every"] <= 0.25:
 						run_ops = [
