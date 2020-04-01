@@ -309,7 +309,7 @@ def train():
 						child_ops["train_op"]]
 						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					else:
-						global_step += 1
+						sess.run(child_ops["advance_global_step"])
 					
 					#TODO: registrare i dati dei primi step
 					#TODO: basandosi sui dati registrati, predire il valore finale
