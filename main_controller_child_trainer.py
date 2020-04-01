@@ -275,16 +275,24 @@ def train():
 					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
+					"""
+					## section momentarily removed for testing
 					
 					temp_current_performance_df = pd.DataFrame(data=[[epoch,current_child_step,tr_acc,loss]], columns=saved_performance_columns)
 					saved_performance_df = saved_performance_df.append(temp_current_performance_df)
 					if current_child_step%50==0:
 						with pd.option_context('display.max_rows', 1, 'display.max_columns', len(saved_performance_columns)):
 							print(temp_current_performance_df)
-					
+					"""
 					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
+					#
+					# come test, alla 2^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
+					if epoch==1 and current_prediction_phase is "training_predictor"
+						current_prediction_phase = "predicting_accuracy"
+					
+					##ENDTODO
 					
 					
 				# se invece il predittore è addestrato
