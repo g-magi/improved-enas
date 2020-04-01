@@ -23,7 +23,7 @@ import data_utils
 from micro_controller import MicroController
 from micro_child import MicroChild
 
-flags = tf.app.flags
+flags = tensorflow.compat.v1.app.flags
 FLAGS = flags.FLAGS
 
 
@@ -410,4 +410,4 @@ def main(_):
 	train()
 
 if __name__ == "__main__":
-	tf.app.run()
+	tensorflow.compat.v1.app.run()
