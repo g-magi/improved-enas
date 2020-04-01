@@ -45,8 +45,8 @@ def _read_data(data_path, channel, img_size, n_aug_img):
 	print("")
 	for j in range(length_data):
 		img = cv2.imread(images[j],flags = flags)
-		if j%500==0:
-			print("reading image number: ",j,"/",length_data)
+		if j%10==0:
+			print("reading image number: ",j,"/",length_data, end="\r", flush=True)
 		if img is None:
 			print(j,"is None, path is: ",images[j])
 		if channel ==1:
