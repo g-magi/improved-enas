@@ -203,6 +203,7 @@ def get_ops(images, labels):
 		"train_acc": child_model.train_acc,
 		"optimizer": child_model.optimizer,
 		"num_train_batches": child_model.num_train_batches,
+		"advance_global_step": child_model.advance_global_step,
 	}
 
 	ops = {
@@ -307,6 +308,8 @@ def train():
 						child_ops["train_acc"],
 						child_ops["train_op"]]
 						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
+					else:
+						global_step += 1
 					
 					#TODO: registrare i dati dei primi step
 					#TODO: basandosi sui dati registrati, predire il valore finale
