@@ -232,7 +232,7 @@ def train():
 	# che vengono usate durante la fase 1 dell'addestramento 
 	
 	saved_performance_df = pd.DataFrame(columns=["epoch","step","child_acc","child_loss"])
-	
+	epoch = 0;
 	##
 	
 	g = tf.Graph()
