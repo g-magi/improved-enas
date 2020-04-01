@@ -230,7 +230,7 @@ def train():
 	## creo il dataframe che conterrà tutte le configurazioni e le sequenze di accuratezze
 	# che vengono usate durante la fase 1 dell'addestramento 
 	
-	configurations_df = pd.DataFrame(columns=["config_data","time_series"])
+	saved_performance_df = pd.DataFrame(columns=["epoch","step","child_acc","child_loss"])
 	
 	##
 	
@@ -263,7 +263,7 @@ def train():
 			start_time = time.time()
 			while True:
 				# se siamo nella fase di addestramento del predittore
-				if(current_prediction_phase is "training_predictor"):
+				if current_prediction_phase is "training_predictor":
 					# esegui l'addestramento del figlio normalmente
 					run_ops = [
 					child_ops["loss"],
@@ -274,14 +274,20 @@ def train():
 					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
+					
+					saved_performance_df = saved_performance_df.append([epoch,current_child_step,tr_acc,loss],ignore_index = True)
+					if current_child_step%10==0
+						print(saved_performance_df.tail(1))
+					
+					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					
 					
 				# se invece il predittore è addestrato
-				elif(current_prediction_phase is "predicting_accuracy")
+				elif current_prediction_phase is "predicting_accuracy"
 					# il figlio viene addestrato normalmente solo per il primo quarto degli step
-					if(current_child_step/ops["eval_every"] <= 0.25):
+					if current_child_step/ops["eval_every"] <= 0.25:
 						run_ops = [
 						child_ops["loss"],
 						child_ops["lr"],
