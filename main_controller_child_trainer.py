@@ -4,6 +4,7 @@ import sys
 import time
 
 import tensorflow.compat.v1 as tf
+import tensorflow as tf2
 import numpy as np
 import keras
 import pandas as pd
@@ -258,7 +259,7 @@ def train():
 		config = tf.ConfigProto(allow_soft_placement=True)
 		current_child_step = 0
 		current_prediction_phase = "training_predictor"
-		with tf.train.SingularMonitoredSession(config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
+		with tf2.train.SingularMonitoredSession(config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
 			while True:
 				# se siamo nella fase di addestramento del predittore
