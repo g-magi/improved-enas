@@ -259,7 +259,7 @@ def train():
 		config = tf.ConfigProto(allow_soft_placement=True)
 		current_child_step = 0
 		current_prediction_phase = "training_predictor"
-		with tf2.train.SingularMonitoredSession(config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
+		with tf.train.SingularMonitoredSession(config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
 			while True:
 				# se siamo nella fase di addestramento del predittore
