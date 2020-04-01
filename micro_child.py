@@ -3,6 +3,7 @@ import sys
 
 import numpy as np
 import tensorflow.compat.v1 as tf
+import tensorflow as tf2
 
 from models import Model
 from common_ops import batch_norm
@@ -91,7 +92,7 @@ class MicroChild(Model):
 		self.fixed_arc = fixed_arc
 		self.channel = channel
 
-		self.global_step = tf.Variable(
+		self.global_step = tf2.Variable(
 			0, dtype=tf.int32, trainable=False, name="global_step")
 
 		if self.drop_path_keep_prob is not None:
