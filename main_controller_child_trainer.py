@@ -285,7 +285,7 @@ def train():
 					
 					
 				# se invece il predittore è addestrato
-				elif current_prediction_phase is "predicting_accuracy"
+				elif current_prediction_phase is "predicting_accuracy":
 					# il figlio viene addestrato normalmente solo per il primo quarto degli step
 					if current_child_step/ops["eval_every"] <= 0.25:
 						run_ops = [
