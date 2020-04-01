@@ -276,7 +276,7 @@ def train():
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					
 					saved_performance_df = saved_performance_df.append([epoch,current_child_step,tr_acc,loss],ignore_index = True)
-					if current_child_step%10==0
+					if current_child_step%10==0:
 						print(saved_performance_df.tail(1))
 					
 					##ENDTODO
