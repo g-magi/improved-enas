@@ -289,7 +289,7 @@ def train():
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					#
 					# come test, alla 2^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
-					if epoch==1 and current_prediction_phase is "training_predictor"
+					if epoch==1 and current_prediction_phase is "training_predictor":
 						current_prediction_phase = "predicting_accuracy"
 					
 					##ENDTODO
