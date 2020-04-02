@@ -3,6 +3,12 @@ import shutil
 import sys
 import time
 
+#mio predittore
+
+import enas_predictor as ep
+
+##
+
 import tensorflow.compat.v1 as tf
 import tensorflow as tf2
 import numpy as np
@@ -234,6 +240,9 @@ def train():
 	saved_performance_columns = ["epoch","step","acc","loss"]
 	saved_performance_df = pd.DataFrame(columns = saved_performance_columns)
 	epoch = 0;
+	
+	## creo il modello di predizione, inizialmente sarà vuoto
+	predictor = None
 	##
 	
 	g = tf.Graph()
@@ -276,11 +285,10 @@ def train():
 					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
-					"""
-					## section momentarily removed for testing
-					
 					temp_current_performance_df = pd.DataFrame(data=[[epoch,current_child_step,tr_acc,loss]], columns=saved_performance_columns)
 					saved_performance_df = saved_performance_df.append(temp_current_performance_df)
+					
+					"""
 					if current_child_step%50==0:
 						with pd.option_context('display.max_rows', 1, 'display.max_columns', len(saved_performance_columns)):
 							print(temp_current_performance_df)
@@ -345,6 +353,25 @@ def train():
 				# 
 				
 				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
+					
+					## TODO
+					# usare il predittore corrente (prima dell'addestramento sull'epoca corrente)
+					# per ottenere una predizione e poterla confrontare con la realtà dell'addestramento
+					#
+					prediction = None
+					if predictor is not None:
+						prediction = ep.get_prediction(source=predictor, data=saved_performance_df, percentage=0.25, target_step=430)
+					
+					## TODO
+					# addestrare il predittore con i dati dell'epoca corrente
+					#
+					
+					predictor = ep.build_prediction_model(data = saved_performance_df)
+					
+					##
+					## TODO
+					# valutare il predittore rispetto agli ultimi dati dell'epoca corrente
+					
 					current_child_step = 0;
 					if (FLAGS.controller_training and
 							epoch % FLAGS.controller_train_every == 0):
