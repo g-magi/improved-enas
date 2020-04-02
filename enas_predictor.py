@@ -1,10 +1,22 @@
+from sklearn.svm import SVR
+import pandas as pd
+
+
+
 def build_prediction_model(data):
 	
 	### TODO TODO TODO
 	# sulla base dei dati addestrare il predittore e ritornarlo
 	##
 	
-	predictor = None
+	predictor = SVR()
+	prepared_data = pd.DataFrame(columns = ['epoch'])
+	step_amt = data['acc'].max()
+	for i in range(step_amt):
+		
+		prepared_data = prepared_data.assign()
+	
+	
 	
 	return predictor
 
