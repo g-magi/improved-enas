@@ -290,7 +290,7 @@ def train():
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					
-					temp_acc_sequence[current_child_step, 0]=tr_acc
+					#temp_acc_sequence[current_child_step, 0]=tr_acc
 					
 					"""
 					if current_child_step%50==0:
