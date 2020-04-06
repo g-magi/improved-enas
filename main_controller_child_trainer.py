@@ -240,7 +240,8 @@ def train():
 	saved_performance = []
 	## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 	#
-	temp_acc_sequence = np.zeros(shape=(ops["eval_every"],1))	
+	# momentaneamente commentato
+	#temp_acc_sequence = np.zeros(shape=(ops["eval_every"],1))	
 	
 	epoch = 0;
 	
