@@ -80,7 +80,7 @@ class MicroController(Controller):
 				for layer_id in range(self.lstm_num_layers): 
 					with tf.variable_scope("layer_{}".format(layer_id)):
 						w = tf.get_variable("w", [2 * self.lstm_size, 4 * self.lstm_size]) 
-						self.w_lstm.append(w) 
+						self.w_lstm.append(w)
 
 			self.g_emb = tf.get_variable("g_emb", [1, self.lstm_size]) 
 			with tf.variable_scope("emb"):

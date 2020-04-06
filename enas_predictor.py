@@ -1,32 +1,18 @@
 from sklearn.svm import SVR
 import pandas as pd
+from numpy import array
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
 
 
-
-def build_prediction_model(data):
-	
-	### TODO TODO TODO
-	# sulla base dei dati addestrare il predittore e ritornarlo
-	##
-	
-	predictor = SVR()
-	prepared_data = pd.DataFrame(columns = ['epoch'])
-	step_amt = data['acc'].max()
-	for i in range(step_amt):
-		
-		prepared_data = prepared_data.assign()
-	
-	
-	
-	return predictor
-
-def get_prediction(source, data, percentage=0.25, target_step):
+def get_prediction(data, partial_data, percentage=0.25):
 	prediction = 0.0
 	
-	### TODO
-	# usare il modello passato in [source] e una percentuale dei dati per estrarre una predizione 
-	# dell'accuratezza allo step [target_step]
-	# 
-	#
+	n_steps = data[0].shape[0]
+	n_features = 1
+	model = Sequential()
+	model.add(LSTM(50, activation='relu', input_shape=(n_steps, n_features)))
+	model.add(Dense(1))
 	
 	return prediction

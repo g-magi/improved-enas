@@ -235,10 +235,13 @@ def train():
 	n_data = np.shape(images["train"])[0]
 	print("Number of training data: %d" % (n_data))
 
-	## creo il dataframe che conterrà tutte le configurazioni e le sequenze di accuratezze
+	## creo la lista che conterrà le sequenze di accuratezze
 	# che vengono usate durante la fase 1 dell'addestramento 
-	saved_performance_columns = ["epoch","step","acc","loss"]
-	saved_performance_df = pd.DataFrame(columns = saved_performance_columns)
+	saved_performance = []
+	## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
+	#
+	temp_acc_sequence = np.zeros(shape=(ops["eval_every"],1))	
+	
 	epoch = 0;
 	
 	## creo il modello di predizione, inizialmente sarà vuoto
@@ -285,8 +288,8 @@ def train():
 					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
-					temp_current_performance_df = pd.DataFrame(data=[[epoch,current_child_step,tr_acc,loss]], columns=saved_performance_columns)
-					saved_performance_df = saved_performance_df.append(temp_current_performance_df)
+					
+					temp_acc_sequence[current_child_step, 0]=tr_acc
 					
 					"""
 					if current_child_step%50==0:
@@ -298,15 +301,13 @@ def train():
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					#
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
-					if epoch==0 and current_prediction_phase is "training_predictor":
+					if epoch==0:
 						current_prediction_phase = "predicting_accuracy"
 						print("Predictor engaged, only training for ",ops["eval_every"]/4," steps")
 					
 					##ENDTODO
-					
-					
 				# se invece il predittore è addestrato
-				if current_prediction_phase is "predicting_accuracy":
+				elif current_prediction_phase is "predicting_accuracy":
 					# il figlio viene addestrato normalmente solo per il primo quarto degli step
 					if current_child_step/ops["eval_every"] <= 0.25:
 						run_ops = [
@@ -410,6 +411,7 @@ def train():
 								controller_ops["sample_arc"],
 								controller_ops["valid_acc"],
 							])
+							
 							if FLAGS.search_for == "micro":
 								normal_arc, reduce_arc = arc
 								print(np.reshape(normal_arc, [-1]))
