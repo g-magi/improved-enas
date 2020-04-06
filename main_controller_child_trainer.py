@@ -411,6 +411,7 @@ def train():
 								controller_ops["sample_arc"],
 								controller_ops["valid_acc"],
 							])
+							print("arc = ",arc)
 							
 							if FLAGS.search_for == "micro":
 								normal_arc, reduce_arc = arc
