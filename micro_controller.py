@@ -134,7 +134,18 @@ class MicroController(Controller):
 
 		def _body(layer_id, inputs, prev_c, prev_h, anchors, anchors_w_1, arc_seq,
 				  entropy, log_prob):
-		  
+			print("-" * 80)
+			print("inside body, vars are:")
+			print("layer_id: ",layer_id)
+			print("inputs: ",inputs)
+			print("prev_c: ",prev_c)
+			print("prev_h: ",prev_h)
+			print("anchors: ",anchors)
+			print("anchors_w_1: ",anchors_w_1)
+			print("arc_seq: ",arc_seq)
+			print("entropy: ",entropy)
+			print("log_prob: ",log_prob)
+			print("-" * 80)
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
 			prev_layers = []
