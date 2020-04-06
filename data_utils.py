@@ -50,7 +50,7 @@ def _read_data(data_path, channel, img_size, n_aug_img):
 		if j%100==0:
 			print("\rreading image number: "+str(j)+"/"+str(length_data)+" <", end="")
 			for i_bar in range(bar_size):
-				if (j/length_data)*100>=(100/bar_size)*i_bar:
+				if (j/length_data)*100>=(100/bar_size)*i_bar: 
 					print("*",end="")
 				else:
 					print("-",end="")
