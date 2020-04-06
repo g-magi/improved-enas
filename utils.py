@@ -96,6 +96,15 @@ def count_model_params(tf_variables):
 		num_vars += np.prod([dim for dim in var.get_shape()])
 	return num_vars
 
+def tf_print(op, tensors, message=None):
+	def print_message(x):
+		sys.stdout.write(message + " %s\n" % x)
+		return x
+
+	prints = [tf.py_func(print_message, [tensor], tensor.dtype) for tensor in tensors]
+	with tf.control_dependencies(prints):
+		op = tf.identity(op)
+	return op
 
 def get_train_ops(
 		loss,
