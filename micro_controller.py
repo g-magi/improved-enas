@@ -225,7 +225,7 @@ class MicroController(Controller):
 
 		last_c = loop_outputs[-7]
 		last_h = loop_outputs[-6]
-		all_inputs = loop_outputs[-8].stack()
+		all_inputs = loop_outputs[-8]
 
 		return arc_seq, entropy, log_prob, last_c, last_h,all_inputs
 
