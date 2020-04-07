@@ -67,8 +67,10 @@ class MicroController(Controller):
 		self.num_replicas = num_replicas
 		self.name = name
 		self._create_params()
-		arc_seq_1, entropy_1, log_prob_1, c, h, log_1 = self._build_sampler(use_bias=True)
-		arc_seq_2, entropy_2, log_prob_2, _, _, log_2 = self._build_sampler(prev_c=c, prev_h=h)
+		#arc_seq_1, entropy_1, log_prob_1, c, h, log_1 = self._build_sampler(use_bias=True)
+		#arc_seq_2, entropy_2, log_prob_2, _, _, log_2 = self._build_sampler(prev_c=c, prev_h=h)
+		arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
+		arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
 		self.sample_arc = (arc_seq_1, arc_seq_2)
 		#self.logs = (log_1, log_2)
 		self.sample_entropy = entropy_1 + entropy_2
