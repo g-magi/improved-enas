@@ -126,8 +126,8 @@ class MicroController(Controller):
 			prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
 					for _ in range(self.lstm_num_layers)] 
 		inputs = self.g_emb 
-		inputs_seq = tf.TensorArray(
-					inputs.dtype, size = self.num_cells + 2, clear_after_read=False)
+		#inputs_seq = tf.TensorArray(inputs.dtype, size = self.num_cells + 2, clear_after_read=False)
+		inputs_seq = None
 		for layer_id in range(2):
 			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
 			prev_c, prev_h = next_c, next_h
@@ -142,8 +142,9 @@ class MicroController(Controller):
 				  entropy, log_prob,inputs_seq):
 			#log_string = inputs
 			#tf.print(log_string)
-			inputs_seq = inputs_seq.write(layer_id,inputs)
-			
+			#inputs_seq = inputs_seq.write(layer_id,inputs)
+			if layer_id == 0:
+				inputs_seq = inputs
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
 			prev_layers = []
