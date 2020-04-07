@@ -4,6 +4,7 @@ import time
 
 import numpy as np
 import tensorflow.compat.v1 as tf
+import tensorflow as tf2
 
 from controller import Controller
 from utils import get_train_ops
@@ -147,7 +148,7 @@ class MicroController(Controller):
 			log_string +="log_prob:  %s\n"%(log_prob)
 			log_string= "--------------------------------------\n"
 			tf_log_string = tf.convert_to_tensor(log_string)
-			tf.io.write_file(filename="./output/tfout.txt", contents=tf_log_string)
+			tf2.io.write_file(filename="./output/tfout.txt", contents=tf_log_string)
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
 			prev_layers = []
