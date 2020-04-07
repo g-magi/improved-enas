@@ -135,18 +135,20 @@ class MicroController(Controller):
 
 		def _body(layer_id, inputs, prev_c, prev_h, anchors, anchors_w_1, arc_seq,
 				  entropy, log_prob):
-			tf.print("-" * 80)
-			tf.print("inside body, vars are:")
-			tf.print("layer_id: ",layer_id)
-			tf.print("inputs: ",inputs)
-			tf.print("prev_c: ",prev_c)
-			tf.print("prev_h: ",prev_h)
-			tf.print("anchors: ",anchors)
-			tf.print("anchors_w_1: ",anchors_w_1)
-			tf.print("arc_seq: ",arc_seq)
-			tf.print("entropy: ",entropy)
-			tf.print("log_prob: ",log_prob)
-			tf.print("-" * 80)
+			log_string= "--------------------------------------\n"
+			log_string +="inside body, vars are:\n"
+			log_string +="layer_id: %s\n"%(layer_id)
+			log_string +="inputs: %s\n"%(inputs)
+			log_string +="prev_c: %s\n"%(prev_c)
+			log_string +="prev_h: %s\n"%(prev_h)
+			log_string +="anchors: %s\n"%(anchors)
+			log_string +="anchors_w_1: %s\n"%(anchors_w_1)
+			log_string +="arc_seq:  %s\n"%(arc_seq)
+			log_string +="entropy:  %s\n"%(entropy)
+			log_string +="log_prob:  %s\n"%(log_prob)
+			log_string= "--------------------------------------\n"
+			tf_log_string = tf.convert_to_tensor(log_string)
+			tf.io.write_file(filename="./output/tfout.txt", contents=tf_log_string)
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
 			prev_layers = []
