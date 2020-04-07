@@ -234,9 +234,10 @@ class MicroController(Controller):
 
 		last_c = loop_outputs[-7]
 		last_h = loop_outputs[-6]
-		tf_log_string = tf.stack(log_string_list)
+		#tf_log_string = tf.stack(log_string_list)
 
-		return arc_seq, entropy, log_prob, last_c, last_h,tf_log_string
+		return arc_seq, entropy, log_prob, last_c, last_h
+		#,tf_log_string
 
 	## funzione che permette di settare la reward a ciò che voglio io, invece di eseguire self.valid_acc
 	def build_trainer(self, child_model):
