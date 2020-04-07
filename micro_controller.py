@@ -127,7 +127,7 @@ class MicroController(Controller):
 					for _ in range(self.lstm_num_layers)] 
 		inputs = self.g_emb 
 		#inputs_seq = tf.TensorArray(inputs.dtype, size = self.num_cells + 2, clear_after_read=False)
-		inputs_seq = None
+		inputs_seq = 0
 		for layer_id in range(2):
 			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
 			prev_c, prev_h = next_c, next_h
