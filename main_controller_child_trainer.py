@@ -192,6 +192,8 @@ def get_ops(images, labels):
 			"entropy": controller_model.sample_entropy,
 			"sample_arc": controller_model.sample_arc,
 			"skip_rate": controller_model.skip_rate,
+			"log_1": controller_model.log_1,
+			"log_2": controller_model.log_2,
 		}
 
 	else:
@@ -408,11 +410,14 @@ def train():
 
 						print("Here are 10 architectures")
 						for _ in range(10):
-							arc, acc = sess.run([
+							arc, acc, log_1, log_2 = sess.run([
 								controller_ops["sample_arc"],
 								controller_ops["valid_acc"],
+								controller_ops["log_1"],
+								controller_ops["log_2"],
 							])
-							print("arc = ",arc)
+							print("log_1 = ",log_1)
+							print("log_2 = ",log_2)
 							
 							if FLAGS.search_for == "micro":
 								normal_arc, reduce_arc = arc
