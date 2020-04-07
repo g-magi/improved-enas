@@ -126,7 +126,6 @@ class MicroController(Controller):
 			prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
 					for _ in range(self.lstm_num_layers)] 
 		inputs = self.g_emb 
-		log_string_list = []
 
 		for layer_id in range(2):
 			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
@@ -152,7 +151,6 @@ class MicroController(Controller):
 			#log_string +="entropy:  %s\n"%(entropy)
 			#log_string +="log_prob:  %s\n"%(log_prob)
 			log_string += "--------------------------------------\n"
-			log_string_list.append(tf.convert_to_tensor(log_string))
 			#tf.print(log_string)
 			
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
@@ -212,8 +210,9 @@ class MicroController(Controller):
 			anchors = anchors.write(layer_id, next_h[-1])
 			anchors_w_1 = anchors_w_1.write(layer_id, tf.matmul(next_h[-1], self.w_attn_1))
 			inputs = self.g_emb
+			log_string_tf = tf.convert_to_tensor(log_string)
 
-			return (layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
+			return (log_string_tf, layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
 				  arc_seq, entropy, log_prob)
 
 		loop_vars = [
@@ -237,7 +236,7 @@ class MicroController(Controller):
 
 		last_c = loop_outputs[-7]
 		last_h = loop_outputs[-6]
-		tf_log_string = tf.stack(log_string_list)
+		tf_log_string = loop_outputs[-10].stack()
 
 		return arc_seq, entropy, log_prob, last_c, last_h,tf_log_string
 
