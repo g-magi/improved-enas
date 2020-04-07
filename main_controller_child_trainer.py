@@ -192,7 +192,7 @@ def get_ops(images, labels):
 			"entropy": controller_model.sample_entropy,
 			"sample_arc": controller_model.sample_arc,
 			"skip_rate": controller_model.skip_rate,
-			"logs": controller_model.logs,
+			#"logs": controller_model.logs,
 		}
 
 	else:
@@ -412,9 +412,9 @@ def train():
 							arc, acc, logs = sess.run([
 								controller_ops["sample_arc"],
 								controller_ops["valid_acc"],
-								controller_ops["logs"],
+								#controller_ops["logs"],
 							])
-							print("logs = ",logs)
+							#print("logs = ",logs)
 							
 							if FLAGS.search_for == "micro":
 								normal_arc, reduce_arc = arc
