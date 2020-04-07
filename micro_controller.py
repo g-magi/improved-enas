@@ -139,7 +139,7 @@ class MicroController(Controller):
 			return tf.less(layer_id, self.num_cells + 2) 
 
 		def _body(layer_id, inputs, prev_c, prev_h, anchors, anchors_w_1, arc_seq,
-				  entropy, log_prob,inputs_seq):
+				  entropy, log_prob):
 			#log_string = inputs
 			#tf.print(log_string)
 			#inputs_seq = inputs_seq.write(layer_id,inputs)
@@ -203,7 +203,7 @@ class MicroController(Controller):
 			anchors_w_1 = anchors_w_1.write(layer_id, tf.matmul(next_h[-1], self.w_attn_1))
 			inputs = self.g_emb
 			
-			return (inputs_seq, layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
+			return (layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
 				  arc_seq, entropy, log_prob)
 		
 		loop_vars = [
@@ -216,7 +216,6 @@ class MicroController(Controller):
 		  arc_seq,
 		  tf.constant([0.0], dtype=tf.float32, name="entropy"),
 		  tf.constant([0.0], dtype=tf.float32, name="log_prob"),
-		  inputs_seq,
 		]
 		loop_outputs = tf.while_loop(_condition, _body, loop_vars,
 								 parallel_iterations=1) 
@@ -229,7 +228,6 @@ class MicroController(Controller):
 
 		last_c = loop_outputs[-7]
 		last_h = loop_outputs[-6]
-		inputs_seq = loop_outputs[-10]
 
 		return arc_seq, entropy, log_prob, last_c, last_h,inputs_seq
 
