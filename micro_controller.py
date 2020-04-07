@@ -72,7 +72,7 @@ class MicroController(Controller):
 		#arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
 		#arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
 		self.sample_arc = (arc_seq_1, arc_seq_2)
-		self.all_inputs = (all_inputs_1, all_inputs_2)
+		self.inputs_seq = (all_inputs_1, all_inputs_2)
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 
@@ -113,6 +113,7 @@ class MicroController(Controller):
 		print("-" * 80)
 		print("Build controller sampler")
 
+		
 		anchors = tf.TensorArray(
 		  tf.float32, size=self.num_cells + 2, clear_after_read=False) 
 		anchors_w_1 = tf.TensorArray(
@@ -125,7 +126,8 @@ class MicroController(Controller):
 			prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
 					for _ in range(self.lstm_num_layers)] 
 		inputs = self.g_emb 
-
+		inputs_seq = tf.TensorArray(
+					inputs.dtype, size = self.num_cells + 2, clear_after_read=False)
 		for layer_id in range(2):
 			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
 			prev_c, prev_h = next_c, next_h
@@ -137,9 +139,10 @@ class MicroController(Controller):
 			return tf.less(layer_id, self.num_cells + 2) 
 
 		def _body(layer_id, inputs, prev_c, prev_h, anchors, anchors_w_1, arc_seq,
-				  entropy, log_prob):
+				  entropy, log_prob,inputs_seq):
 			#log_string = inputs
 			#tf.print(log_string)
+			inputs_seq = inputs_seq.write(layer_id,inputs)
 			
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
@@ -198,11 +201,10 @@ class MicroController(Controller):
 			anchors = anchors.write(layer_id, next_h[-1])
 			anchors_w_1 = anchors_w_1.write(layer_id, tf.matmul(next_h[-1], self.w_attn_1))
 			inputs = self.g_emb
-			#log_string_tf = tf.convert_to_tensor(log_string)
-
-			return (layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
+			
+			return (inputs_seq, layer_id + 1, inputs, next_c, next_h, anchors, anchors_w_1,
 				  arc_seq, entropy, log_prob)
-
+		
 		loop_vars = [
 		  tf.constant(2, dtype=tf.int32, name="layer_id"),
 		  inputs,
@@ -213,6 +215,7 @@ class MicroController(Controller):
 		  arc_seq,
 		  tf.constant([0.0], dtype=tf.float32, name="entropy"),
 		  tf.constant([0.0], dtype=tf.float32, name="log_prob"),
+		  inputs_seq,
 		]
 		loop_outputs = tf.while_loop(_condition, _body, loop_vars,
 								 parallel_iterations=1) 
@@ -225,9 +228,9 @@ class MicroController(Controller):
 
 		last_c = loop_outputs[-7]
 		last_h = loop_outputs[-6]
-		all_inputs = loop_outputs[-8]
+		inputs_seq = loop_outputs[-10]
 
-		return arc_seq, entropy, log_prob, last_c, last_h,all_inputs
+		return arc_seq, entropy, log_prob, last_c, last_h,inputs_seq
 
 	## funzione che permette di settare la reward a ciò che voglio io, invece di eseguire self.valid_acc
 	def build_trainer(self, child_model):
