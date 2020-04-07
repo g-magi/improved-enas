@@ -67,12 +67,13 @@ class MicroController(Controller):
 		self.num_replicas = num_replicas
 		self.name = name
 		self._create_params()
-		#arc_seq_1, entropy_1, log_prob_1, c, h, log_1 = self._build_sampler(use_bias=True)
-		#arc_seq_2, entropy_2, log_prob_2, _, _, log_2 = self._build_sampler(prev_c=c, prev_h=h)
-		arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
-		arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
+		arc_seq_1, entropy_1, log_prob_1, c, h, log_1 = self._build_sampler(use_bias=True)
+		arc_seq_2, entropy_2, log_prob_2, _, _, log_2 = self._build_sampler(prev_c=c, prev_h=h)
+		#arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
+		#arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
 		self.sample_arc = (arc_seq_1, arc_seq_2)
 		#self.logs = (log_1, log_2)
+		self.logs = log_1
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 
@@ -125,7 +126,7 @@ class MicroController(Controller):
 			prev_h = [tf.zeros([1, self.lstm_size], tf.float32)
 					for _ in range(self.lstm_num_layers)] 
 		inputs = self.g_emb 
-		#log_string_list = []
+		log_string_list = []
 
 		for layer_id in range(2):
 			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
@@ -145,14 +146,14 @@ class MicroController(Controller):
 			log_string +="inputs: %s\n"%(inputs)
 			log_string +="prev_c: %s\n"%(prev_c)
 			log_string +="prev_h: %s\n"%(prev_h)
-			log_string +="anchors: %s\n"%(anchors)
-			log_string +="anchors_w_1: %s\n"%(anchors_w_1)
+			#log_string +="anchors: %s\n"%(anchors)
+			#log_string +="anchors_w_1: %s\n"%(anchors_w_1)
 			log_string +="arc_seq:  %s\n"%(arc_seq)
-			log_string +="entropy:  %s\n"%(entropy)
-			log_string +="log_prob:  %s\n"%(log_prob)
+			#log_string +="entropy:  %s\n"%(entropy)
+			#log_string +="log_prob:  %s\n"%(log_prob)
 			log_string += "--------------------------------------\n"
-			#log_string_list.append(tf.convert_to_tensor(log_string))
-			tf.print(log_string)
+			log_string_list.append(tf.convert_to_tensor(log_string))
+			#tf.print(log_string)
 			
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
@@ -236,10 +237,9 @@ class MicroController(Controller):
 
 		last_c = loop_outputs[-7]
 		last_h = loop_outputs[-6]
-		#tf_log_string = tf.stack(log_string_list)
+		tf_log_string = tf.stack(log_string_list)
 
-		return arc_seq, entropy, log_prob, last_c, last_h
-		#,tf_log_string
+		return arc_seq, entropy, log_prob, last_c, last_h,tf_log_string
 
 	## funzione che permette di settare la reward a ciò che voglio io, invece di eseguire self.valid_acc
 	def build_trainer(self, child_model):
