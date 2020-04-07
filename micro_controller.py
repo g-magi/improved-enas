@@ -7,7 +7,6 @@ import tensorflow.compat.v1 as tf
 
 from controller import Controller
 from utils import get_train_ops
-from utils import tf_print
 from common_ops import stack_lstm
 
 class MicroController(Controller):
