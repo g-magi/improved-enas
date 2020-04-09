@@ -145,7 +145,8 @@ class MicroController(Controller):
 			#inputs_seq = inputs_seq.write(layer_id,inputs)
 			if layer_id == 0:
 				inputs_seq = inputs
-			indices = tf.range(0, layer_id, dtype=tf.int32) 
+			
+            indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
 			prev_layers = []
 			for i in range(2): 
