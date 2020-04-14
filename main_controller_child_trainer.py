@@ -64,6 +64,11 @@ DEFINE_integer("child_block_size", 3, "")
 DEFINE_integer("child_lr_T_0", 10, "for lr schedule")
 DEFINE_integer("child_lr_T_mul", 2, "for lr schedule")
 DEFINE_integer("child_cutout_size", None, "CutOut size")
+
+# my defines
+DEFINE_float("reduced_training_steps_perc",0.25,"determines the percentage of steps used for partial training")
+
+#
 DEFINE_float("child_grad_bound", 5.0, "Gradient clipping")
 DEFINE_float("child_lr", 0.1, "")
 DEFINE_float("child_lr_dec_rate", 0.1, "")
@@ -238,11 +243,12 @@ def train():
 
 	## creo la lista che conterrà le sequenze di accuratezze
 	# che vengono usate durante la fase 1 dell'addestramento 
-	saved_performance = []
+	saved_acc_sequences = []
+    saved_final_accs = []
 	## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 	#
 	# momentaneamente commentato
-	#temp_acc_sequence = np.zeros(shape=(ops["eval_every"],1))	
+	temp_acc_sequence = np.zeros(shape=(ops["eval_every"],1))
 	
 	epoch = 0;
 	
@@ -290,7 +296,9 @@ def train():
 					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
-					
+					if current_child_step < ops["eval_every"]*FLAGS.reduced_training_steps_perc:
+                        # salvo i dati soltanto per il primo 25% di addestramento
+                        temp_acc_sequence[current_child_step,0] = tr_acc
 					#temp_acc_sequence[current_child_step, 0]=tr_acc
 					
 					"""
@@ -311,7 +319,7 @@ def train():
 				# se invece il predittore è addestrato
 				elif current_prediction_phase is "predicting_accuracy":
 					# il figlio viene addestrato normalmente solo per il primo quarto degli step
-					if current_child_step/ops["eval_every"] <= 0.25:
+					if current_child_step/ops["eval_every"] <= FLAGS.reduced_training_steps_perc:
 						run_ops = [
 						child_ops["loss"],
 						child_ops["lr"],
@@ -357,13 +365,24 @@ def train():
 				
 				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
 					
+                    if current_prediction_phase is "training_predictor":
+                        # salvo la sequenza di addestramento del figlio corrente
+                        saved_acc_sequences.append(temp_acc_sequence)
+                        # salvo l'accuratezza finale del figlio corrente
+                        saved_final_accs.append(tr_acc)
+                        
+                        #TODO creare il predittore con i dati correnti
+                        
+                        
+                        #ENDTODO
+                        
 					## TODO
 					# usare il predittore corrente (prima dell'addestramento sull'epoca corrente)
 					# per ottenere una predizione e poterla confrontare con la realtà dell'addestramento
 					#
 					prediction = None
 					if predictor is not None:
-						prediction = ep.get_prediction(source=predictor, data=saved_performance_df, percentage=0.25, target_step=430)
+						prediction = ep.get_prediction(source=predictor, data=saved_performance_df, percentage=FLAGS.reduced_training_steps_perc, target_step=430)
 					
 					## TODO
 					# addestrare il predittore con i dati dell'epoca corrente
