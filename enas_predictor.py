@@ -8,7 +8,7 @@ def get_predictor(acc_seqs,final_accs):
 	predictor = SVR(kernel='rbf', C=1e4, gamma=0.1)
 	predictor.fit(acc_seqs, final_accs)
 	return predictor
-    
+	
 def get_prediction(acc_seq, predictor):
-    prediction = predictor.predict(acc_seq)
-    return prediction
+	prediction = predictor.predict(acc_seq)
+	return prediction

@@ -250,21 +250,21 @@ def train():
 		ops =get_ops(images, labels)
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
-        ### MY STUFF
-        ## creo la lista che conterrà le sequenze di accuratezze
-        # che vengono usate durante la fase 1 dell'addestramento
-        saved_acc_sequences =[]
-        saved_final_accs =[]
-        ## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
-        #
-        # momentaneamente commentato
-        temp_acc_sequence = np.zeros(1,shape=(ops["eval_every"]))
-        
-        epoch = 0;
-        
-        ## creo il modello di predizione, inizialmente sarà vuoto
-        predictor = None
-        ### END MY STUFF
+		### MY STUFF
+		## creo la lista che conterrà le sequenze di accuratezze
+		# che vengono usate durante la fase 1 dell'addestramento
+		saved_acc_sequences =[]
+		saved_final_accs =[]
+		## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
+		#
+		# momentaneamente commentato
+		temp_acc_sequence = np.zeros(1,shape=(ops["eval_every"]))
+		
+		epoch = 0;
+		
+		## creo il modello di predizione, inizialmente sarà vuoto
+		predictor = None
+		### END MY STUFF
 		saver = tf.train.Saver(max_to_keep=2)
 		checkpoint_saver_hook = tf.train.CheckpointSaverHook(
 			FLAGS.output_dir, save_steps=child_ops["num_train_batches"], saver=saver)
