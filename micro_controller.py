@@ -78,7 +78,7 @@ class MicroController(Controller):
 		
 		# op per settare reward
 		self.placeholder_reward = tf.placeholder(tf.float32)
-		self.reward = tf.assign(self.placeholder_reward)
+		self.assign_reward = tf.assign(self.placeholder_reward)
 
 	def _create_params(self):
 		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)

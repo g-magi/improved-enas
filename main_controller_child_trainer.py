@@ -198,7 +198,7 @@ def get_ops(images, labels):
 			"sample_arc": controller_model.sample_arc,
 			"skip_rate": controller_model.skip_rate,
 			"inputs_seq": controller_model.inputs_seq,
-			"reward":controller_model.reward,
+			"assign_reward":controller_model.assign_reward,
 		}
 
 	else:
@@ -428,7 +428,7 @@ def train():
 								controller_ops["entropy"],
 								controller_ops["lr"],
 								controller_ops["grad_norm"],
-								controller_ops["reward"],
+								controller_ops["assign_reward"],
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
