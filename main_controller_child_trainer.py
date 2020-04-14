@@ -297,7 +297,7 @@ def train():
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					if current_child_step < ops["eval_every"]*FLAGS.reduced_training_steps_perc:
-                        # salvo i dati soltanto per il primo 25% di addestramento
+                        # salvo i dati soltanto per il primo [FLAGS.reduced_training_steps_perc] (di base 0.25) di addestramento
                         temp_acc_sequence[current_child_step,0] = tr_acc
 					#temp_acc_sequence[current_child_step, 0]=tr_acc
 					
@@ -313,7 +313,7 @@ def train():
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
 					if epoch==0:
 						current_prediction_phase = "predicting_accuracy"
-						print("Predictor engaged, only training for ",ops["eval_every"]/4," steps")
+						print("Predictor engaged, only training for ",ops["eval_every"]*FLAGS.reduced_training_steps_perc," steps")
 					
 					##ENDTODO
 				# se invece il predittore è addestrato
