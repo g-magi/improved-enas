@@ -258,7 +258,7 @@ def train():
 		## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 		#
 		# momentaneamente commentato
-		temp_acc_sequence = np.zeros(1,shape=(ops["eval_every"]))
+		temp_acc_sequence = np.zeros(shape=(1,ops["eval_every"]))
 		
 		epoch = 0;
 		
