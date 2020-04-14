@@ -245,6 +245,7 @@ class MicroController(Controller):
 		self.var_reward = tf.Variable(0.0)
 		self.assign_reward = tf.assign(self.var_reward,self.placeholder_reward)
 		self.reward = self.var_reward
+		self.reward = tf.constant(self.reward)
 		###
 		
 		if self.entropy_weight is not None:
