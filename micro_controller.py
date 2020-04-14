@@ -75,10 +75,10 @@ class MicroController(Controller):
 		self.inputs_seq = (all_inputs_1, all_inputs_2)
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
-        
-        # op per settare reward
-        self.placeholder_reward = tf.placeholder(tf.float32)
-        self.reward = tf.assign(placeholder_reward)
+		
+		# op per settare reward
+		self.placeholder_reward = tf.placeholder(tf.float32)
+		self.reward = tf.assign(placeholder_reward)
 
 	def _create_params(self):
 		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
@@ -150,7 +150,7 @@ class MicroController(Controller):
 			if layer_id == 0:
 				inputs_seq = inputs
 			
-            indices = tf.range(0, layer_id, dtype=tf.int32) 
+			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
 			prev_layers = []
 			for i in range(2): 
