@@ -243,9 +243,9 @@ def train():
 	print("Number of training data: %d" % (n_data))
 
 	## creo la lista che conterrà le sequenze di accuratezze
-	# che vengono usate durante la fase 1 dell'addestramento 
-	saved_acc_sequences = []
-    saved_final_accs = []
+	# che vengono usate durante la fase 1 dell'addestramento
+    saved_acc_sequences =[]
+    saved_final_accs =[]
 	## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 	#
 	# momentaneamente commentato
