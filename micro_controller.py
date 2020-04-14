@@ -76,9 +76,6 @@ class MicroController(Controller):
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 		
-		# op per settare reward
-		self.placeholder_reward = tf.placeholder(tf.float32)
-		self.assign_reward = tf.assign(self.reward,self.placeholder_reward)
 
 	def _create_params(self):
 		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
@@ -242,7 +239,12 @@ class MicroController(Controller):
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
 						  tf.to_float(child_model.batch_size))
 		self.reward = self.valid_acc 
-
+		
+		# op per settare reward
+		self.placeholder_reward = tf.placeholder(tf.float32)
+		self.assign_reward = tf.assign(self.reward,self.placeholder_reward)
+		###
+		
 		if self.entropy_weight is not None:
 			self.reward += self.entropy_weight * self.sample_entropy
 
