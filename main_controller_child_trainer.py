@@ -248,7 +248,7 @@ def train():
 	## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 	#
 	# momentaneamente commentato
-	temp_acc_sequence = np.zeros(shape=(ops["eval_every"],1))
+	temp_acc_sequence = np.zeros(1,shape=(ops["eval_every"]))
 	
 	epoch = 0;
 	
@@ -297,21 +297,15 @@ def train():
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					if current_child_step < ops["eval_every"]*FLAGS.reduced_training_steps_perc:
-                        # salvo i dati soltanto per il primo [FLAGS.reduced_training_steps_perc] (di base 0.25) di addestramento
-                        temp_acc_sequence[current_child_step,0] = tr_acc
-					#temp_acc_sequence[current_child_step, 0]=tr_acc
+                        # salvo i dati soltanto per una frazione pari a [FLAGS.reduced_training_steps_perc] (di base 0.25) # del tempo di addestramento
+                        temp_acc_sequence[0,current_child_step] = tr_acc
 					
-					"""
-					if current_child_step%50==0:
-						with pd.option_context('display.max_rows', 1, 'display.max_columns', len(saved_performance_columns)):
-							print(temp_current_performance_df)
-					"""
 					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					#
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
-					if epoch==0:
+					if epoch==3:
 						current_prediction_phase = "predicting_accuracy"
 						print("Predictor engaged, only training for ",ops["eval_every"]*FLAGS.reduced_training_steps_perc," steps")
 					
@@ -327,12 +321,10 @@ def train():
 						child_ops["train_acc"],
 						child_ops["train_op"]]
 						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
+                        temp_acc_sequence[0,current_child_step] = tr_acc
 					else:
 						sess.run(child_ops["advance_global_step"])
-					
-					#TODO: registrare i dati dei primi step
-					#TODO: basandosi sui dati registrati, predire il valore finale
-					#TODO: una volta predetto un valore si salta la sezione di predizione
+                        
 				
 				
 				global_step = sess.run(child_ops["global_step"])
@@ -366,34 +358,28 @@ def train():
 				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
 					
                     if current_prediction_phase is "training_predictor":
+                        #TODO creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
+                        if saved_acc_sequences:
+                            predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
+                            prediction = ep.get_prediction(predictor,temp_acc_sequence)
+                            print("Prediction - epoch ",epoch," -->> ",prediction) 
+                        
                         # salvo la sequenza di addestramento del figlio corrente
                         saved_acc_sequences.append(temp_acc_sequence)
                         # salvo l'accuratezza finale del figlio corrente
                         saved_final_accs.append(tr_acc)
                         
-                        #TODO creare il predittore con i dati correnti
+                        #
                         
-                        
-                        #ENDTODO
-                        
-					## TODO
-					# usare il predittore corrente (prima dell'addestramento sull'epoca corrente)
-					# per ottenere una predizione e poterla confrontare con la realtà dell'addestramento
-					#
-					prediction = None
-					if predictor is not None:
-						prediction = ep.get_prediction(source=predictor, data=saved_performance_df, percentage=FLAGS.reduced_training_steps_perc, target_step=430)
-					
-					## TODO
-					# addestrare il predittore con i dati dell'epoca corrente
-					#
-					
-					#predictor = ep.build_prediction_model(data = saved_performance_df)
-					
-					##
-					## TODO
-					# valutare il predittore rispetto agli ultimi dati dell'epoca corrente
-					
+                    #TODO
+                    # se siamo in fase 2, passare l'accuratezza predetta come reward per il controller
+                    elif current_prediction_phase is "predicting_accuracy":
+                        #TODO
+                        # 
+                        predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
+                        prediction = 
+                    
+                    
 					current_child_step = 0;
 					if (FLAGS.controller_training and
 							epoch % FLAGS.controller_train_every == 0):
