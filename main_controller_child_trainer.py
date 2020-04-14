@@ -361,7 +361,7 @@ def train():
                         #TODO creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
                         if saved_acc_sequences:
                             predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
-                            prediction = ep.get_prediction(predictor,temp_acc_sequence)
+                            prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
                             print("Prediction - epoch ",epoch," -->> ",prediction) 
                         
                         # salvo la sequenza di addestramento del figlio corrente
@@ -377,7 +377,9 @@ def train():
                         #TODO
                         # 
                         predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
-                        prediction = 
+                        prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
+                        
+                        # passare come reward
                     
                     
 					current_child_step = 0;
