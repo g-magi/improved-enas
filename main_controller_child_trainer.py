@@ -198,7 +198,7 @@ def get_ops(images, labels):
 			"sample_arc": controller_model.sample_arc,
 			"skip_rate": controller_model.skip_rate,
 			"inputs_seq": controller_model.inputs_seq,
-            "reward":controller_model.reward,
+			"reward":controller_model.reward,
 		}
 
 	else:
@@ -244,8 +244,8 @@ def train():
 
 	## creo la lista che conterrà le sequenze di accuratezze
 	# che vengono usate durante la fase 1 dell'addestramento
-    saved_acc_sequences =[]
-    saved_final_accs =[]
+	saved_acc_sequences =[]
+	saved_final_accs =[]
 	## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 	#
 	# momentaneamente commentato
@@ -298,8 +298,8 @@ def train():
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					if current_child_step < ops["eval_every"]*FLAGS.reduced_training_steps_perc:
-                        # salvo i dati soltanto per una frazione pari a [FLAGS.reduced_training_steps_perc] (di base 0.25) # del tempo di addestramento
-                        temp_acc_sequence[0,current_child_step] = tr_acc
+						# salvo i dati soltanto per una frazione pari a [FLAGS.reduced_training_steps_perc] (di base 0.25) # del tempo di addestramento
+						temp_acc_sequence[0,current_child_step] = tr_acc
 					
 					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
@@ -322,10 +322,10 @@ def train():
 						child_ops["train_acc"],
 						child_ops["train_op"]]
 						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
-                        temp_acc_sequence[0,current_child_step] = tr_acc
+						temp_acc_sequence[0,current_child_step] = tr_acc
 					else:
 						sess.run(child_ops["advance_global_step"])
-                        
+						
 				
 				
 				global_step = sess.run(child_ops["global_step"])
@@ -358,37 +358,37 @@ def train():
 				
 				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
 					
-                    if current_prediction_phase is "training_predictor":
-                        #TODO creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
-                        if saved_acc_sequences:
-                            predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
-                            prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
-                            print("Prediction - epoch ",epoch," -->> ",prediction) 
-                        
-                        # salvo la sequenza di addestramento del figlio corrente
-                        saved_acc_sequences.append(temp_acc_sequence)
-                        # salvo l'accuratezza finale del figlio corrente
-                        saved_final_accs.append(tr_acc)
-                        
-                        #
-                        
-                    #TODO
-                    # se siamo in fase 2, passare l'accuratezza predetta come reward per il controller
-                    elif current_prediction_phase is "predicting_accuracy":
-                        #TODO
-                        # 
-                        predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
-                        prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
-                        
-                        # passare come reward
-                        
-                        
-                    
-                    
+					if current_prediction_phase is "training_predictor":
+						#TODO creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
+						if saved_acc_sequences:
+							predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
+							prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
+							print("Prediction - epoch ",epoch," -->> ",prediction) 
+						
+						# salvo la sequenza di addestramento del figlio corrente
+						saved_acc_sequences.append(temp_acc_sequence)
+						# salvo l'accuratezza finale del figlio corrente
+						saved_final_accs.append(tr_acc)
+						
+						#
+						
+					#TODO
+					# se siamo in fase 2, passare l'accuratezza predetta come reward per il controller
+					elif current_prediction_phase is "predicting_accuracy":
+						#TODO
+						# 
+						predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
+						prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
+						
+						# passare come reward
+						
+						
+					
+					
 					current_child_step = 0;
 					if (FLAGS.controller_training and
 							epoch % FLAGS.controller_train_every == 0):
-                        # addestramento normale del controller quando il predittore è in addestramento
+						# addestramento normale del controller quando il predittore è in addestramento
 						print("Epoch {}: Training controller".format(epoch))
 						for ct_step in range(FLAGS.controller_train_steps *
 											 FLAGS.controller_num_aggregate):
@@ -417,9 +417,9 @@ def train():
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
 								print(log_string)
-                        
-                        # addestramento del controller quando il predittore è addestrato
-                        print("Epoch {}: Training controller".format(epoch))
+						
+						# addestramento del controller quando il predittore è addestrato
+						print("Epoch {}: Training controller".format(epoch))
 						for ct_step in range(FLAGS.controller_train_steps *
 											 FLAGS.controller_num_aggregate):
 							run_ops = [
@@ -447,7 +447,7 @@ def train():
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
 								print(log_string)
-                        ### fine modifiche
+						### fine modifiche
 						print("Here are 10 architectures")
 						for _ in range(10):
 							arc, acc, inputs_seq = sess.run([
