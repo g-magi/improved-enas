@@ -242,8 +242,9 @@ class MicroController(Controller):
 		
 		# op per settare reward
 		self.placeholder_reward = tf.placeholder(tf.float32)
-		self.reward = tf.Variable(tf.cast(self.reward, tf.float32), name="reward",dtype=tf.float32)
-		self.assign_reward = tf.assign(self.reward,self.placeholder_reward)
+		self.var_reward = tf.Variable(0.0)
+		self.assign_reward = tf.assign(self.var_reward,self.placeholder_reward)
+		self.reward = self.var_reward
 		###
 		
 		if self.entropy_weight is not None:
