@@ -327,6 +327,7 @@ def train():
 						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 						temp_acc_sequence[current_child_step] = tr_acc
 					else:
+						print("advance global step goes here")
 						#sess.run(child_ops["advance_global_step"])
 						
 				
