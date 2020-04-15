@@ -241,9 +241,9 @@ class MicroController(Controller):
 		self.reward = self.valid_acc
 		
 		# op per settare reward
-		self.placeholder_reward = tf.placeholder(tf.float32)
+		placeholder_reward = tf.placeholder(tf.float32)
 		self.var_reward = tf.Variable(0.0)
-		self.assign_reward = tf.assign(self.var_reward,self.placeholder_reward)
+		self.assign_reward = tf.assign(self.var_reward,placeholder_reward)
 		self.reward = self.var_reward
 		self.reward = tf.stop_gradient(self.reward)
 		###
