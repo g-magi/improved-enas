@@ -380,6 +380,7 @@ def train():
 						# 
 						predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 						prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
+						print("Prediction - epoch ",epoch," -->> ",prediction) 
 						
 						# passare come reward
 						
@@ -389,65 +390,68 @@ def train():
 					current_child_step = 0;
 					if (FLAGS.controller_training and
 							epoch % FLAGS.controller_train_every == 0):
-						# addestramento normale del controller quando il predittore è in addestramento
-						print("Epoch {}: Training controller".format(epoch))
-						for ct_step in range(FLAGS.controller_train_steps *
-											 FLAGS.controller_num_aggregate):
-							run_ops = [
-								controller_ops["loss"],
-								controller_ops["entropy"],
-								controller_ops["lr"],
-								controller_ops["grad_norm"],
-								controller_ops["valid_acc"],
-								controller_ops["baseline"],
-								controller_ops["skip_rate"],
-								controller_ops["train_op"],
-							]
-							loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops)
-							controller_step = sess.run(controller_ops["train_step"])
-							if ct_step % FLAGS.log_every == 0:
-								curr_time = time.time()
-								log_string = ""
-								log_string += "ctrl_step = {:<6d}".format(controller_step)
-								log_string += " loss = {:<7.3f}".format(loss)
-								log_string += " ent = {:<5.2f}".format(entropy)
-								log_string += "   lr = {:<6.4f}".format(lr)
-								log_string += "   |g| = {:<8.4f}".format(gn)
-								log_string += " acc = {:<6.4f}".format(val_acc)
-								log_string += "   bl = {:<5.2f}".format(bl)
-								log_string += "  mins = {:<.2f}".format(
-									float(curr_time - start_time) / 60)
-								print(log_string)
 						
+						# addestramento normale del controller quando il predittore è in addestramento
+						if current_prediction_phase is "training_predictor":
+							print("Epoch {}: Training controller".format(epoch))
+							for ct_step in range(FLAGS.controller_train_steps *
+												 FLAGS.controller_num_aggregate):
+								run_ops = [
+									controller_ops["loss"],
+									controller_ops["entropy"],
+									controller_ops["lr"],
+									controller_ops["grad_norm"],
+									controller_ops["valid_acc"],
+									controller_ops["baseline"],
+									controller_ops["skip_rate"],
+									controller_ops["train_op"],
+								]
+								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops)
+								controller_step = sess.run(controller_ops["train_step"])
+								if ct_step % FLAGS.log_every == 0:
+									curr_time = time.time()
+									log_string = ""
+									log_string += "ctrl_step = {:<6d}".format(controller_step)
+									log_string += " loss = {:<7.3f}".format(loss)
+									log_string += " ent = {:<5.2f}".format(entropy)
+									log_string += "   lr = {:<6.4f}".format(lr)
+									log_string += "   |g| = {:<8.4f}".format(gn)
+									log_string += " acc = {:<6.4f}".format(val_acc)
+									log_string += "   bl = {:<5.2f}".format(bl)
+									log_string += "  mins = {:<.2f}".format(
+										float(curr_time - start_time) / 60)
+									print(log_string)
+						## ENDIF
+						elif current_prediction_phase is "predicting_accuracy":
 						# addestramento del controller quando il predittore è addestrato
-						print("Epoch {}: Training controller".format(epoch))
-						for ct_step in range(FLAGS.controller_train_steps *
-											 FLAGS.controller_num_aggregate):
-							run_ops = [
-								controller_ops["loss"],
-								controller_ops["entropy"],
-								controller_ops["lr"],
-								controller_ops["grad_norm"],
-								controller_ops["assign_reward"],
-								controller_ops["baseline"],
-								controller_ops["skip_rate"],
-								controller_ops["train_op"],
-							]
-							loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={placeholder_reward: prediction})
-							controller_step = sess.run(controller_ops["train_step"])
-							if ct_step % FLAGS.log_every == 0:
-								curr_time = time.time()
-								log_string = ""
-								log_string += "ctrl_step = {:<6d}".format(controller_step)
-								log_string += " loss = {:<7.3f}".format(loss)
-								log_string += " ent = {:<5.2f}".format(entropy)
-								log_string += "   lr = {:<6.4f}".format(lr)
-								log_string += "   |g| = {:<8.4f}".format(gn)
-								log_string += " acc = {:<6.4f}".format(val_acc)
-								log_string += "   bl = {:<5.2f}".format(bl)
-								log_string += "  mins = {:<.2f}".format(
-									float(curr_time - start_time) / 60)
-								print(log_string)
+							print("Epoch {}: Training controller".format(epoch))
+							for ct_step in range(FLAGS.controller_train_steps *
+												 FLAGS.controller_num_aggregate):
+								run_ops = [
+									controller_ops["loss"],
+									controller_ops["entropy"],
+									controller_ops["lr"],
+									controller_ops["grad_norm"],
+									controller_ops["assign_reward"],
+									controller_ops["baseline"],
+									controller_ops["skip_rate"],
+									controller_ops["train_op"],
+								]
+								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={placeholder_reward: prediction})
+								controller_step = sess.run(controller_ops["train_step"])
+								if ct_step % FLAGS.log_every == 0:
+									curr_time = time.time()
+									log_string = ""
+									log_string += "ctrl_step = {:<6d}".format(controller_step)
+									log_string += " loss = {:<7.3f}".format(loss)
+									log_string += " ent = {:<5.2f}".format(entropy)
+									log_string += "   lr = {:<6.4f}".format(lr)
+									log_string += "   |g| = {:<8.4f}".format(gn)
+									log_string += " acc = {:<6.4f}".format(val_acc)
+									log_string += "   bl = {:<5.2f}".format(bl)
+									log_string += "  mins = {:<.2f}".format(
+										float(curr_time - start_time) / 60)
+									print(log_string)
 						### fine modifiche
 						print("Here are 10 architectures")
 						for _ in range(10):
