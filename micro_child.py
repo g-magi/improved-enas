@@ -95,9 +95,7 @@ class MicroChild(Model):
 		self.global_step = tf.Variable(
 			0, dtype=tf.int32, trainable=False, name="global_step")
 		
-		self.g_step = tf.Variable(
-			0, dtype=tf.int32, trainable=False, name="g_step")
-		self.advance_global_step = tf.assign_add(self.g_step, tf.constant(1, dtype=tf.int32))
+		self.advance_global_step = tf.assign_add(self.global_step, 1)
 
 		if self.drop_path_keep_prob is not None:
 			assert num_epochs is not None, "Need num_epochs to drop_path"
