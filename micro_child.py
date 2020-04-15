@@ -3,7 +3,7 @@ import sys
 
 import numpy as np
 import tensorflow.compat.v1 as tf
-import tensorflow as tf2
+#import tensorflow as tf2
 
 from models import Model
 from common_ops import batch_norm
