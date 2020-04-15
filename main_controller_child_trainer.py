@@ -311,13 +311,13 @@ def train():
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
 					if epoch==3:
 						current_prediction_phase = "predicting_accuracy"
-						print("\nPredictor engaged, only training for ",ops["eval_every"]*FLAGS.reduced_training_steps_perc," steps")
+						print("\nPredictor engaged, only training for ",int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)," steps")
 					
 					##ENDTODO
 				# se invece il predittore è addestrato
 				elif current_prediction_phase is "predicting_accuracy":
 					# il figlio viene addestrato normalmente solo per il primo quarto degli step
-					if current_child_step/ops["eval_every"] <= FLAGS.reduced_training_steps_perc:
+					if current_child_step < int(ops["eval_every"]*FLAGS.reduced_training_steps_perc):
 						run_ops = [
 						child_ops["loss"],
 						child_ops["lr"],
