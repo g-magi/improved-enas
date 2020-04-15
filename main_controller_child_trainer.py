@@ -258,7 +258,7 @@ def train():
 		## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 		#
 		# momentaneamente commentato
-		temp_acc_sequence = np.zeros(shape=(ops["eval_every"]))
+		temp_acc_sequence = np.zeros(shape=(ops["eval_every"]*FLAGS.reduced_training_steps_perc))
 		
 		epoch = 0;
 		
@@ -280,12 +280,14 @@ def train():
 		#comincia la sessione di addestramento
 		print("-" * 80)
 		print("Starting session")
+		print("")
 		config = tf.ConfigProto(allow_soft_placement=True)
 		current_child_step = 0
 		current_prediction_phase = "training_predictor"
 		with tf.train.SingularMonitoredSession(config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
 			while True:
+				print("\rCurrent child step: ",current_child_step, end="")
 				# se siamo nella fase di addestramento del predittore
 				if current_prediction_phase is "training_predictor":
 					# esegui l'addestramento del figlio normalmente
@@ -309,7 +311,7 @@ def train():
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
 					if epoch==3:
 						current_prediction_phase = "predicting_accuracy"
-						print("Predictor engaged, only training for ",ops["eval_every"]*FLAGS.reduced_training_steps_perc," steps")
+						print("\nPredictor engaged, only training for ",ops["eval_every"]*FLAGS.reduced_training_steps_perc," steps")
 					
 					##ENDTODO
 				# se invece il predittore è addestrato
@@ -341,7 +343,7 @@ def train():
 				#qui io sto eseguendo ogni epoca di addestramento del figlio (o del controller, vedi sotto)
 				#ogni FLAGS.log_every (50 default) mostro i dati dello step corrente
 				if global_step % FLAGS.log_every == 0:
-					log_string = ""
+					log_string = "\n"
 					log_string += "epoch = {:<6d}".format(epoch)
 					log_string += "ch_step = {:<6d}".format(global_step)
 					log_string += " loss = {:<8.6f}".format(loss)
@@ -364,7 +366,7 @@ def train():
 						if saved_acc_sequences:
 							predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 							prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
-							print("Prediction - epoch ",epoch," -->> ",prediction) 
+							print("\nPrediction - epoch ",epoch," -->> ",prediction) 
 						
 						# salvo la sequenza di addestramento del figlio corrente
 						saved_acc_sequences.append(temp_acc_sequence)
@@ -380,7 +382,7 @@ def train():
 						# 
 						predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 						prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
-						print("Prediction - epoch ",epoch," -->> ",prediction) 
+						print("\nPrediction - epoch ",epoch," -->> ",prediction) 
 						
 						# passare come reward
 						
@@ -393,7 +395,7 @@ def train():
 						
 						# addestramento normale del controller quando il predittore è in addestramento
 						if current_prediction_phase is "training_predictor":
-							print("Epoch {}: Training controller".format(epoch))
+							print("\nEpoch {}: Training controller".format(epoch))
 							for ct_step in range(FLAGS.controller_train_steps *
 												 FLAGS.controller_num_aggregate):
 								run_ops = [
@@ -410,7 +412,7 @@ def train():
 								controller_step = sess.run(controller_ops["train_step"])
 								if ct_step % FLAGS.log_every == 0:
 									curr_time = time.time()
-									log_string = ""
+									log_string = "\n"
 									log_string += "ctrl_step = {:<6d}".format(controller_step)
 									log_string += " loss = {:<7.3f}".format(loss)
 									log_string += " ent = {:<5.2f}".format(entropy)
@@ -424,7 +426,7 @@ def train():
 						## ENDIF
 						elif current_prediction_phase is "predicting_accuracy":
 						# addestramento del controller quando il predittore è addestrato
-							print("Epoch {}: Training controller".format(epoch))
+							print("\nEpoch {}: Training controller".format(epoch))
 							for ct_step in range(FLAGS.controller_train_steps *
 												 FLAGS.controller_num_aggregate):
 								run_ops = [
@@ -441,7 +443,7 @@ def train():
 								controller_step = sess.run(controller_ops["train_step"])
 								if ct_step % FLAGS.log_every == 0:
 									curr_time = time.time()
-									log_string = ""
+									log_string = "\n"
 									log_string += "ctrl_step = {:<6d}".format(controller_step)
 									log_string += " loss = {:<7.3f}".format(loss)
 									log_string += " ent = {:<5.2f}".format(entropy)
@@ -453,7 +455,7 @@ def train():
 										float(curr_time - start_time) / 60)
 									print(log_string)
 						### fine modifiche
-						print("Here are 10 architectures")
+						print("\nHere are 10 architectures")
 						for _ in range(10):
 							arc, acc = sess.run([
 								controller_ops["sample_arc"],
@@ -478,7 +480,7 @@ def train():
 							print("val_acc = {:<6.4f}".format(acc))
 							print("-" * 80)
 
-					print("Epoch {}: Eval".format(epoch))
+					print("\nEpoch {}: Eval".format(epoch))
 					if FLAGS.child_fixed_arc is None:
 						ops["eval_func"](sess, "valid")
 					ops["eval_func"](sess, "test")
