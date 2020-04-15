@@ -300,7 +300,7 @@ def train():
 					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
-					if current_child_step < ops["eval_every"]*FLAGS.reduced_training_steps_perc:
+					if current_child_step < int(ops["eval_every"]*FLAGS.reduced_training_steps_perc):
 						# salvo i dati soltanto per una frazione pari a [FLAGS.reduced_training_steps_perc] (di base 0.25) # del tempo di addestramento
 						temp_acc_sequence[current_child_step] = tr_acc
 					
