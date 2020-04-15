@@ -258,7 +258,7 @@ def train():
 		## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 		#
 		# momentaneamente commentato
-		temp_acc_sequence = np.zeros(shape=(1,ops["eval_every"]))
+		temp_acc_sequence = np.zeros(shape=(ops["eval_every"]))
 		
 		epoch = 0;
 		
@@ -300,7 +300,7 @@ def train():
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
 					if current_child_step < ops["eval_every"]*FLAGS.reduced_training_steps_perc:
 						# salvo i dati soltanto per una frazione pari a [FLAGS.reduced_training_steps_perc] (di base 0.25) # del tempo di addestramento
-						temp_acc_sequence[0,current_child_step] = tr_acc
+						temp_acc_sequence[current_child_step] = tr_acc
 					
 					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
@@ -323,7 +323,7 @@ def train():
 						child_ops["train_acc"],
 						child_ops["train_op"]]
 						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
-						temp_acc_sequence[0,current_child_step] = tr_acc
+						temp_acc_sequence[current_child_step] = tr_acc
 					else:
 						sess.run(child_ops["advance_global_step"])
 						

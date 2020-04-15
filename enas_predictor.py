@@ -4,7 +4,7 @@ import numpy as np
 
 
 def get_predictor(acc_seqs,final_accs):
-	# TODO creare predittore e ritornarlo
+	acc_seqs = np.asarray(acc_seqs)
 	predictor = SVR(kernel='rbf', C=1e4, gamma=0.1)
 	predictor.fit(acc_seqs, final_accs)
 	return predictor
