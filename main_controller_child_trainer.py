@@ -315,7 +315,7 @@ def train():
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					#
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
-					if epoch==10:
+					if epoch==80:
 						current_prediction_phase = "predicting_accuracy"
 						print("\nPredictor engaged, only training for ",int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)," steps")
 					
