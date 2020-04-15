@@ -258,7 +258,7 @@ def train():
 		## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 		#
 		# momentaneamente commentato
-		temp_acc_sequence = np.zeros(shape=(ops["eval_every"]*FLAGS.reduced_training_steps_perc))
+		temp_acc_sequence = np.zeros(shape=(int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)))
 		
 		epoch = 0;
 		
