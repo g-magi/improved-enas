@@ -10,6 +10,6 @@ def get_predictor(acc_seqs,final_accs):
 	return predictor
 	
 def get_prediction(acc_seq, predictor):
-	acc_seq = np.reshape(acc_seq, (-1,len(acc_seq))
+	acc_seq = np.reshape(acc_seq, (-1,len(acc_seq)))
 	prediction = predictor.predict(acc_seq)
 	return prediction
