@@ -366,7 +366,7 @@ def train():
 						if saved_acc_sequences:
 							predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 							prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
-							print("\nPrediction - epoch ",epoch," -->> ",prediction) 
+							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%") 
 						
 						# salvo la sequenza di addestramento del figlio corrente
 						saved_acc_sequences.append(temp_acc_sequence)
@@ -382,7 +382,7 @@ def train():
 						# 
 						predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 						prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
-						print("\nPrediction - epoch ",epoch," -->> ",prediction) 
+						print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%")
 						
 						# passare come reward
 						
