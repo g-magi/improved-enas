@@ -439,7 +439,7 @@ def train():
 									controller_ops["skip_rate"],
 									controller_ops["train_op"],
 								]
-								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={placeholder_reward: prediction})
+								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={self.placeholder_reward: prediction})
 								controller_step = sess.run(controller_ops["train_step"])
 								if ct_step % FLAGS.log_every == 0:
 									curr_time = time.time()
