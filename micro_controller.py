@@ -67,12 +67,12 @@ class MicroController(Controller):
 		self.num_replicas = num_replicas
 		self.name = name
 		self._create_params()
-		arc_seq_1, entropy_1, log_prob_1, c, h, all_inputs_1 = self._build_sampler(use_bias=True)
-		arc_seq_2, entropy_2, log_prob_2, _, _, all_inputs_2 = self._build_sampler(prev_c=c, prev_h=h)
-		#arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
-		#arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
+		#arc_seq_1, entropy_1, log_prob_1, c, h, all_inputs_1 = self._build_sampler(use_bias=True)
+		#arc_seq_2, entropy_2, log_prob_2, _, _, all_inputs_2 = self._build_sampler(prev_c=c, prev_h=h)
+		arc_seq_1, entropy_1, log_prob_1, c, h = self._build_sampler(use_bias=True)
+		arc_seq_2, entropy_2, log_prob_2, _, _ = self._build_sampler(prev_c=c, prev_h=h)
 		self.sample_arc = (arc_seq_1, arc_seq_2)
-		self.inputs_seq = (all_inputs_1, all_inputs_2)
+		#self.inputs_seq = (all_inputs_1, all_inputs_2)
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 		
@@ -128,7 +128,7 @@ class MicroController(Controller):
 					for _ in range(self.lstm_num_layers)] 
 		inputs = self.g_emb 
 		#inputs_seq = tf.TensorArray(inputs.dtype, size = self.num_cells + 2, clear_after_read=False)
-		inputs_seq = ""
+		#inputs_seq = ""
 		for layer_id in range(2):
 			next_c, next_h = stack_lstm(inputs, prev_c, prev_h, self.w_lstm)
 			prev_c, prev_h = next_c, next_h
@@ -144,9 +144,9 @@ class MicroController(Controller):
 			#log_string = inputs
 			#tf.print(log_string)
 			#inputs_seq = inputs_seq.write(layer_id,inputs)
-			if layer_id == 0:
-				inputs_seq = inputs
-			
+			#if layer_id == 0:
+			#	inputs_seq = inputs
+			#
 			indices = tf.range(0, layer_id, dtype=tf.int32) 
 			start_id = 4 * (layer_id - 2) 
 			prev_layers = []
@@ -231,7 +231,7 @@ class MicroController(Controller):
 		last_c = loop_outputs[-7]
 		last_h = loop_outputs[-6]
 
-		return arc_seq, entropy, log_prob, last_c, last_h,inputs_seq
+		return arc_seq, entropy, log_prob, last_c, last_h
 
 	
 	def build_trainer(self, child_model):
