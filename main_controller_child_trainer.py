@@ -285,7 +285,7 @@ def train():
 		current_child_step = 0
 		current_prediction_phase = "training_predictor"
 		
-		print("global_step here: ",child_model.global_step.dtype)
+		print("global_step here: ",child_ops["global_step"].dtype)
 		
 		with tf.train.SingularMonitoredSession(config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
