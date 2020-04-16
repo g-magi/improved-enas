@@ -508,7 +508,7 @@ def train():
 						print("valid accuracy: ",eval_correct,"/",eval_total_samples)
 					ops["eval_func"](sess, "test")
 					print("test accuracy: ",eval_correct,"/",eval_total_samples)
-					saved_final_accs.append(int(eval_correct/ops["eval_every"]))
+					saved_final_accs.append(int(eval_correct*FLAGS.batch_size/eval_total_samples))
 				if epoch >= FLAGS.num_epochs:
 					break
 
