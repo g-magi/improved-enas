@@ -498,12 +498,14 @@ def train():
 									start = end
 							print("val_acc = {:<6.4f}".format(acc))
 							print("-" * 80)
-
+					eval_correct = 0
+					eval_total_samples = 0
 					print("\nEpoch {}: Eval".format(epoch))
 					if FLAGS.child_fixed_arc is None:
-						ops["eval_func"](sess, "valid")
+						eval_correct, eval_total_samples = ops["eval_func"](sess, "valid")
+						print("valid accuracy: ",eval_correct,"/",eval_total_samples)
 					ops["eval_func"](sess, "test")
-
+					print("test accuracy: ",eval_correct,"/",eval_total_samples)
 				if epoch >= FLAGS.num_epochs:
 					break
 
