@@ -261,8 +261,8 @@ def train():
 		## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
 		#
 		# momentaneamente commentato
-		temp_acc_sequence = np.zeros(shape=(int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)))
-		
+		#temp_acc_sequence = np.zeros(shape=(int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)))
+		temp_acc_sequence = np.zeros(ops["eval_every"])
 		epoch = 0;
 		
 		## creo il modello di predizione, inizialmente sarà vuoto
@@ -306,9 +306,9 @@ def train():
 					loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 					
 					#TODO: registrare i dati di addestramento del figlio per darli in pasto al predittore
-					if current_child_step < int(ops["eval_every"]*FLAGS.reduced_training_steps_perc):
+					#if current_child_step < int(ops["eval_every"]*FLAGS.reduced_training_steps_perc):
 						# salvo i dati soltanto per una frazione pari a [FLAGS.reduced_training_steps_perc] (di base 0.25) # del tempo di addestramento
-						temp_acc_sequence[current_child_step] = tr_acc
+					temp_acc_sequence[current_child_step] = tr_acc
 					
 					##ENDTODO
 					#TODO: estrarre una predizione dal predittore e controllare quanto è accurata
@@ -334,7 +334,8 @@ def train():
 						temp_acc_sequence[current_child_step] = tr_acc
 					else:
 						print("advance global step goes here")
-						#sess.run(child_ops["advance_global_step"])
+						temp_acc_sequence[current_child_step] = -1
+						sess.run(child_ops["advance_global_step"])
 						
 				
 				
@@ -368,15 +369,21 @@ def train():
 				
 				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
 					
+					short_acc_sequence = temp_acc_sequence[:int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)]
+					print("<>"*40)
+					print("accuracy sequence for current controller epoch is:\n",short_acc_sequence)
+					print("<>"*40)
+					print("\n")
 					if current_prediction_phase is "training_predictor":
 						#TODO creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
 						if saved_acc_sequences:
 							predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
-							prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
+							
+							prediction = ep.get_prediction(predictor = predictor, acc_seq = short_acc_sequence)
 							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%") 
 						
 						# salvo la sequenza di addestramento del figlio corrente
-						saved_acc_sequences.append(temp_acc_sequence)
+						saved_acc_sequences.append(short_acc_sequence)
 						# salvo l'accuratezza finale del figlio corrente
 						saved_final_accs.append(tr_acc)
 						
@@ -388,7 +395,7 @@ def train():
 						#TODO
 						# 
 						predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
-						prediction = ep.get_prediction(predictor = predictor, acc_seq = temp_acc_sequence)
+						prediction = ep.get_prediction(predictor = predictor, acc_seq = short_acc_sequence)
 						print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%")
 						
 						# passare come reward
