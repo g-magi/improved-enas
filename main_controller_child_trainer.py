@@ -375,7 +375,7 @@ def train():
 					print("<>"*40)
 					print("\n")
 					if current_prediction_phase is "training_predictor":
-						#TODO creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
+						#creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
 						if saved_acc_sequences:
 							predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 							
@@ -383,7 +383,12 @@ def train():
 							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%") 
 						
 						# salvo la sequenza di addestramento del figlio corrente
-						saved_acc_sequences.append(short_acc_sequence)
+						saved_acc_sequences.append(temp_acc_sequence)
+						file_loc = FLAGS.output_dir+'/acc_seqs.txt'
+						file_object = open(file_loc, 'a+')
+						string_to_write = str(temp_acc_sequence)+"\n"
+						file_object.write(string_to_write)
+						file_object.close()
 						# salvo l'accuratezza finale del figlio corrente
 						saved_final_accs.append(tr_acc)
 						
