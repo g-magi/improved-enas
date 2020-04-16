@@ -383,7 +383,7 @@ def train():
 							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%") 
 						
 						# salvo la sequenza di addestramento del figlio corrente
-						saved_acc_sequences.append(temp_acc_sequence)
+						saved_acc_sequences.append(short_acc_sequence)
 						file_loc = FLAGS.output_dir+'/acc_seqs.txt'
 						file_object = open(file_loc, 'a+')
 						string_to_write = str(temp_acc_sequence)+"\n"
