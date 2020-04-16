@@ -390,7 +390,9 @@ def train():
 						file_object.write(string_to_write)
 						file_object.close()
 						# salvo l'accuratezza finale del figlio corrente
-						saved_final_accs.append(tr_acc)
+						# UPDATE: sposto questo alla valutazione dell'epoca, così da salvare quello invece dell'ultimo valore
+						# 		  in teoria è più significativo
+						##saved_final_accs.append(tr_acc)
 						
 						#
 						
@@ -506,6 +508,7 @@ def train():
 						print("valid accuracy: ",eval_correct,"/",eval_total_samples)
 					ops["eval_func"](sess, "test")
 					print("test accuracy: ",eval_correct,"/",eval_total_samples)
+					saved_final_accs.append(int(eval_correct/ops["eval_every"]))
 				if epoch >= FLAGS.num_epochs:
 					break
 
