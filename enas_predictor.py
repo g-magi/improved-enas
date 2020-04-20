@@ -45,8 +45,8 @@ def get_untrained_prediction(acc_seq, step_to_be_predicted, predictor_type="line
 			])
 		#print("predicting accuracy, this is step_to_be_predicted:\n",step_to_be_predicted)
 		prediction = predictor.predict(step_to_be_predicted)
-		
+		prediction = prediction.item()
 	elif predictor_type is "average":
 		prediction = np.average(acc_seq)
 		
-	return prediction.item()
+	return prediction
