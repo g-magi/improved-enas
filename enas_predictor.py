@@ -34,7 +34,7 @@ def get_untrained_prediction(acc_seq, step_to_be_predicted, predictor_type="line
 
 	prediction = 0.0
 	if predictor_type is "linear":
-		x = np.arange(len(acc_seq)).reshape(-1,1)
+		x = np.arange(len(acc_seq)).reshape(-1,len(acc_seq))
 		y = np.reshape(acc_seq, (-1,len(acc_seq)))
 		predictor = linear_model.LinearRegression()
 		predictor.fit(x,y)
