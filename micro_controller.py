@@ -239,7 +239,7 @@ class MicroController(Controller):
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
 						  tf.to_float(child_model.batch_size))
 		if self.valid_acc is not None:
-			self.reward = tf.Variable(self.valid_acc, name="reward", dtype=tf.float32, trainable=False)
+			self.reward = tf.Variable(tf.identity(self.valid_acc), name="reward", dtype=tf.float32, trainable=False)
 		
 		# op per settare reward
 		placeholder_reward = tf.placeholder(tf.float32,name="placeholder_reward")
@@ -256,12 +256,12 @@ class MicroController(Controller):
 		self.sample_log_prob = tf.reduce_sum(self.sample_log_prob) 
 		self.baseline = tf.Variable(0.0, dtype=tf.float32, trainable=False)
 		baseline_update = tf.assign_sub(
-		  self.baseline, (1 - self.bl_dec) * (self.baseline - self.reward)) 
+		  self.baseline, (1 - self.bl_dec) * (self.baseline - self.reward.read_value())) 
 
 		with tf.control_dependencies([baseline_update]):
-			self.reward = tf.assign(tf.identity(self.reward))
+			self.reward = tf.assign(tf.identity(self.reward.read_value()))
 
-		self.loss = self.sample_log_prob * (self.reward - self.baseline)
+		self.loss = self.sample_log_prob * (self.reward.read_value() - self.baseline)
 		self.train_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="train_step")
 
 		tf_variables = [var for var in tf.trainable_variables() if var.name.startswith(self.name)]
