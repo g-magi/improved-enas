@@ -466,6 +466,7 @@ def train():
 									controller_ops["skip_rate"],
 									controller_ops["train_op"],
 								]
+								placeholder_reward = tf.placeholder(tf.float32)
 								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={placeholder_reward: prediction})
 								controller_step = sess.run(controller_ops["train_step"])
 								if ct_step % FLAGS.log_every == 0:
@@ -512,7 +513,7 @@ def train():
 					if FLAGS.child_fixed_arc is None:
 						eval_correct, eval_total_samples = ops["eval_func"](sess, "valid")
 						print("valid accuracy: ",eval_correct,"/",eval_total_samples)
-					ops["eval_func"](sess, "test")
+					eval_correct, eval_total_samples = ops["eval_func"](sess, "test")
 					print("test accuracy: ",eval_correct,"/",eval_total_samples)
 					saved_final_accs.append(int(eval_correct*FLAGS.batch_size/eval_total_samples))
 				if epoch >= FLAGS.num_epochs:
