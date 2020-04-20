@@ -239,7 +239,7 @@ class MicroController(Controller):
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
 						  tf.to_float(child_model.batch_size))
 		if self.valid_acc is not None:
-			self.reward = tf.Variable(self.valid_acc, name="reward", dtype=tf.float32)
+			self.reward = tf.Variable(self.valid_acc, name="reward", dtype=tf.float32, trainable=False)
 		
 		# op per settare reward
 		placeholder_reward = tf.placeholder(tf.float32,name="placeholder_reward")
