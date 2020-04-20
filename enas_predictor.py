@@ -38,7 +38,7 @@ def get_untrained_prediction(acc_seq, step_to_be_predicted, predictor_type="line
 		y = np.reshape(acc_seq, (-1,len(acc_seq)))
 		predictor = linear_model.LinearRegression()
 		predictor.fit(x,y)
-		prediction = predictor.predict(np.array([step_to_be_predicted]))
+		prediction = predictor.predict(np.array([[step_to_be_predicted]]))
 		
 	elif predictor_type is "average":
 		prediction = np.average(acc_seq)
