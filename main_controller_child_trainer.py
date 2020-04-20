@@ -298,6 +298,10 @@ def train():
 			while True:
 				print("\rCurrent child step: ",current_child_step, end="")
 				# se siamo nella fase di addestramento del predittore
+				if epoch==FLAGS.forced_prediction_phase_epoch and current_prediction_phase is "training_predictor":
+						current_prediction_phase = "predicting_accuracy"
+						print("\nPredictor engaged, only training for ",int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)," steps")
+				
 				if current_prediction_phase is "training_predictor":
 					# esegui l'addestramento del figlio normalmente
 					run_ops = [
@@ -318,9 +322,7 @@ def train():
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					#
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
-					if epoch==FLAGS.forced_prediction_phase_epoch:
-						current_prediction_phase = "predicting_accuracy"
-						print("\nPredictor engaged, only training for ",int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)," steps")
+					
 					
 					##ENDTODO
 				# se invece il predittore è addestrato
