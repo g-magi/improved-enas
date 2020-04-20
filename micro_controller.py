@@ -238,18 +238,18 @@ class MicroController(Controller):
 		child_model.build_valid_rl()
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
 						  tf.to_float(child_model.batch_size))
-		self.reward = self.valid_acc
+		self.reward = Variable(self.valid_acc, name="reward")
 		
 		# op per settare reward
 		placeholder_reward = tf.placeholder(tf.float32,name="placeholder_reward")
-		self.var_reward = tf.Variable(0.0)
-		self.assign_reward = tf.assign(self.var_reward,placeholder_reward)
-		self.reward = self.var_reward
-		self.reward = tf.stop_gradient(self.reward)
+		#self.var_reward = tf.Variable(0.0)
+		self.assign_reward = tf.assign(self.reward,placeholder_reward)
+		#self.reward = self.var_reward
+		#self.reward = tf.stop_gradient(self.reward)
 		###
 		
 		if self.entropy_weight is not None:
-			self.reward += self.entropy_weight * self.sample_entropy
+			self.reward = tf.assign_add(self.reward, self.entropy_weight * self.sample_entropy)
 
 		self.sample_log_prob = tf.reduce_sum(self.sample_log_prob) 
 		self.baseline = tf.Variable(0.0, dtype=tf.float32, trainable=False)
@@ -257,7 +257,7 @@ class MicroController(Controller):
 		  self.baseline, (1 - self.bl_dec) * (self.baseline - self.reward)) 
 
 		with tf.control_dependencies([baseline_update]):
-			self.reward = tf.identity(self.reward)
+			self.reward = tf.assign(tf.identity(self.reward))
 
 		self.loss = self.sample_log_prob * (self.reward - self.baseline)
 		self.train_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="train_step")
