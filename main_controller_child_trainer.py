@@ -293,6 +293,7 @@ def train():
 		
 		with tf.train.SingularMonitoredSession(config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
+			print("\n")
 			while True:
 				print("\rCurrent child step: ",current_child_step, end="")
 				# se siamo nella fase di addestramento del predittore
@@ -372,6 +373,7 @@ def train():
 					
 					prediction = 0.0
 					short_acc_sequence = temp_acc_sequence[:int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)]
+					print("\n")
 					print("<>"*40)
 					print("accuracy sequence for current controller epoch is:\n",short_acc_sequence)
 					print("<>"*40)
