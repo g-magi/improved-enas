@@ -238,12 +238,14 @@ class MicroController(Controller):
 		child_model.build_valid_rl()
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
 						  tf.to_float(child_model.batch_size))
-		self.reward = tf.Variable(self.valid_acc, name="reward", dtype=tf.float32)
+		if self.valid_acc is not None:
+			self.reward = tf.Variable(self.valid_acc, name="reward", dtype=tf.float32)
 		
 		# op per settare reward
 		placeholder_reward = tf.placeholder(tf.float32,name="placeholder_reward")
 		#self.var_reward = tf.Variable(0.0)
-		self.assign_reward = tf.assign(self.reward,placeholder_reward)
+		if placeholder_reward is not None:
+			self.assign_reward = tf.assign(self.reward,placeholder_reward)
 		#self.reward = self.var_reward
 		#self.reward = tf.stop_gradient(self.reward)
 		###
