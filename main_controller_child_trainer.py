@@ -254,6 +254,7 @@ def train():
 		ops =get_ops(images, labels)
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
+		placeholder_reward = tf.placeholder(tf.float32)
 		### MY STUFF
 		## creo la lista che conterrà le sequenze di accuratezze
 		# che vengono usate durante la fase 1 dell'addestramento
@@ -466,7 +467,7 @@ def train():
 									controller_ops["skip_rate"],
 									controller_ops["train_op"],
 								]
-								placeholder_reward = tf.placeholder(tf.float32)
+								
 								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={placeholder_reward: prediction})
 								controller_step = sess.run(controller_ops["train_step"])
 								if ct_step % FLAGS.log_every == 0:
