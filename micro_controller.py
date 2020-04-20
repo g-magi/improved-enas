@@ -260,7 +260,7 @@ class MicroController(Controller):
 		  self.baseline, (1 - self.bl_dec) * (self.baseline - self.reward.read_value())) 
 
 		with tf.control_dependencies([baseline_update]):
-			self.reward = tf.identity(self.reward.read_value())
+			self.reward = tf.assign(self.reward, tf.identity(self.reward.read_value()))
 
 		self.loss = self.sample_log_prob * (self.reward.read_value() - self.baseline)
 		self.train_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="train_step")
