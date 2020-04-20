@@ -334,7 +334,7 @@ def train():
 						loss, lr, gn, tr_acc, _ = sess.run(run_ops)
 						temp_acc_sequence[current_child_step] = tr_acc
 					else:
-						print("advance global step goes here")
+						#print("advance global step goes here")
 						temp_acc_sequence[current_child_step] = -1
 						sess.run(child_ops["advance_global_step"])
 						
@@ -370,6 +370,7 @@ def train():
 				
 				if actual_step % ops["eval_every"] == 0:#eval_every ogni 430 step
 					
+					prediction = 0.0
 					short_acc_sequence = temp_acc_sequence[:int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)]
 					print("<>"*40)
 					print("accuracy sequence for current controller epoch is:\n",short_acc_sequence)
@@ -405,10 +406,6 @@ def train():
 						predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 						prediction = ep.get_prediction(predictor = predictor, acc_seq = short_acc_sequence)
 						print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%")
-						
-						# passare come reward
-						
-						
 					
 					
 					current_child_step = 0;
