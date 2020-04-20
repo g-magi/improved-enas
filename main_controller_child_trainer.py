@@ -70,7 +70,7 @@ DEFINE_integer("child_cutout_size", None, "CutOut size")
 
 # my defines
 DEFINE_float("reduced_training_steps_perc",0.25,"determines the percentage of steps used for partial training")
-DEFINE_integer("forced_prediction_phase_epoch",3, "at which epoch it switches prediction phase regardless of anything else")
+DEFINE_integer("forced_prediction_phase_epoch",2, "at which epoch it switches prediction phase regardless of anything else")
 
 #
 DEFINE_float("child_grad_bound", 5.0, "Gradient clipping")
@@ -382,7 +382,10 @@ def train():
 							predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 							
 							prediction = ep.get_prediction(predictor = predictor, acc_seq = short_acc_sequence)
-							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%") 
+							
+							untrained_pred = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"])
+							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%")
+							print("\nUntrained prediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%") 
 						
 						# salvo la sequenza di addestramento del figlio corrente
 						saved_acc_sequences.append(short_acc_sequence)
