@@ -243,7 +243,7 @@ class MicroController(Controller):
 			self.reward = tf.assign(self.reward, self.valid_acc)
 		
 		# op per settare reward
-		placeholder_reward = tf.placeholder(tf.float32,name="placeholder_reward")
+		placeholder_reward = tf.placeholder(tf.float32)
 		#self.var_reward = tf.Variable(0.0)
 		if placeholder_reward is not None:
 			self.assign_reward = tf.assign(self.reward,placeholder_reward)
