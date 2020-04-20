@@ -70,6 +70,7 @@ DEFINE_integer("child_cutout_size", None, "CutOut size")
 
 # my defines
 DEFINE_float("reduced_training_steps_perc",0.25,"determines the percentage of steps used for partial training")
+DEFINE_integer("forced_prediction_phase_epoch",3, "at which epoch it switches prediction phase regardless of anything else")
 
 #
 DEFINE_float("child_grad_bound", 5.0, "Gradient clipping")
@@ -315,7 +316,7 @@ def train():
 					#TODO: se è sufficientemente accurata per almeno N step, passare a fase "predicting_accuracy"
 					#
 					# come test, alla 1^ epoca cambio fase, così vedo la differenza nel tempo di addestramento
-					if epoch==80:
+					if epoch==FLAGS.forced_prediction_phase_epoch:
 						current_prediction_phase = "predicting_accuracy"
 						print("\nPredictor engaged, only training for ",int(ops["eval_every"]*FLAGS.reduced_training_steps_perc)," steps")
 					
