@@ -30,7 +30,7 @@ def get_prediction(acc_seq, predictor):
 	prediction = predictor.predict(acc_seq)
 	return prediction.item()
 
-def get_untrained_prediction(acc_seq, predictor_type="linear", step_to_be_predicted):
+def get_untrained_prediction(acc_seq, step_to_be_predicted, predictor_type="linear"):
 
 	prediction = 0.0
 	if predictor_type is "linear":
