@@ -392,7 +392,7 @@ def train():
 						
 						untrained_pred = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"])
 						print("\nUntrained prediction (linear) - epoch ",epoch," -->> ",untrained_pred,"/",FLAGS.batch_size," => ",float(untrained_pred/FLAGS.batch_size)*100,"%") 
-						untrained_pred_avg = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"])
+						untrained_pred_avg = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"], predictor_type="average")
 						print("\nUntrained prediction (average) - epoch ",epoch," -->> ",untrained_pred_avg,"/",FLAGS.batch_size," => ",float(untrained_pred_avg/FLAGS.batch_size)*100,"%") 
 						# salvo la sequenza di addestramento del figlio corrente
 						saved_acc_sequences.append(short_acc_sequence)
