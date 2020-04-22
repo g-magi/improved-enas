@@ -22,6 +22,9 @@ def get_predictor(acc_seqs,final_accs,predictor_type="linear"):
 		predictor = LogisticRegression(solver='liblinear', random_state=0)
 	# type selection
 	
+	print("acc_seqs shape: \n", acc_seqs.shape)
+	
+	print("final_accs shape: \n", final_accs.shape)
 	predictor.fit(acc_seqs, final_accs)
 	return predictor
 	
