@@ -1,37 +1,41 @@
-import os
-import shutil
-import sys
-import time
-
 import warnings
-warnings.filterwarnings('ignore')
+with warnings.catch_warnings():
+	# filter sklearn\externals\joblib\parallel.py:268:
+	# DeprecationWarning: check_pickle is deprecated
+	warnings.simplefilter("ignore", category=DeprecationWarning)
+	import hdbscan
+	import os
+	import shutil
+	import sys
+	import time
 
-#mio predittore
 
-import enas_predictor as ep
+	#mio predittore
 
-##
+	import enas_predictor as ep
 
-import tensorflow.compat.v1 as tf
-import tensorflow as tf2
-import numpy as np
-import keras
-import pandas as pd
+	##
 
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
+	import tensorflow.compat.v1 as tf
+	import tensorflow as tf2
+	import numpy as np
+	import keras
+	import pandas as pd
 
-from utils import Logger
-from utils import DEFINE_boolean
-from utils import DEFINE_float
-from utils import DEFINE_integer
-from utils import DEFINE_string
-from utils import print_user_flags
+	from sklearn.preprocessing import MinMaxScaler
+	from sklearn.metrics import mean_squared_error
 
-import data_utils
+	from utils import Logger
+	from utils import DEFINE_boolean
+	from utils import DEFINE_float
+	from utils import DEFINE_integer
+	from utils import DEFINE_string
+	from utils import print_user_flags
 
-from micro_controller import MicroController
-from micro_child import MicroChild
+	import data_utils
+
+	from micro_controller import MicroController
+	from micro_child import MicroChild
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -535,6 +539,7 @@ def train():
 
 def main(_):
 	print("-" * 80)
+	warnings.simplefilter("ignore")
 	if not os.path.isdir(FLAGS.output_dir):
 		print("Path {} does not exist. Creating.".format(FLAGS.output_dir))
 		os.makedirs(FLAGS.output_dir)
