@@ -258,6 +258,7 @@ def train():
 		### MY STUFF
 		## creo la lista che conterrà le sequenze di accuratezze
 		# che vengono usate durante la fase 1 dell'addestramento
+		saved_predictions = []
 		saved_acc_sequences =[]
 		saved_final_accs =[]
 		## numpy array che conterrà una serie di accuratezze e che verrà agggiunto alla lista precedente
@@ -396,6 +397,7 @@ def train():
 						print("\nUntrained prediction (linear) - epoch ",epoch," -->> ",untrained_pred,"/",FLAGS.batch_size," => ",float(untrained_pred/FLAGS.batch_size)*100,"%") 
 						untrained_pred_avg = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"], predictor_type="average")
 						print("\nUntrained prediction (average) - epoch ",epoch," -->> ",untrained_pred_avg,"/",FLAGS.batch_size," => ",float(untrained_pred_avg/FLAGS.batch_size)*100,"%") 
+						saved_predictions.append(untrained_pred_avg)
 						# salvo la sequenza di addestramento del figlio corrente
 						saved_acc_sequences.append(short_acc_sequence)
 						file_loc = FLAGS.output_dir+'/acc_seqs.txt'
@@ -424,6 +426,7 @@ def train():
 						print("\nUntrained prediction - epoch ",epoch," -->> ",untrained_pred,"/",FLAGS.batch_size," => ",float(untrained_pred/FLAGS.batch_size)*100,"%") 
 						untrained_pred_avg = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"], predictor_type="average")
 						print("\nUntrained prediction (average) - epoch ",epoch," -->> ",untrained_pred_avg,"/",FLAGS.batch_size," => ",float(untrained_pred_avg/FLAGS.batch_size)*100,"%") 
+						saved_predictions.append(untrained_pred_avg)
 					
 					
 					current_child_step = 0;
