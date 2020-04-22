@@ -3,7 +3,7 @@ with warnings.catch_warnings():
 	# filter sklearn\externals\joblib\parallel.py:268:
 	# DeprecationWarning: check_pickle is deprecated
 	warnings.simplefilter("ignore", category=DeprecationWarning)
-	import hdbscan
+	
 	import os
 	import shutil
 	import sys
