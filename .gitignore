@@ -1,3 +1,6 @@
 
 prediction-enas.zip
 data.zip
+*.png
+*.pyc
+output/stdout
