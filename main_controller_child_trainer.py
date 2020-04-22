@@ -478,14 +478,17 @@ def train():
 									controller_ops["entropy"],
 									controller_ops["lr"],
 									controller_ops["grad_norm"],
-									controller_ops["assign_reward"],
+									#controller_ops["assign_reward"],
+									controller_ops["valid_acc"],
 									controller_ops["baseline"],
 									controller_ops["skip_rate"],
 									controller_ops["train_op"],
 								]
 								
 								scaled_prediction = untrained_pred_avg/FLAGS.batch_size
-								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={"ph_reward:0": scaled_prediction})
+								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops
+									#,feed_dict={"ph_reward:0": scaled_prediction}
+										)
 								controller_step = sess.run(controller_ops["train_step"])
 								if ct_step % FLAGS.log_every == 0:
 									curr_time = time.time()
