@@ -391,7 +391,9 @@ def train():
 							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%")
 						
 						untrained_pred = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"])
-						print("\nUntrained prediction - epoch ",epoch," -->> ",untrained_pred,"/",FLAGS.batch_size," => ",float(untrained_pred/FLAGS.batch_size)*100,"%") 
+						print("\nUntrained prediction (linear) - epoch ",epoch," -->> ",untrained_pred,"/",FLAGS.batch_size," => ",float(untrained_pred/FLAGS.batch_size)*100,"%") 
+						untrained_pred_avg = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"])
+						print("\nUntrained prediction (average) - epoch ",epoch," -->> ",untrained_pred_avg,"/",FLAGS.batch_size," => ",float(untrained_pred_avg/FLAGS.batch_size)*100,"%") 
 						# salvo la sequenza di addestramento del figlio corrente
 						saved_acc_sequences.append(short_acc_sequence)
 						file_loc = FLAGS.output_dir+'/acc_seqs.txt'
