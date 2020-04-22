@@ -1,6 +1,8 @@
 import pygraphviz as pgv
 import numpy as np
 import sys
+import warnings
+warnings.filterwarnings('ignore')
 
 def construct_block(graph, num_block, ops):
 

@@ -3,6 +3,8 @@ import sys
 
 import numpy as np
 import tensorflow.compat.v1 as tf
+import warnings
+warnings.filterwarnings('ignore')
 
 from utils import count_model_params
 from utils import get_train_ops

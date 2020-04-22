@@ -5,6 +5,8 @@ import time
 import numpy as np
 import tensorflow.compat.v1 as tf
 import tensorflow as tf2
+import warnings
+warnings.filterwarnings('ignore')
 
 from controller import Controller
 from utils import get_train_ops

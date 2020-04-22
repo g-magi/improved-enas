@@ -2,6 +2,8 @@ import os
 import shutil
 import sys
 import time
+import warnings
+warnings.filterwarnings('ignore')
 
 import tensorflow as tf
 import numpy as np

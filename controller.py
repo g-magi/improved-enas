@@ -1,4 +1,6 @@
 import tensorflow as tf
+import warnings
+warnings.filterwarnings('ignore')
 
 class Controller(object):
 	def __init__(self, *args, **kwargs):

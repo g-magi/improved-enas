@@ -6,6 +6,8 @@ import numpy as np
 from glob import *
 import utils
 from utils import plot_data_label
+import warnings
+warnings.filterwarnings('ignore')
 
 random.seed(random.randint(0, 2 ** 31 - 1))
 

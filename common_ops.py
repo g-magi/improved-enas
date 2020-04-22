@@ -1,6 +1,8 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 from tensorflow.python.training import moving_averages
+import warnings
+warnings.filterwarnings('ignore')
 
 def lstm(x, prev_c, prev_h, w):
 	ifog = tf.matmul(tf.concat([x, prev_h], axis=1), w)

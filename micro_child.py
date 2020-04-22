@@ -3,6 +3,8 @@ import sys
 
 import numpy as np
 import tensorflow.compat.v1 as tf
+import warnings
+warnings.filterwarnings('ignore')
 #import tensorflow as tf2
 
 from models import Model
@@ -281,7 +283,7 @@ class MicroChild(Model):
 								layer_id, layers, self.reduce_arc, out_filters, 2, is_training,
 								normal_or_reduction_cell="reduction")
 
-					print("Layer {0:>2d}: {1}".format(layer_id, x))
+					tf.print("Layer {0:>2d}: {1}".format(layer_id, x))
 					layers = [layers[-1], x]
 
 				# auxiliary heads
