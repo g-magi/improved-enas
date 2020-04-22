@@ -383,13 +383,15 @@ def train():
 					print("\n")
 					if current_prediction_phase is "training_predictor":
 						#creare il predittore con i dati salvati delle epoche precedenti se ce ne sono già
+						
+						"""
 						if saved_acc_sequences:
 							predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 							
 							prediction = ep.get_prediction(predictor = predictor, acc_seq = short_acc_sequence)
 							
 							print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%")
-						
+						"""
 						untrained_pred = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"])
 						print("\nUntrained prediction (linear) - epoch ",epoch," -->> ",untrained_pred,"/",FLAGS.batch_size," => ",float(untrained_pred/FLAGS.batch_size)*100,"%") 
 						untrained_pred_avg = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"], predictor_type="average")
@@ -413,12 +415,15 @@ def train():
 					elif current_prediction_phase is "predicting_accuracy":
 						#TODO
 						# 
+						"""
 						predictor = ep.get_predictor(acc_seqs = saved_acc_sequences, final_accs = saved_final_accs)
 						prediction = ep.get_prediction(predictor = predictor, acc_seq = short_acc_sequence)
 						print("\nPrediction - epoch ",epoch," -->> ",prediction,"/",FLAGS.batch_size," => ",float(prediction/FLAGS.batch_size)*100,"%")
-						
+						"""
 						untrained_pred = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"])
 						print("\nUntrained prediction - epoch ",epoch," -->> ",untrained_pred,"/",FLAGS.batch_size," => ",float(untrained_pred/FLAGS.batch_size)*100,"%") 
+						untrained_pred_avg = ep.get_untrained_prediction(short_acc_sequence, step_to_be_predicted = ops["eval_every"], predictor_type="average")
+						print("\nUntrained prediction (average) - epoch ",epoch," -->> ",untrained_pred_avg,"/",FLAGS.batch_size," => ",float(untrained_pred_avg/FLAGS.batch_size)*100,"%") 
 					
 					
 					current_child_step = 0;
@@ -472,7 +477,7 @@ def train():
 									controller_ops["train_op"],
 								]
 								
-								scaled_prediction = untrained_pred/FLAGS.batch_size
+								scaled_prediction = untrained_pred_avg/FLAGS.batch_size
 								loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops, feed_dict={"ph_reward:0": scaled_prediction})
 								controller_step = sess.run(controller_ops["train_step"])
 								if ct_step % FLAGS.log_every == 0:
