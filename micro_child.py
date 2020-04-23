@@ -283,7 +283,7 @@ class MicroChild(Model):
 								layer_id, layers, self.reduce_arc, out_filters, 2, is_training,
 								normal_or_reduction_cell="reduction")
 
-					tf.print("Layer {0:>2d}: {1}".format(layer_id, x))
+					print("Layer {0:>2d}: {1}".format(layer_id, x))
 					layers = [layers[-1], x]
 
 				# auxiliary heads
