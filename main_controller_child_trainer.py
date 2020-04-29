@@ -180,8 +180,8 @@ def get_ops(images, labels):
 			"entropy": controller_model.sample_entropy,
 			"sample_arc": controller_model.sample_arc,
 			"skip_rate": controller_model.skip_rate,
-			"normal_arc": controller.current_normal_arc,
-			"reduce_arc": controller.current_reduce_arc,
+			"normal_arc": controller_model.current_normal_arc,
+			"reduce_arc": controller_model.current_reduce_arc,
 		}
 
 	else:
