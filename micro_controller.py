@@ -73,36 +73,36 @@ class MicroController(Controller):
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 
-		def _create_params(self):
-			initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
-			with tf.variable_scope(self.name, initializer=initializer): 
-				with tf.variable_scope("lstm"):
-					self.w_lstm = []
-					for layer_id in range(self.lstm_num_layers): 
-						with tf.variable_scope("layer_{}".format(layer_id)):
-							w = tf.get_variable("w", [2 * self.lstm_size, 4 * self.lstm_size]) 
-							self.w_lstm.append(w) 
+	def _create_params(self):
+		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
+		with tf.variable_scope(self.name, initializer=initializer): 
+			with tf.variable_scope("lstm"):
+				self.w_lstm = []
+				for layer_id in range(self.lstm_num_layers): 
+					with tf.variable_scope("layer_{}".format(layer_id)):
+						w = tf.get_variable("w", [2 * self.lstm_size, 4 * self.lstm_size]) 
+						self.w_lstm.append(w) 
 
-				self.g_emb = tf.get_variable("g_emb", [1, self.lstm_size]) 
-				with tf.variable_scope("emb"):
-					self.w_emb = tf.get_variable("w", [self.num_branches, self.lstm_size]) 
-				with tf.variable_scope("softmax"):
-					self.w_soft = tf.get_variable("w", [self.lstm_size, self.num_branches]) 
-					b_init = np.array([10.0, 10.0] + [0] * (self.num_branches - 2),
-								  dtype=np.float32) 
-					self.b_soft = tf.get_variable(
-					  "b", [1, self.num_branches],
-					  initializer=tf.constant_initializer(b_init)) 
+			self.g_emb = tf.get_variable("g_emb", [1, self.lstm_size]) 
+			with tf.variable_scope("emb"):
+				self.w_emb = tf.get_variable("w", [self.num_branches, self.lstm_size]) 
+			with tf.variable_scope("softmax"):
+				self.w_soft = tf.get_variable("w", [self.lstm_size, self.num_branches]) 
+				b_init = np.array([10.0, 10.0] + [0] * (self.num_branches - 2),
+							  dtype=np.float32) 
+				self.b_soft = tf.get_variable(
+				  "b", [1, self.num_branches],
+				  initializer=tf.constant_initializer(b_init)) 
 
-					b_soft_no_learn = np.array(
-					[0.25, 0.25] + [-0.25] * (self.num_branches - 2), dtype=np.float32)
-					b_soft_no_learn = np.reshape(b_soft_no_learn, [1, self.num_branches]) 
-					self.b_soft_no_learn = tf.constant(b_soft_no_learn, dtype=tf.float32) 
+				b_soft_no_learn = np.array(
+				[0.25, 0.25] + [-0.25] * (self.num_branches - 2), dtype=np.float32)
+				b_soft_no_learn = np.reshape(b_soft_no_learn, [1, self.num_branches]) 
+				self.b_soft_no_learn = tf.constant(b_soft_no_learn, dtype=tf.float32) 
 
-				with tf.variable_scope("attention"):
-					self.w_attn_1 = tf.get_variable("w_1", [self.lstm_size, self.lstm_size]) 
-					self.w_attn_2 = tf.get_variable("w_2", [self.lstm_size, self.lstm_size]) 
-					self.v_attn = tf.get_variable("v", [self.lstm_size, 1]) 
+			with tf.variable_scope("attention"):
+				self.w_attn_1 = tf.get_variable("w_1", [self.lstm_size, self.lstm_size]) 
+				self.w_attn_2 = tf.get_variable("w_2", [self.lstm_size, self.lstm_size]) 
+				self.v_attn = tf.get_variable("v", [self.lstm_size, 1]) 
 
 	def _build_sampler(self, prev_c=None, prev_h=None, use_bias=False):
 		"""Build the sampler ops and the log_prob ops."""
