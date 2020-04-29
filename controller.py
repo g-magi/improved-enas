@@ -1,4 +1,4 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 class Controller(object):
 	def __init__(self, *args, **kwargs):

@@ -2,7 +2,7 @@ import os
 import sys
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from utils import count_model_params
 from utils import get_train_ops

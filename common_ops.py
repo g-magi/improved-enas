@@ -1,5 +1,5 @@
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from tensorflow.python.training import moving_averages
 
 def lstm(x, prev_c, prev_h, w):
