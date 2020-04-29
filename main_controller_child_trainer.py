@@ -256,8 +256,10 @@ def train():
 					child_ops["lr"],
 					child_ops["grad_norm"],
 					child_ops["train_acc"],
-					child_ops["train_op"]]
-				loss, lr, gn, tr_acc, _ = sess.run(run_ops)
+					child_ops["train_op"],
+					child_ops["normal_arc"],
+					child_ops["reduce_arc"]]
+				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
 				global_step = sess.run(child_ops["global_step"])
 
 				if FLAGS.child_sync_replicas:
@@ -278,6 +280,9 @@ def train():
 					log_string += "   mins = {:<10.2f}".format(
 						float(curr_time - start_time) / 60)
 					print(log_string)
+					print("\tNormal architecture: \n\t",normal_arc)
+					print("#"*80)
+					print("\tReduce architecture: \n\t",reduce_arc)
 
 				if actual_step % ops["eval_every"] == 0:
 					if (FLAGS.controller_training and
