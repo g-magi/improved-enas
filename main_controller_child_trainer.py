@@ -180,6 +180,8 @@ def get_ops(images, labels):
 			"entropy": controller_model.sample_entropy,
 			"sample_arc": controller_model.sample_arc,
 			"skip_rate": controller_model.skip_rate,
+			"normal_arc": controller.current_normal_arc,
+			"reduce_arc": controller.current_reduce_arc,
 		}
 
 	else:
@@ -197,6 +199,8 @@ def get_ops(images, labels):
 		"train_acc": child_model.train_acc,
 		"optimizer": child_model.optimizer,
 		"num_train_batches": child_model.num_train_batches,
+		"normal_arc": child_model.current_normal_arc,
+		"reduce_arc": child_model.current_reduce_arc,
 	}
 
 	ops = {

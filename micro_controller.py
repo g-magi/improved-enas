@@ -224,6 +224,9 @@ class MicroController(Controller):
 		child_model.build_valid_rl()
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
 						  tf.to_float(child_model.batch_size))
+		self.current_normal_arc = child_model.current_normal_arc
+		self.current_reduce_arc = child_model.current_reduce_arc
+		
 		self.reward = self.valid_acc 
 
 		if self.entropy_weight is not None:

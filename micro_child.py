@@ -712,7 +712,9 @@ class MicroChild(Model):
 			logits=logits, labels=self.y_train)  
 
 		self.loss = tf.reduce_mean(log_probs)  
-
+		self.current_normal_arc = self.normal_arc
+		self.current_reduce_arc = self.reduce_arc
+		
 		if self.use_aux_heads:
 			log_probs = tf.nn.sparse_softmax_cross_entropy_with_logits(
 				logits=self.aux_logits, labels=self.y_train)
