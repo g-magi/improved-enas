@@ -281,7 +281,6 @@ def train():
 						float(curr_time - start_time) / 60)
 					print(log_string)
 					print("\tNormal architecture: \n\t",normal_arc)
-					print("#"*80)
 					print("\tReduce architecture: \n\t",reduce_arc)
 
 				if actual_step % ops["eval_every"] == 0:
