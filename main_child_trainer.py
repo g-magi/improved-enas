@@ -3,7 +3,7 @@ import shutil
 import sys
 import time
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 from utils import Logger
@@ -338,21 +338,21 @@ def train():
                     break
 
 def main(_):
-  print("-" * 80)
-  if not os.path.isdir(FLAGS.output_dir):
-    print("Path {} does not exist. Creating.".format(FLAGS.output_dir))
-    os.makedirs(FLAGS.output_dir)
-  elif FLAGS.reset_output_dir:
-    print("Path {} exists. Remove and remake.".format(FLAGS.output_dir))
-    shutil.rmtree(FLAGS.output_dir)
-    os.makedirs(FLAGS.output_dir)
+	print("-" * 80)
+	if not os.path.isdir(FLAGS.output_dir):
+		print("Path {} does not exist. Creating.".format(FLAGS.output_dir))
+		os.makedirs(FLAGS.output_dir)
+	elif FLAGS.reset_output_dir:
+		print("Path {} exists. Remove and remake.".format(FLAGS.output_dir))
+		shutil.rmtree(FLAGS.output_dir)
+		os.makedirs(FLAGS.output_dir)
 
-  print("-" * 80)
-  log_file = os.path.join(FLAGS.output_dir, "stdout")
-  print("Logging to {}".format(log_file))
-  sys.stdout = Logger(log_file)
-  print_user_flags()
-  train()
+	print("-" * 80)
+	log_file = os.path.join(FLAGS.output_dir, "stdout")
+	print("Logging to {}".format(log_file))
+	sys.stdout = Logger(log_file)
+	print_user_flags()
+	train()
 
 if __name__ == "__main__":
     tf.app.run()
