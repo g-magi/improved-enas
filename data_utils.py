@@ -42,6 +42,7 @@ def _read_data(data_path, channel, img_size, n_aug_img):
 		flags = 1
 
 	length_data = len(images)
+	bar_size=20
 	print("\n")
 	for j in range(length_data):
 		img = cv2.imread(images[j],flags = flags)
