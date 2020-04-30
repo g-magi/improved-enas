@@ -216,6 +216,67 @@ def get_ops(images, labels):
 
 
 def train():
+	
+	def _split_arc_seq(arc_seq):
+		arc_seq_length = len(arc_seq)
+		arc_nodes_amt = FLAGS.child_num_cells
+		assert arc_seq_length%arc_nodes_amt == 0
+		arc_nodes = np.split(arc_seq, arc_nodes_amt)
+		return arc_nodes
+	
+	normal_train_dict = {}
+	reduce_train_dict = {}
+	
+	def _save_trained_op(key, arc_type)
+		if arc_type is "normal":
+			if key in normal_train_dict:
+				normal_train_dict[key]+=1
+			else
+				normal_train_dict[key]=1
+		elif arc_type is "reduce":
+			if key in reduce_train_dict:
+				reduce_train_dict[key]+=1
+			else
+				reduce_train_dict[key]=1
+	
+	def _save_trained_arc(arc_seq, arc_type):
+		arc_nodes = _split_arc_seq(arc_seq)
+		for i, node in enumerate(arc_nodes):
+			x_op = node[1]
+			y_op = node[3]
+			x_key = "node"+str(i)+"_op"+str(x_op)
+			y_key = "node"+str(i)+"_op"+str(y_op)
+			_save_trained_op(x_key, arc_type)
+			_save_trained_op(y_key, arc_type)
+		
+	def _get_trained_op(key, arc_type)
+		if arc_type is "normal":
+			if key in normal_train_dict:
+				return normal_train_dict[key]
+			else
+				return 0
+		elif arc_type is "reduce":
+			if key in reduce_train_dict:
+				return reduce_train_dict[key]
+			else
+				return 0
+			
+	def _get_trained_arc(arc_seq, arc_type):
+		arc_nodes = _split_arc_seq(arc_seq)
+		trained_arc = []
+		for i, node in enumerate(arc_nodes):
+			x_op = node[1]
+			y_op = node[3]
+			x_key = "node"+str(i)+"_op"+str(x_op)
+			y_key = "node"+str(i)+"_op"+str(y_op)
+			x_train_amt = _get_trained_op(x_key, arc_type)
+			y_train_amt = _get_trained_op(y_key, arc_type)
+			trained_arc.append(x_train_amt)
+			trained_arc.append(y_train_amt)
+		
+		return trained_arc
+		
+	
 	images, labels = data_utils.read_data(FLAGS.train_data_dir,
 										  FLAGS.val_data_dir,
 										  FLAGS.test_data_dir,
@@ -225,6 +286,7 @@ def train():
 	
 	n_data = np.shape(images["train"])[0]
 	print("Number of training data: %d" % (n_data))
+	
 
 	g = tf.Graph()
 	with g.as_default():
@@ -298,8 +360,10 @@ def train():
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
+								controller_ops["normal_arc"],
+								controller_ops["reduce_arc"],
 							]
-							loss, entropy, lr, gn, val_acc, bl, skip, _ = sess.run(run_ops)
+							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc = sess.run(run_ops)
 							controller_step = sess.run(controller_ops["train_step"])
 
 							if ct_step % FLAGS.log_every == 0:
@@ -315,6 +379,8 @@ def train():
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
 								print(log_string)
+								print("\tNormal architecture: \n\t",normal_arc)
+								print("\tReduce architecture: \n\t",reduce_arc)
 
 						print("Here are 10 architectures")
 						for _ in range(10):
