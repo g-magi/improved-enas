@@ -231,12 +231,12 @@ def train():
 		if arc_type is "normal":
 			if key in normal_train_dict:
 				normal_train_dict[key]+=1
-			else
+			else:
 				normal_train_dict[key]=1
 		elif arc_type is "reduce":
 			if key in reduce_train_dict:
 				reduce_train_dict[key]+=1
-			else
+			else:
 				reduce_train_dict[key]=1
 	
 	def _save_trained_arc(arc_seq, arc_type):
@@ -253,12 +253,12 @@ def train():
 		if arc_type is "normal":
 			if key in normal_train_dict:
 				return normal_train_dict[key]
-			else
+			else:
 				return 0
 		elif arc_type is "reduce":
 			if key in reduce_train_dict:
 				return reduce_train_dict[key]
-			else
+			else:
 				return 0
 			
 	def _get_trained_arc(arc_seq, arc_type):
