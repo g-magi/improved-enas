@@ -227,7 +227,7 @@ def train():
 	normal_train_dict = {}
 	reduce_train_dict = {}
 	
-	def _save_trained_op(key, arc_type)
+	def _save_trained_op(key, arc_type):
 		if arc_type is "normal":
 			if key in normal_train_dict:
 				normal_train_dict[key]+=1
@@ -249,7 +249,7 @@ def train():
 			_save_trained_op(x_key, arc_type)
 			_save_trained_op(y_key, arc_type)
 		
-	def _get_trained_op(key, arc_type)
+	def _get_trained_op(key, arc_type):
 		if arc_type is "normal":
 			if key in normal_train_dict:
 				return normal_train_dict[key]
