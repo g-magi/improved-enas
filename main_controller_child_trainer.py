@@ -347,9 +347,9 @@ def train():
 						float(curr_time - start_time) / 60)
 					print(log_string)
 					print("\tNormal architecture: \n\t",normal_arc)
-					print("\tTrain amount: \n\t",normal_train_amt, "Total: ", np.sum(normal_train_amt))
+					print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", len(normal_train_dict))
 					print("\tReduce architecture: \n\t",reduce_arc)
-					print("\tTrain amount: \n\t",reduce_train_amt, "Total: ", np.sum(reduce_train_amt))
+					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", len(reduce_train_dict))
 
 				if actual_step % ops["eval_every"] == 0:
 					if (FLAGS.controller_training and
