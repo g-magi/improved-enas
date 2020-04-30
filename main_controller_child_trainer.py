@@ -244,8 +244,8 @@ def train():
 		for i, node in enumerate(arc_nodes):
 			x_op = node[1]
 			y_op = node[3]
-			x_key = "node"+str(i)+"_op"+str(x_op)
-			y_key = "node"+str(i)+"_op"+str(y_op)
+			x_key = "node"+str(i)+"_x_op"+str(x_op)
+			y_key = "node"+str(i)+"_y_op"+str(y_op)
 			_save_trained_op(x_key, arc_type)
 			_save_trained_op(y_key, arc_type)
 		
@@ -267,8 +267,8 @@ def train():
 		for i, node in enumerate(arc_nodes):
 			x_op = node[1]
 			y_op = node[3]
-			x_key = "node"+str(i)+"_op"+str(x_op)
-			y_key = "node"+str(i)+"_op"+str(y_op)
+			x_key = "node"+str(i)+"_x_op"+str(x_op)
+			y_key = "node"+str(i)+"_y_op"+str(y_op)
 			x_train_amt = _get_trained_op(x_key, arc_type)
 			y_train_amt = _get_trained_op(y_key, arc_type)
 			trained_arc.append(x_train_amt)
