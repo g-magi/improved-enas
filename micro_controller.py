@@ -38,7 +38,7 @@ class MicroController(Controller):
 				   num_aggregate=None,
 				   num_replicas=None,
 				   name="controller",
-				   accuracy_scaling,
+				   accuracy_scaling=None,
 				   **kwargs):
 
 		print("-" * 80)
