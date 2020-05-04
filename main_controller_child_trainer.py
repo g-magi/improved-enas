@@ -348,8 +348,17 @@ def train():
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
 								print("Controller step #",controller_step,":")
+								accuracy_scaling.save_trained_arc(normal_arc, "normal")
+								accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+								normal_train_amt = accuracy_scaling.get_trained_arc(normal_arc, "normal")
+								reduce_train_amt = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+								normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
+								reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
+								
 								print("\tNormal architecture: \n\t",normal_arc)
+								print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
 								print("\tReduce architecture: \n\t",reduce_arc)
+								print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 								print("\tScaled acc: \n\t",scaled_acc)
 								print(log_string)
 
