@@ -93,7 +93,7 @@ DEFINE_integer("eval_every_epochs", 1, "How many epochs to eval")
 
 channel = FLAGS.channel
 
-def get_ops(images, labels):
+def get_ops(self, images, labels):
 	"""
 	Args:
 	  images: dict with keys {"train", "valid", "test"}.
@@ -182,8 +182,9 @@ def get_ops(images, labels):
 			"skip_rate": controller_model.skip_rate,
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
-			"scaled_accuracy": controller_model.scaled_accuracy
+			"scaled_accuracy": controller_model.scaled_accuracy,
 		}
+		self.controller_model = controller_model
 
 	else:
 		assert not FLAGS.controller_training, (
@@ -291,7 +292,7 @@ def train():
 
 	g = tf.Graph()
 	with g.as_default():
-		ops =get_ops(images, labels)
+		ops = self.get_ops(images, labels)
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
 
@@ -324,10 +325,10 @@ def train():
 					child_ops["reduce_arc"]]
 				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
 				global_step = sess.run(child_ops["global_step"])
-				controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
-				controller_model.accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
-				normal_train_amt = controller_model.accuracy_scaling.get_trained_arc(normal_arc, "normal")
-				reduce_train_amt = controller_model.accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+				self.controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
+				self.controller_model.accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+				normal_train_amt = self.controller_model.accuracy_scaling.get_trained_arc(normal_arc, "normal")
+				reduce_train_amt = self.controller_model.accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
 
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
