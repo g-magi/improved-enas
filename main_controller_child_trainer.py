@@ -93,7 +93,9 @@ DEFINE_integer("eval_every_epochs", 1, "How many epochs to eval")
 
 channel = FLAGS.channel
 
-def get_ops(self, images, labels):
+controller_model = None
+
+def get_ops(images, labels):
 	"""
 	Args:
 	  images: dict with keys {"train", "valid", "test"}.
@@ -183,8 +185,9 @@ def get_ops(self, images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_accuracy,
+			#"save_arc_training": controller_model.
 		}
-		self.controller_model = controller_model
+		
 
 	else:
 		assert not FLAGS.controller_training, (
@@ -217,7 +220,7 @@ def get_ops(self, images, labels):
 
 
 
-def train(self):
+def train():
 	"""
 	def _split_arc_seq(arc_seq):
 		arc_seq_length = len(arc_seq)
@@ -292,7 +295,7 @@ def train(self):
 
 	g = tf.Graph()
 	with g.as_default():
-		ops = self.get_ops(images, labels)
+		ops =get_ops(images, labels)
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
 
