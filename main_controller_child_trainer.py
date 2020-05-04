@@ -185,8 +185,7 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
-			"set_normal_dict": controller_model.set_normal_dict,
-			"set_reduce_dict": controller_model.set_reduce_dict,
+			"get_normal_train_dict": controller_model.get_normal_train_dict
 			#"save_arc_training": controller_model.
 		}
 		
@@ -224,67 +223,6 @@ def get_ops(images, labels):
 
 
 def train():
-	"""
-	def _split_arc_seq(arc_seq):
-		arc_seq_length = len(arc_seq)
-		arc_nodes_amt = FLAGS.child_num_cells
-		assert arc_seq_length%arc_nodes_amt == 0
-		arc_nodes = np.split(arc_seq, arc_nodes_amt)
-		return arc_nodes
-	
-	normal_train_dict = {}
-	reduce_train_dict = {}
-	
-	def _save_trained_op(key, arc_type):
-		if arc_type is "normal":
-			if key in normal_train_dict:
-				normal_train_dict[key]+=1
-			else:
-				normal_train_dict[key]=1
-		elif arc_type is "reduce":
-			if key in reduce_train_dict:
-				reduce_train_dict[key]+=1
-			else:
-				reduce_train_dict[key]=1
-	
-	def _save_trained_arc(arc_seq, arc_type):
-		arc_nodes = _split_arc_seq(arc_seq)
-		for i, node in enumerate(arc_nodes):
-			x_op = node[1]
-			y_op = node[3]
-			x_key = "node"+str(i)+"_x_op"+str(x_op)
-			y_key = "node"+str(i)+"_y_op"+str(y_op)
-			_save_trained_op(x_key, arc_type)
-			_save_trained_op(y_key, arc_type)
-		
-	def _get_trained_op(key, arc_type):
-		if arc_type is "normal":
-			if key in normal_train_dict:
-				return normal_train_dict[key]
-			else:
-				return 0
-		elif arc_type is "reduce":
-			if key in reduce_train_dict:
-				return reduce_train_dict[key]
-			else:
-				return 0
-			
-	def _get_trained_arc(arc_seq, arc_type):
-		arc_nodes = _split_arc_seq(arc_seq)
-		trained_arc = []
-		for i, node in enumerate(arc_nodes):
-			x_op = node[1]
-			y_op = node[3]
-			x_key = "node"+str(i)+"_x_op"+str(x_op)
-			y_key = "node"+str(i)+"_y_op"+str(y_op)
-			x_train_amt = _get_trained_op(x_key, arc_type)
-			y_train_amt = _get_trained_op(y_key, arc_type)
-			trained_arc.append(x_train_amt)
-			trained_arc.append(y_train_amt)
-		
-		return trained_arc
-		
-	"""
 	images, labels = data_utils.read_data(FLAGS.train_data_dir,
 										  FLAGS.val_data_dir,
 										  FLAGS.test_data_dir,
@@ -389,11 +327,10 @@ def train():
 								controller_ops["normal_arc"],
 								controller_ops["reduce_arc"],
 								controller_ops["scaled_accuracy"],
-								controller_ops["set_normal_dict"],
-								controller_ops["set_reduce_dict"],
+								controller_ops["get_normal_train_dict"],
 							]
-							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc = sess.run(run_ops)
-							controller_step = sess.run(controller_ops["train_step"], feed_dict={"normal_dict:0":controller_model.accuracy_scaling.normal_train_dict, "reduce_dict:0":controller_model.accuracy_scaling.reduce_train_dict})
+							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc, train_dict = sess.run(run_ops)
+							controller_step = sess.run(controller_ops["train_step"])
 
 							if ct_step % FLAGS.log_every == 0:
 								curr_time = time.time()
@@ -413,6 +350,7 @@ def train():
 								print("\tNormal architecture: \n\t",normal_arc)
 								print("\tReduce architecture: \n\t",reduce_arc)
 								print("\tScaled acc: \n\t",scaled_acc)
+								print("\tTrain_dict: \n\t",train_dict)
 								print(log_string)
 
 						print("Here are 10 architectures")

@@ -233,11 +233,7 @@ class MicroController(Controller):
 		acc_to_scale = self.valid_acc + 0.0
 		#self.reward = self.valid_acc 
 		
-		
-		placeholder_set_normal_dict = tf.placeholder("normal_dict")
-		placeholder_set_reduce_dict = tf.placeholder("reduce_dict")
-		
-		self.set_normal_dict, self.set_reduce_dict = self.accuracy_scaling.init_dicts(placeholder_set_normal_dict, placeholder_set_reduce_dict)
+		self.get_normal_train_dict = self.accuracy_scaling.normal_train_dict
 		
 		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
 									acc_to_scale,
