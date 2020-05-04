@@ -81,8 +81,8 @@ class MicroController(Controller):
 		self.accuracy_scaling = accs.AccuracyScaling()
 		self.normal_dict = normal_dict
 		self.reduce_dict = reduce_dict
-		self.accuracy_scaling.normal_train_dict = normal_dict
-		self.accuracy_scaling.reduce_train_dict = reduce_dict
+		self.accuracy_scaling.normal_train_dict = self.normal_dict
+		self.accuracy_scaling.reduce_train_dict = self.reduce_dict
 		
 		
 
