@@ -97,9 +97,7 @@ class AccuracyScaling():
 		return trained_arc
 		
 	def get_scaled_accuracy(self,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
-		if tf.is_tensor(normal_arc):
-			normal_arc = normal_arc.numpy()
-			reduce_arc = reduce_arc.numpy()
+		#if type(normal_arc) is not np.ndarray:
 		#	return 0.0
 		normal_arc_training = self.get_trained_arc(normal_arc, "normal")
 		reduce_arc_training = self.get_trained_arc(reduce_arc, "reduce")
