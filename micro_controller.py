@@ -233,7 +233,7 @@ class MicroController(Controller):
 		acc_to_scale = self.valid_acc + 0.0
 		#self.reward = self.valid_acc 
 		
-		self.reward = self.accuracy_scaling.get_scaled_accuracy(
+		self.reward,self.total_dict, _ = self.accuracy_scaling.get_scaled_accuracy(
 									acc_to_scale,
 									self.current_normal_arc,
 									self.current_reduce_arc,

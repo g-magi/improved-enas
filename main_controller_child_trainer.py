@@ -184,7 +184,7 @@ def get_ops(images, labels):
 			"skip_rate": controller_model.skip_rate,
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
-			"scaled_accuracy": controller_model.reward,
+			"scaled_accuracy": controller_model.total_dict,
 			#"save_arc_training": controller_model.
 		}
 		
@@ -400,14 +400,15 @@ def train():
 								log_string += "   lr = {:<6.4f}".format(lr)
 								log_string += "   |g| = {:<8.4f}".format(gn)
 								log_string += " acc = {:<6.4f}".format(val_acc)
-								log_string += " s_acc = "
-								log_string += str(scaled_acc)
+								#log_string += " s_acc = "
+								#log_string += str(scaled_acc)
 								log_string += "   bl = {:<5.2f}".format(bl)
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
 								print("Controller step #",controller_step,":")
 								print("\tNormal architecture: \n\t",normal_arc)
 								print("\tReduce architecture: \n\t",reduce_arc)
+								print("\tDict: \n\t",scaled_acc)
 								print(log_string)
 
 						print("Here are 10 architectures")

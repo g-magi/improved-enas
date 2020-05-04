@@ -134,4 +134,4 @@ class AccuracyScaling():
 		
 		##
 		
-		return scaled_accuracy
+		return scaled_accuracy, self.normal_train_dict, self.reduce_train_dict
