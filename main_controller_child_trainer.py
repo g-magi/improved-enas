@@ -309,7 +309,7 @@ def train():
 					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 					#print("Testing acc scaling with current arc -> ", test_acc_scaling)
 					
-					print("normal_dict", normal_dict)
+					
 
 				if actual_step % ops["eval_every"] == 0:
 					if (FLAGS.controller_training and
