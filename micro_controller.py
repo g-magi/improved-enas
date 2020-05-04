@@ -5,6 +5,8 @@ import time
 import numpy as np
 import tensorflow.compat.v1 as tf
 
+import accuracy_scaling as accs
+
 from controller import Controller
 from utils import get_train_ops
 from common_ops import stack_lstm
@@ -72,6 +74,8 @@ class MicroController(Controller):
 		self.sample_arc = (arc_seq_1, arc_seq_2)
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
+		
+		self.accuracy_scaling = accs.AccuracyScaling()
 
 	def _create_params(self):
 		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)

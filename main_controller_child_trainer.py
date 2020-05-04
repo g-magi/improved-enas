@@ -216,7 +216,7 @@ def get_ops(images, labels):
 
 
 def train():
-	
+	"""
 	def _split_arc_seq(arc_seq):
 		arc_seq_length = len(arc_seq)
 		arc_nodes_amt = FLAGS.child_num_cells
@@ -276,7 +276,7 @@ def train():
 		
 		return trained_arc
 		
-	
+	"""
 	images, labels = data_utils.read_data(FLAGS.train_data_dir,
 										  FLAGS.val_data_dir,
 										  FLAGS.test_data_dir,
@@ -323,10 +323,10 @@ def train():
 					child_ops["reduce_arc"]]
 				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
 				global_step = sess.run(child_ops["global_step"])
-				_save_trained_arc(normal_arc, "normal")
-				_save_trained_arc(reduce_arc, "reduce")
-				normal_train_amt = _get_trained_arc(normal_arc, "normal")
-				reduce_train_amt = _get_trained_arc(reduce_arc, "reduce")
+				controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
+				controller_model.accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+				normal_train_amt = controller_model.accuracy_scaling.get_trained_arc(normal_arc, "normal")
+				reduce_train_amt = controller_model.accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
 
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
