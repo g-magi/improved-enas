@@ -273,13 +273,13 @@ def train():
 				reduce_train_dict_length = 0
 				test_acc_scaling = 0
 				
-				if controller_model is not None:
-					ops["controller_model"].accuracy_scaling.save_trained_arc(normal_arc, "normal")
-					ops["controller_model"].accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
-					normal_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(normal_arc, "normal")
-					reduce_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
-					normal_train_dict_length = len(ops["controller_model"].accuracy_scaling.normal_train_dict)
-					reduce_train_dict_length = len(ops["controller_model"].accuracy_scaling.reduce_train_dict)
+				#if controller_model is not None:
+				ops["controller_model"].accuracy_scaling.save_trained_arc(normal_arc, "normal")
+				ops["controller_model"].accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+				normal_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(normal_arc, "normal")
+				reduce_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+				normal_train_dict_length = len(ops["controller_model"].accuracy_scaling.normal_train_dict)
+				reduce_train_dict_length = len(ops["controller_model"].accuracy_scaling.reduce_train_dict)
 					#test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
 
 				if FLAGS.child_sync_replicas:
