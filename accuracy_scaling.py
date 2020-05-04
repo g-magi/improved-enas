@@ -2,10 +2,9 @@ import numpy as np
 import tensorflow.compat.v1 as tf
 
 class AccuracyScaling():
-	def __init__(self, normal_train_dict={}, reduce_train_dict={}):
-		self.normal_train_dict = normal_train_dict
-		self.reduce_train_dict = reduce_train_dict
-		
+
+	self.normal_train_dict = {}
+	self.reduce_train_dict = {}
 	
 	def _split_arc_seq(self,arc_seq):
 		arc_seq_length = 0
