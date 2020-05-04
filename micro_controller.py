@@ -232,12 +232,14 @@ class MicroController(Controller):
 		self.current_reduce_arc = child_model.current_reduce_arc
 		
 		if self.current_normal_arc is not None:
-			self.scaled_accuracy = self.accuracy_scaling.get_scaled_accuracy(
+			self.scaled_accuracy = tf.constant(
+									self.accuracy_scaling.get_scaled_accuracy(
 									self.valid_acc,
 									self.current_normal_arc,
 									self.current_reduce_arc,
 									scaling_method="linear",
 									arc_handling="sum")
+									)
 		
 		#self.reward = self.valid_acc 
 		self.reward = self.scaled_accuracy
