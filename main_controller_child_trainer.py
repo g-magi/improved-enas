@@ -334,6 +334,7 @@ def train():
 				reduce_train_amt = 0
 				normal_train_dict_length = 0
 				reduce_train_dict_length = 0
+				test_acc_scaling = 0
 				
 				if controller_model is not None:
 					controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
@@ -343,7 +344,6 @@ def train():
 					normal_train_dict_length = len(controller_model.accuracy_scaling.normal_train_dict)
 					reduce_train_dict_length = len(controller_model.accuracy_scaling.reduce_train_dict)
 					test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
-					print("Testing acc scaling with current arc -> ", test_acc_scaling)
 
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
@@ -367,6 +367,7 @@ def train():
 					print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
 					print("\tReduce architecture: \n\t",reduce_arc)
 					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
+					print("Testing acc scaling with current arc -> ", test_acc_scaling)
 
 				if actual_step % ops["eval_every"] == 0:
 					if (FLAGS.controller_training and
