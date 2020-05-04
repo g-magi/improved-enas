@@ -240,7 +240,7 @@ class MicroController(Controller):
 		self.get_normal_train_dict = self.accuracy_scaling.normal_train_dict
 		
 		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
-									0.5,
+									self.valid_acc,
 									self.current_normal_arc,
 									self.current_reduce_arc,
 									scaling_method="linear",
