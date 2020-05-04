@@ -234,13 +234,13 @@ class MicroController(Controller):
 						  tf.to_float(child_model.batch_size))
 		self.current_normal_arc = child_model.current_normal_arc
 		self.current_reduce_arc = child_model.current_reduce_arc
-		acc_to_scale = self.valid_acc + 0.0
+		#acc_to_scale = self.valid_acc + 0.0
 		#self.reward = self.valid_acc 
 		
 		self.get_normal_train_dict = self.accuracy_scaling.normal_train_dict
 		
 		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
-									acc_to_scale,
+									self.valid_acc,
 									self.current_normal_arc,
 									self.current_reduce_arc,
 									scaling_method="linear",
