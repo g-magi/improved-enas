@@ -214,6 +214,7 @@ def get_ops(images, labels):
 		"eval_every": child_model.num_train_batches * FLAGS.eval_every_epochs,
 		"eval_func": child_model.eval_once,
 		"num_train_batches": child_model.num_train_batches,
+		"controller_model": controller_model
 	}
 
 	return ops
@@ -296,6 +297,7 @@ def train():
 	g = tf.Graph()
 	with g.as_default():
 		ops =get_ops(images, labels)
+		controller_model = ops["controller_model"]
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
 
