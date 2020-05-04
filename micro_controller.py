@@ -39,7 +39,7 @@ class MicroController(Controller):
 				   num_replicas=None,
 				   name="controller",
 				   normal_dict = {},
-				   reduce_dict = {}
+				   reduce_dict = {},
 				   **kwargs):
 
 		print("-" * 80)
