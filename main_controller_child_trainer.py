@@ -328,11 +328,17 @@ def train():
 					child_ops["reduce_arc"]]
 				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
 				global_step = sess.run(child_ops["global_step"])
+				normal_train_amt = 0
+				reduce_train_amt = 0
+				normal_train_dict_length = 0
+				reduce_train_dict_length = 0
 				if controller_model is not None:
 					controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
 					controller_model.accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
 					normal_train_amt = controller_model.accuracy_scaling.get_trained_arc(normal_arc, "normal")
 					reduce_train_amt = controller_model.accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+					normal_train_dict_length = len(controller_model.accuracy_scaling.normal_train_dict)
+					reduce_train_dict_length = len(controller_model.accuracy_scaling.reduce_train_dict)
 
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
@@ -353,9 +359,9 @@ def train():
 						float(curr_time - start_time) / 60)
 					print(log_string)
 					print("\tNormal architecture: \n\t",normal_arc)
-					print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", len(normal_train_dict))
+					print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
 					print("\tReduce architecture: \n\t",reduce_arc)
-					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", len(reduce_train_dict))
+					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 
 				if actual_step % ops["eval_every"] == 0:
 					if (FLAGS.controller_training and
