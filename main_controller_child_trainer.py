@@ -217,7 +217,7 @@ def get_ops(self, images, labels):
 
 
 
-def train():
+def train(self):
 	"""
 	def _split_arc_seq(arc_seq):
 		arc_seq_length = len(arc_seq)
@@ -438,7 +438,7 @@ def main(_):
 	print("Logging to {}".format(log_file))
 	sys.stdout = Logger(log_file)
 	print_user_flags()
-	train()
+	self.train()
 
 if __name__ == "__main__":
 	tf.app.run()
