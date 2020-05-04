@@ -111,7 +111,7 @@ class AccuracyScaling():
 		if arc_handling is "sum":
 			combined_arcs_training = normal_arc_training + reduce_arc_training
 		elif arc_handling is "avg":
-			combined_arcs_training = (normal_arc_training+reduce_arc_training)//2 #i use // so it stays integer
+			combined_arcs_training = (normal_arc_training+reduce_arc_training)//2 #i use // so it gets floored
 		
 		scaled_accuracy = 0.0
 		
