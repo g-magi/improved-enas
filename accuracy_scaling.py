@@ -5,9 +5,9 @@ class AccuracyScaling:
 	__shared_state = {}
 	def __init__(self):
 		self.__dict__ = self.__shared_state
-		if "self.normal_train_dict" not in __dict__ :
+		if "self.normal_train_dict" not in self.__dict__ :
 			self.normal_train_dict = {}
-		if "self.reduce_train_dict" not in __dict__ :
+		if "self.reduce_train_dict" not in self.__dict__ :
 			self.reduce_train_dict = {}
 		
 	
