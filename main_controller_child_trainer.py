@@ -438,7 +438,7 @@ def main(_):
 	print("Logging to {}".format(log_file))
 	sys.stdout = Logger(log_file)
 	print_user_flags()
-	self.train()
+	train()
 
 if __name__ == "__main__":
 	tf.app.run()
