@@ -38,6 +38,8 @@ class MicroController(Controller):
 				   num_aggregate=None,
 				   num_replicas=None,
 				   name="controller",
+				   normal_dict = {},
+				   reduce_dict = {}
 				   **kwargs):
 
 		print("-" * 80)
@@ -75,7 +77,14 @@ class MicroController(Controller):
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 		
+		
 		self.accuracy_scaling = accs.AccuracyScaling()
+		self.normal_dict = normal_dict
+		self.reduce_dict = reduce_dict
+		self.accuracy_scaling.normal_train_dict = normal_dict
+		self.accuracy_scaling.reduce_train_dict = reduce_dict
+		
+		
 
 	def _create_params(self):
 		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
