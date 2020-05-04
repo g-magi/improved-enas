@@ -185,6 +185,8 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
+			"set_normal_dict": controller_model.set_normal_dict,
+			"set_reduce_dict": controller_model.set_reduce_dict,
 			#"save_arc_training": controller_model.
 		}
 		
@@ -387,9 +389,11 @@ def train():
 								controller_ops["normal_arc"],
 								controller_ops["reduce_arc"],
 								controller_ops["scaled_accuracy"],
+								controller_ops["set_normal_dict"],
+								controller_ops["set_reduce_dict"],
 							]
 							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc = sess.run(run_ops)
-							controller_step = sess.run(controller_ops["train_step"])
+							controller_step = sess.run(controller_ops["train_step"], feed_dict={"normal_dict:0":controller_model.accuracy_scaling.normal_train_dict, "reduce_dict:0":controller_model.accuracy_scaling.reduce_train_dict})
 
 							if ct_step % FLAGS.log_every == 0:
 								curr_time = time.time()

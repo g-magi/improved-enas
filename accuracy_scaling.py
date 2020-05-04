@@ -11,6 +11,8 @@ class AccuracyScaling():
 		self.normal_train_dict = normal_train_dict
 		self.reduce_train_dict = reduce_train_dict
 		
+		return self.normal_train_dict, self.reduce_train_dict
+		
 	
 	def _split_arc_seq(self,arc_seq):
 		arc_seq_length = 0
