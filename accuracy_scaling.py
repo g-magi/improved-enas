@@ -9,7 +9,7 @@ class AccuracyScaling():
 	
 	def _split_arc_seq(self,arc_seq):
 		arc_seq_length = arc_seq.get_shape().as_list()[0]
-		arc_nodes_amt = FLAGS.child_num_cells
+		arc_nodes_amt = arc_seq_length//4
 		assert arc_seq_length%arc_nodes_amt == 0
 		arc_nodes = np.split(arc_seq, arc_nodes_amt)
 		return arc_nodes
