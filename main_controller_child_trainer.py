@@ -323,12 +323,12 @@ def train():
 								controller_ops["lr"],
 								controller_ops["grad_norm"],
 								controller_ops["valid_acc"],
-								controller_ops["baseline"],
-								controller_ops["skip_rate"],
-								controller_ops["train_op"],
 								controller_ops["normal_arc"],
 								controller_ops["reduce_arc"],
 								controller_ops["scaled_accuracy"],
+								controller_ops["baseline"],
+								controller_ops["skip_rate"],
+								controller_ops["train_op"],
 							]
 							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc = sess.run(run_ops)
 							controller_step = sess.run(controller_ops["train_step"])
