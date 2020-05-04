@@ -2,11 +2,13 @@ import numpy as np
 import tensorflow.compat.v1 as tf
 
 class AccuracyScaling:
-	__shared_normal_dict = {}
-	__shared_reduce_dict = {}
+	__shared_state = {}
 	def __init__(self):
-		self.normal_train_dict = self.__shared_normal_dict
-		self.reduce_train_dict = self.__shared_reduce_dict
+		self.__dict__ = self.__shared_state
+		if "self.normal_train_dict" not in __dict__ :
+			self.normal_train_dict = {}
+		if "self.reduce_train_dict" not in __dict__ :
+			self.reduce_train_dict = {}
 		
 	
 	def _split_arc_seq(self,arc_seq):
