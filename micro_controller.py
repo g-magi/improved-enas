@@ -236,7 +236,7 @@ class MicroController(Controller):
 									self.current_normal_arc,
 									self.current_reduce_arc,
 									scaling_method="linear",
-									arc_handling="sum"
+									arc_handling="sum")
 		
 		#self.reward = self.valid_acc 
 		self.reward = self.scaled_accuracy
