@@ -91,7 +91,7 @@ class AccuracyScaling():
 		
 		return trained_arc
 		
-	def get_scaled_accuracy(accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
+	def get_scaled_accuracy(self,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		normal_arc_training = get_trained_arc(normal_arc, "normal")
 		reduce_arc_training = get_trained_arc(reduce_arc, "reduce")
 		normal_arc_training = np.sum(normal_arc_training)
