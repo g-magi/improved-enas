@@ -92,8 +92,8 @@ class AccuracyScaling():
 		return trained_arc
 		
 	def get_scaled_accuracy(self,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
-		normal_arc_training = get_trained_arc(normal_arc, "normal")
-		reduce_arc_training = get_trained_arc(reduce_arc, "reduce")
+		normal_arc_training = self.get_trained_arc(normal_arc, "normal")
+		reduce_arc_training = self.get_trained_arc(reduce_arc, "reduce")
 		normal_arc_training = np.sum(normal_arc_training)
 		reduce_arc_training = np.sum(reduce_arc_training)
 		combined_arcs_training = 0
@@ -110,9 +110,9 @@ class AccuracyScaling():
 		if scaling_method is "linear":
 			scaled_accuracy = accuracy * float(combined_arcs_training)
 		elif scaling_method is "compare_avg":
-			average_normal_arc_training = _compute_average_arc(len(normal_arc)//4, "normal")
+			average_normal_arc_training = self._compute_average_arc(len(normal_arc)//4, "normal")
 			average_normal_arc_training = np.avg(average_normal_arc_training)
-			average_reduce_arc_training = _compute_average_arc(len(normal_arc)//4, "reduce")
+			average_reduce_arc_training = self._compute_average_arc(len(normal_arc)//4, "reduce")
 			average_reduce_arc_training = np.avg(average_reduce_arc_training)
 			average_arc_training = 0
 			if arc_handling is "sum":
