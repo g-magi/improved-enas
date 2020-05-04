@@ -182,6 +182,7 @@ def get_ops(images, labels):
 			"skip_rate": controller_model.skip_rate,
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
+			"scaled_accuracy": controller_model.scaled_accuracy
 		}
 
 	else:
@@ -368,8 +369,9 @@ def train():
 								controller_ops["train_op"],
 								controller_ops["normal_arc"],
 								controller_ops["reduce_arc"],
+								controller_ops["scaled_accuracy"],
 							]
-							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc = sess.run(run_ops)
+							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc = sess.run(run_ops)
 							controller_step = sess.run(controller_ops["train_step"])
 
 							if ct_step % FLAGS.log_every == 0:
@@ -381,12 +383,14 @@ def train():
 								log_string += "   lr = {:<6.4f}".format(lr)
 								log_string += "   |g| = {:<8.4f}".format(gn)
 								log_string += " acc = {:<6.4f}".format(val_acc)
+								log_string += " s_acc = {:<6.4f}".format(scaled_acc)
 								log_string += "   bl = {:<5.2f}".format(bl)
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
-								print(log_string)
+								print("Controller step #",controller_step,":")
 								print("\tNormal architecture: \n\t",normal_arc)
 								print("\tReduce architecture: \n\t",reduce_arc)
+								print(log_string)
 
 						print("Here are 10 architectures")
 						for _ in range(10):
