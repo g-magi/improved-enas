@@ -113,7 +113,7 @@ class AccuracyScaling():
 		elif arc_handling is "avg":
 			combined_arcs_training = (normal_arc_training+reduce_arc_training)//2 #i use // so it gets floored
 		
-		scaled_accuracy = 0.0
+		scaled_accuracy = 5.0
 		
 		## scaling section
 		if scaling_method is "linear":
@@ -134,4 +134,4 @@ class AccuracyScaling():
 		
 		##
 		
-		return scaled_accuracy, self.normal_train_dict, self.reduce_train_dict
+		return scaled_accuracy

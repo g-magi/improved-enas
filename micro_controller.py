@@ -233,12 +233,13 @@ class MicroController(Controller):
 		acc_to_scale = self.valid_acc + 0.0
 		#self.reward = self.valid_acc 
 		
-		self.reward,self.total_dict, _ = self.accuracy_scaling.get_scaled_accuracy(
+		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
 									acc_to_scale,
 									self.current_normal_arc,
 									self.current_reduce_arc,
 									scaling_method="linear",
 									arc_handling="sum")
+		self.reward = self.scaled_acc
 		
 		if self.entropy_weight is not None:
 			self.reward += self.entropy_weight * self.sample_entropy
