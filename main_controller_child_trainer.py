@@ -330,7 +330,7 @@ def train():
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
 							]
-							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc = sess.run(run_ops)
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_acr, scaled_acc, bl, skip, _ = sess.run(run_ops)
 							controller_step = sess.run(controller_ops["train_step"])
 
 							if ct_step % FLAGS.log_every == 0:
