@@ -328,10 +328,10 @@ def train():
 					child_ops["reduce_arc"]]
 				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
 				global_step = sess.run(child_ops["global_step"])
-				self.controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
-				self.controller_model.accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
-				normal_train_amt = self.controller_model.accuracy_scaling.get_trained_arc(normal_arc, "normal")
-				reduce_train_amt = self.controller_model.accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+				controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
+				controller_model.accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+				normal_train_amt = controller_model.accuracy_scaling.get_trained_arc(normal_arc, "normal")
+				reduce_train_amt = controller_model.accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
 
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
