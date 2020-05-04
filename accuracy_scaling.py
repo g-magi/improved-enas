@@ -12,9 +12,9 @@ class AccuracyScaling():
 		if type(arc_seq) is np.ndarray:
 			arc_seq_length = arc_seq.shape[0]
 		else:
-			arc_seq_length = arc_seq.get_shape().as_list()[1]
+			arc_seq_length = arc_seq.get_shape().as_list()[0]
+		assert arc_seq_length != 0
 		arc_nodes_amt = arc_seq_length//4
-		assert arc_seq_length%arc_nodes_amt == 0
 		arc_nodes = [np.ones(4)] * arc_nodes_amt
 		if type(arc_seq) is np.ndarray:
 			arc_nodes = np.split(arc_seq, arc_nodes_amt)
