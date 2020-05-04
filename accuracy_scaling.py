@@ -48,12 +48,12 @@ class AccuracyScaling():
 			if key in self.normal_train_dict:
 				return self.normal_train_dict[key]
 			else:
-				return 0
+				return -10
 		elif arc_type is "reduce":
 			if key in self.reduce_train_dict:
 				return self.reduce_train_dict[key]
 			else:
-				return 0
+				return -10
 	
 	# returns a numpy array of [nodes_amt*5] items that has the same structure as the return from [get_trained_arc]
 	def _compute_average_arc(self,nodes_amt, arc_type):
