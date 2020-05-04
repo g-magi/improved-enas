@@ -117,7 +117,7 @@ class AccuracyScaling():
 			average_arc_training = 0
 			if arc_handling is "sum":
 				average_arc_training = (average_normal_arc_training+average_reduce_arc_training)
-			elif arc_handling is "avg"
+			elif arc_handling is "avg":
 				average_arc_training = (average_normal_arc_training+average_reduce_arc_training)//2
 			
 			scaling_factor = float(average_arc_training)/float(combined_arcs_training)
