@@ -18,6 +18,9 @@ import data_utils
 from micro_controller import MicroController
 from micro_child import MicroChild
 
+import accuracy_scaling as accs
+
+accuracy_scaling = accs.AccuracyScaling()
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
@@ -163,7 +166,8 @@ def get_ops(images, labels):
 			optim_algo="adam",
 			sync_replicas=FLAGS.controller_sync_replicas,
 			num_aggregate=FLAGS.controller_num_aggregate,
-			num_replicas=FLAGS.controller_num_replicas)
+			num_replicas=FLAGS.controller_num_replicas,
+			accuracy_scaling=accuracy_scaling)
 
 		child_model.connect_controller(controller_model)
 		controller_model.build_trainer(child_model)
@@ -183,8 +187,6 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
-			"normal_train_dict": controller_model.accuracy_scaling.normal_train_dict
-			#"save_arc_training": controller_model.
 		}
 		
 
@@ -274,13 +276,13 @@ def train():
 				reduce_train_dict_length = 0
 				test_acc_scaling = 0
 				
-				#if controller_model is not None:
-				ops["controller_model"].accuracy_scaling.save_trained_arc(normal_arc, "normal")
-				ops["controller_model"].accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
-				normal_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(normal_arc, "normal")
-				reduce_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
-				normal_train_dict_length = len(ops["controller_model"].accuracy_scaling.normal_train_dict)
-				reduce_train_dict_length = len(ops["controller_model"].accuracy_scaling.reduce_train_dict)
+				
+				accuracy_scaling.save_trained_arc(normal_arc, "normal")
+				accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+				normal_train_amt = accuracy_scaling.get_trained_arc(normal_arc, "normal")
+				reduce_train_amt = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+				normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
+				reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
 					#test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
 
 				if FLAGS.child_sync_replicas:

@@ -38,8 +38,7 @@ class MicroController(Controller):
 				   num_aggregate=None,
 				   num_replicas=None,
 				   name="controller",
-				   normal_dict = {},
-				   reduce_dict = {},
+				   accuracy_scaling,
 				   **kwargs):
 
 		print("-" * 80)
@@ -78,11 +77,7 @@ class MicroController(Controller):
 		self.sample_log_prob = log_prob_1 + log_prob_2
 		
 		
-		self.accuracy_scaling = accs.AccuracyScaling()
-		self.normal_dict = normal_dict
-		self.reduce_dict = reduce_dict
-		self.accuracy_scaling.normal_train_dict = tf.get_variable("normal_dict",self.normal_dict)
-		self.accuracy_scaling.reduce_train_dict = tf.get_variable("reduce_dict",self.reduce_dict)
+		self.accuracy_scaling = accuracy_scaling
 		
 		
 

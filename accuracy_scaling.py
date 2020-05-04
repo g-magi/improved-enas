@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 
-class AccuracyScaling():
+class AccuracyScaling:
 	def __init__(self):
 		self.normal_train_dict = {}
 		self.reduce_train_dict = {}
