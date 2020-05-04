@@ -183,6 +183,7 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
+			"normal_train_dict": controller_model.accuracy_scaling.normal_train_dict
 			#"save_arc_training": controller_model.
 		}
 		
@@ -305,6 +306,11 @@ def train():
 					print("\tReduce architecture: \n\t",reduce_arc)
 					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 					#print("Testing acc scaling with current arc -> ", test_acc_scaling)
+					
+					normal_dict = sess.run([
+						controller_ops["normal_train_dict"],
+					])
+					print("normal_dict", normal_dict)
 
 				if actual_step % ops["eval_every"] == 0:
 					if (FLAGS.controller_training and
