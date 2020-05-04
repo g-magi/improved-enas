@@ -105,7 +105,7 @@ class AccuracyScaling():
 		reduce_arc_training = self.get_trained_arc(reduce_arc, "reduce")
 		normal_arc_training = np.sum(normal_arc_training)
 		reduce_arc_training = np.sum(reduce_arc_training)
-		combined_arcs_training = 0
+		combined_arcs_training = 0.0
 		
 		## arc handling section
 		if arc_handling is "sum":
@@ -113,7 +113,7 @@ class AccuracyScaling():
 		elif arc_handling is "avg":
 			combined_arcs_training = (normal_arc_training+reduce_arc_training)//2 #i use // so it stays integer
 		
-		scaled_accuracy = 0
+		scaled_accuracy = 0.0
 		
 		## scaling section
 		if scaling_method is "linear":
