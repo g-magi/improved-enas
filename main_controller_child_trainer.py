@@ -93,8 +93,6 @@ DEFINE_integer("eval_every_epochs", 1, "How many epochs to eval")
 
 channel = FLAGS.channel
 
-controller_model = None
-
 def get_ops(images, labels):
 	"""
 	Args:
@@ -185,7 +183,6 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
-			"get_normal_train_dict": controller_model.get_normal_train_dict
 			#"save_arc_training": controller_model.
 		}
 		
@@ -237,7 +234,7 @@ def train():
 	g = tf.Graph()
 	with g.as_default():
 		ops =get_ops(images, labels)
-		controller_model = ops["controller_model"]
+		#controller_model = ops["controller_model"]
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
 
@@ -277,12 +274,12 @@ def train():
 				test_acc_scaling = 0
 				
 				if controller_model is not None:
-					controller_model.accuracy_scaling.save_trained_arc(normal_arc, "normal")
-					controller_model.accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
-					normal_train_amt = controller_model.accuracy_scaling.get_trained_arc(normal_arc, "normal")
-					reduce_train_amt = controller_model.accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
-					normal_train_dict_length = len(controller_model.accuracy_scaling.normal_train_dict)
-					reduce_train_dict_length = len(controller_model.accuracy_scaling.reduce_train_dict)
+					ops["controller_model"].accuracy_scaling.save_trained_arc(normal_arc, "normal")
+					ops["controller_model"].accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+					normal_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(normal_arc, "normal")
+					reduce_train_amt = ops["controller_model"].accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+					normal_train_dict_length = len(ops["controller_model"].accuracy_scaling.normal_train_dict)
+					reduce_train_dict_length = len(ops["controller_model"].accuracy_scaling.reduce_train_dict)
 					#test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
 
 				if FLAGS.child_sync_replicas:
@@ -327,9 +324,8 @@ def train():
 								controller_ops["normal_arc"],
 								controller_ops["reduce_arc"],
 								controller_ops["scaled_accuracy"],
-								controller_ops["get_normal_train_dict"],
 							]
-							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc, train_dict = sess.run(run_ops)
+							loss, entropy, lr, gn, val_acc, bl, skip, _, normal_arc, reduce_arc,scaled_acc = sess.run(run_ops)
 							controller_step = sess.run(controller_ops["train_step"])
 
 							if ct_step % FLAGS.log_every == 0:
@@ -350,7 +346,6 @@ def train():
 								print("\tNormal architecture: \n\t",normal_arc)
 								print("\tReduce architecture: \n\t",reduce_arc)
 								print("\tScaled acc: \n\t",scaled_acc)
-								print("\tTrain_dict: \n\t",train_dict)
 								print(log_string)
 
 						print("Here are 10 architectures")
