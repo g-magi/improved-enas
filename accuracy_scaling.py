@@ -6,7 +6,7 @@ class AccuracyScaling():
 		self.reduce_train_dict = reduce_train_dict
 		
 	
-	def _split_arc_seq(arc_seq):
+	def _split_arc_seq(self,arc_seq):
 		arc_seq_length = len(arc_seq)
 		arc_nodes_amt = FLAGS.child_num_cells
 		assert arc_seq_length%arc_nodes_amt == 0
@@ -14,7 +14,7 @@ class AccuracyScaling():
 		return arc_nodes
 	
 	
-	def _save_trained_op(key, arc_type):
+	def _save_trained_op(self,key, arc_type):
 		if arc_type is "normal":
 			if key in self.normal_train_dict:
 				self.normal_train_dict[key]+=1
@@ -26,17 +26,17 @@ class AccuracyScaling():
 			else:
 				self.reduce_train_dict[key]=1
 	
-	def save_trained_arc(arc_seq, arc_type):
-		arc_nodes = _split_arc_seq(arc_seq)
+	def save_trained_arc(self,arc_seq, arc_type):
+		arc_nodes = self._split_arc_seq(arc_seq)
 		for i, node in enumerate(arc_nodes):
 			x_op = node[1]
 			y_op = node[3]
 			x_key = "node"+str(i)+"_x_op"+str(x_op)
 			y_key = "node"+str(i)+"_y_op"+str(y_op)
-			_save_trained_op(x_key, arc_type)
-			_save_trained_op(y_key, arc_type)
+			self._save_trained_op(x_key, arc_type)
+			self._save_trained_op(y_key, arc_type)
 		
-	def _get_trained_op(key, arc_type):
+	def _get_trained_op(self,key, arc_type):
 		if arc_type is "normal":
 			if key in self.normal_train_dict:
 				return self.normal_train_dict[key]
@@ -49,7 +49,7 @@ class AccuracyScaling():
 				return 0
 	
 	# returns a numpy array of [nodes_amt*5] items that has the same structure as the return from [get_trained_arc]
-	def _compute_average_arc(nodes_amt, arc_type):
+	def _compute_average_arc(self,nodes_amt, arc_type):
 		average_arc = np.zeros(nodes_amt*2, dtype=int)
 		for i in range(nodes_amt):
 			#per ogni nodo
@@ -76,16 +76,16 @@ class AccuracyScaling():
 		
 		return average_arc
 	
-	def get_trained_arc(arc_seq, arc_type):
-		arc_nodes = _split_arc_seq(arc_seq)
+	def get_trained_arc(self,arc_seq, arc_type):
+		arc_nodes = self._split_arc_seq(arc_seq)
 		trained_arc = []
 		for i, node in enumerate(arc_nodes):
 			x_op = node[1]
 			y_op = node[3]
 			x_key = "node"+str(i)+"_x_op"+str(x_op)
 			y_key = "node"+str(i)+"_y_op"+str(y_op)
-			x_train_amt = _get_trained_op(x_key, arc_type)
-			y_train_amt = _get_trained_op(y_key, arc_type)
+			x_train_amt = self._get_trained_op(x_key, arc_type)
+			y_train_amt = self._get_trained_op(y_key, arc_type)
 			trained_arc.append(x_train_amt)
 			trained_arc.append(y_train_amt)
 		
