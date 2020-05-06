@@ -163,7 +163,8 @@ class AccuracyScaling:
 		temp_dict = {}
 		shape = array.shape
 		for i, s in enumerate(shape):
-			temp_dict[i] = s
+			if s is not None:
+				temp_dict[i] = s
 		if tf.is_tensor(array):
 			return temp_dict
 		for i in range(array.shape[0]//4):
