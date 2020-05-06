@@ -156,8 +156,8 @@ class AccuracyScaling:
 		return np.asarray(out_list, dtype=int32)
 			
 	def get_dicts_as_numpy_arrays(self):
-		out_normal = _get_dict_as_numpy_array("normal")
-		out_reduce = _get_dict_as_numpy_array("reduce")
+		out_normal = self._get_dict_as_numpy_array("normal")
+		out_reduce = self._get_dict_as_numpy_array("reduce")
 		return out_normal, out_reduce
 		
 	def _set_numpy_array_as_dict(self,dict_type, array):
