@@ -162,8 +162,8 @@ class AccuracyScaling:
 	def convert_numpy_array_to_dict(self,array):
 		temp_dict = {}
 		shape = array.shape
-		for s in shape:
-			temp_dict{s, 1}
+		for i, s in enumerate(shape):
+			temp_dict[i] = s
 		if tf.is_tensor(array):
 			return temp_dict
 		for i in range(array.shape[0]//4):
