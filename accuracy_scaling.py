@@ -139,7 +139,8 @@ class AccuracyScaling:
 		
 		##
 		
-		return scaled_accuracy, self._get_dict_as_numpy_array("normal"), self._get_dict_as_numpy_array("reduce")
+		#return scaled_accuracy, self._get_dict_as_numpy_array("normal"), self._get_dict_as_numpy_array("reduce")
+		return scaled_accuracy, normal_dict, reduce_dict
 		
 	def _get_dict_as_numpy_array(self, dict_type):
 		
