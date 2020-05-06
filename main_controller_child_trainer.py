@@ -187,6 +187,8 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
+			"normal_dict_array": controller_model.normal_dict_array,
+			"reduce_dict_array": controller_model.reduce_dict_array,
 			#"set_train_dicts": controller_model.set_train_dicts
 		}
 		
@@ -337,6 +339,8 @@ def train():
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
+								controller_ops["normal_dict_array"],
+								controller_ops["reduce_dict_array"],
 							]
 							print("passing dicts\n\t",temp_normal_array,"\n\t",temp_reduce_array)
 							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
