@@ -158,7 +158,7 @@ class AccuracyScaling:
 		return out_normal, out_reduce
 	
 	def convert_numpy_array_to_dict(self,array):
-		temp_dict = {}
+		temp_dict = {1:3}
 		if array.shape[0] is None:
 			return temp_dict
 		for i in range(array.shape[0]//4):
