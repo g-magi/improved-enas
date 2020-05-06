@@ -369,7 +369,7 @@ def train():
 								normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
 								reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
 								
-								print("passing dicts:\n\t",temp_normal_array,"\n\t",temp_reduce_array)
+								print("passing dicts:\n\t",temp_normal_array,"\n\t",temp_reduce_array, "\nshape: ",temp_normal_array.shape)
 								print("received dicts:\n\t",normal_dict_array,"\n\t",reduce_dict_array,"\n")
 								
 								print("\tNormal architecture: \n\t",normal_arc)
