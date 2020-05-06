@@ -153,7 +153,7 @@ class AccuracyScaling:
 		for key in out_dict:
 			out_list.append(key)
 			out_list.append(out_dict[key])
-		return np.asarray(out_list, dtype=int32)
+		return np.asarray(out_list, dtype=np.int32)
 			
 	def get_dicts_as_numpy_arrays(self):
 		out_normal = self._get_dict_as_numpy_array("normal")
