@@ -286,8 +286,7 @@ def train():
 				reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
 					#test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
 				
-				temp_normal_array, temp_reduce_array = accuracy_scaling.get_dicts_as_numpy_arrays()
-				temp_normal_dict, temp_reduce_dict = sess.run(controller_ops["set_train_dicts"], feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+				
 				
 				
 				if FLAGS.child_sync_replicas:
@@ -323,6 +322,10 @@ def train():
 						print("Epoch {}: Training controller".format(epoch))
 						for ct_step in range(FLAGS.controller_train_steps *
 											 FLAGS.controller_num_aggregate):
+							temp_normal_array, temp_reduce_array = accuracy_scaling.get_dicts_as_numpy_arrays()
+							temp_normal_dict, temp_reduce_dict = sess.run(controller_ops["set_train_dicts"], feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							
+							
 							run_ops = [
 								controller_ops["loss"],
 								controller_ops["entropy"],
