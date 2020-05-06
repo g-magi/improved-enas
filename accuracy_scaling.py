@@ -24,7 +24,6 @@ class AccuracyScaling:
 			arc_nodes = np.split(arc_seq, arc_nodes_amt)
 		return arc_nodes
 	
-	
 	def _save_trained_op(self,key, arc_type):
 		if arc_type is "normal":
 			if key in self.normal_train_dict:
