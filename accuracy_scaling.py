@@ -42,8 +42,10 @@ class AccuracyScaling:
 		for i, node in enumerate(arc_nodes):
 			x_op = node[1]
 			y_op = node[3]
-			x_key = "node"+str(i)+"_x_op"+str(x_op)
-			y_key = "node"+str(i)+"_y_op"+str(y_op)
+			x_key = ((i*100)+(x_op*10))*(10+0)
+			#x_key = "node"+str(i)+"_x_op"+str(x_op)
+			y_key = ((i*100)+(y_op*10))*(10+1)
+			#y_key = "node"+str(i)+"_y_op"+str(y_op)
 			self._save_trained_op(x_key, arc_type)
 			self._save_trained_op(y_key, arc_type)
 		
@@ -93,8 +95,10 @@ class AccuracyScaling:
 		for i, node in enumerate(arc_nodes):
 			x_op = node[1]
 			y_op = node[3]
-			x_key = "node"+str(i)+"_x_op"+str(x_op)
-			y_key = "node"+str(i)+"_y_op"+str(y_op)
+			#x_key = "node"+str(i)+"_x_op"+str(x_op)
+			x_key = ((i*100)+(x_op*10))*(10+0)
+			#y_key = "node"+str(i)+"_y_op"+str(y_op)
+			y_key = ((i*100)+(y_op*10))*(10+1)
 			x_train_amt = self._get_trained_op(x_key, arc_type)
 			y_train_amt = self._get_trained_op(y_key, arc_type)
 			trained_arc.append(x_train_amt)
