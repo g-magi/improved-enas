@@ -162,7 +162,7 @@ class AccuracyScaling:
 	def convert_numpy_array_to_dict(self,array):
 		temp_dict = {1:3}
 		if array.shape[0] is None:
-			return {1:array.shape, 2:array.ndim}
+			return {1:array.shape, 2:32}
 		for i in range(array.shape[0]//4):
 			x_key = array[i*4+0]
 			x_value = array[i*4+1]
