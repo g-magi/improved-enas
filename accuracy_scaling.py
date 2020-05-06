@@ -163,6 +163,8 @@ class AccuracyScaling:
 		temp_dict = {1:3}
 		if array.shape[0] is None:
 			return {1:5, 2:3}
+		else
+			return {1:array.shape[0]}
 		for i in range(array.shape[0]//4):
 			x_key = array[i*4+0]
 			x_value = array[i*4+1]
