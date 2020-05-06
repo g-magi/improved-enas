@@ -187,7 +187,7 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
-			"set_train_dicts": controller_model.set_train_dicts
+			#"set_train_dicts": controller_model.set_train_dicts
 		}
 		
 
