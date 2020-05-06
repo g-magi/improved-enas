@@ -228,6 +228,8 @@ class MicroController(Controller):
 
 		return arc_seq, entropy, log_prob, last_c, last_h
 
+	def _set_train_dicts(self, normal_array, reduce_array):
+		return self.accuracy_scaling.set_numpy_arrays_as_dicts(normal_array, reduce_array)
 	def build_trainer(self, child_model):
 		child_model.build_valid_rl()
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
