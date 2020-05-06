@@ -115,13 +115,13 @@ class MicroController(Controller):
 				self.w_attn_1 = tf.get_variable("w_1", [self.lstm_size, self.lstm_size]) 
 				self.w_attn_2 = tf.get_variable("w_2", [self.lstm_size, self.lstm_size]) 
 				self.v_attn = tf.get_variable("v", [self.lstm_size, 1]) 
-
+	
 	def _build_sampler(self, prev_c=None, prev_h=None, use_bias=False):
 		"""Build the sampler ops and the log_prob ops."""
 
 		print("-" * 80)
 		print("Build controller sampler")
-
+		
 		anchors = tf.TensorArray(
 		  tf.float32, size=self.num_cells + 2, clear_after_read=False) 
 		anchors_w_1 = tf.TensorArray(
@@ -234,6 +234,7 @@ class MicroController(Controller):
 
 	def _set_train_dicts(self, normal_array, reduce_array):
 		return self.accuracy_scaling.convert_numpy_arrays_to_dicts(normal_array, reduce_array)
+	in_session = False
 	def build_trainer(self, child_model):
 		child_model.build_valid_rl()
 		self.valid_acc = (tf.to_float(child_model.valid_shuffle_acc) /
@@ -245,8 +246,8 @@ class MicroController(Controller):
 		
 		#if self.normal_array is not None:
 		#	self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
-		
-		self.scaled_acc, normal_dict_array, reduce_dict_array = self.accuracy_scaling.get_scaled_accuracy(
+		if in_session:
+			self.scaled_acc, normal_dict_array, reduce_dict_array = self.accuracy_scaling.get_scaled_accuracy(
 									self.normal_array,
 									self.reduce_array,
 									self.valid_acc,
@@ -254,9 +255,10 @@ class MicroController(Controller):
 									self.current_reduce_arc,
 									scaling_method="linear",
 									arc_handling="sum")
-		normal_dict_array, reduce_dict_array = self.accuracy_scaling.get_dicts_as_numpy_arrays()
-		self.normal_dict_array = tf.convert_to_tensor(normal_dict_array)
-		self.reduce_dict_array = tf.convert_to_tensor(reduce_dict_array)
+			normal_dict_array, reduce_dict_array = self.accuracy_scaling.get_dicts_as_numpy_arrays()
+			self.normal_dict_array = tf.convert_to_tensor(normal_dict_array)
+			self.reduce_dict_array = tf.convert_to_tensor(reduce_dict_array)
+		in_session = True
 		self.reward = self.scaled_acc
 		
 		if self.entropy_weight is not None:
