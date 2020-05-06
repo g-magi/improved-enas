@@ -105,7 +105,7 @@ class AccuracyScaling:
 	def get_scaled_accuracy(self, normal_dict, reduce_dict ,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		#if type(normal_arc) is not np.ndarray:
 		#	return 0.0
-		self.convert_numpy_arrays_to_dicts(normal_dict,reduce_dict)
+		normal_dict, reduce_dict = self.convert_numpy_arrays_to_dicts(normal_dict,reduce_dict)
 		normal_arc_training = self.get_trained_arc(normal_arc, "normal")
 		reduce_arc_training = self.get_trained_arc(reduce_arc, "reduce")
 		normal_arc_training = np.sum(normal_arc_training)
@@ -139,7 +139,7 @@ class AccuracyScaling:
 		
 		##
 		
-		return scaled_accuracy
+		return scaled_accuracy, self._get_dict_as_numpy_array("normal"), self._get_dict_as_numpy_array("reduce")
 		
 	def _get_dict_as_numpy_array(self, dict_type):
 		
