@@ -39,9 +39,9 @@ class AccuracyScaling:
 			x_op = node[1]
 			y_op = node[3]
 			#x_key = "node"+str(i)+"_x_op"+str(x_op)
-			x_key = (((i+1)*100)+((x_op+1)*10))*(10+0)
+			x_key = (((i+1)*100)+((x_op+1)*10))*(10)+0
 			#y_key = "node"+str(i)+"_y_op"+str(y_op)
-			y_key = (((i+1)*100)+((y_op+1)*10))*(10+1)
+			y_key = (((i+1)*100)+((y_op+1)*10))*(10)+1
 			self._save_trained_op(x_key, arc_type)
 			self._save_trained_op(y_key, arc_type)
 		
