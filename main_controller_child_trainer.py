@@ -187,6 +187,7 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
+			"set_train_dicts": controller_model.set_train_dicts
 		}
 		
 
@@ -284,7 +285,11 @@ def train():
 				normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
 				reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
 					#test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
-
+				
+				temp_normal_array, temp_reduce_array = accuracy_scaling.get_dicts_as_numpy_arrays()
+				temp_normal_dict, temp_reduce_dict = sess.run(controller_ops["set_train_dicts"], feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array}
+				
+				
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
 				else:
@@ -305,7 +310,7 @@ def train():
 					print(log_string)
 					print("\tNormal architecture: \n\t",normal_arc)
 					print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
-					print("\tNormal dict: \n\t",accuracy_scaling.normal_train_dict)
+					print("\tLast received dict: \n\t",temp_normal_dict)
 					print("\tReduce architecture: \n\t",reduce_arc)
 					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 					#print("Testing acc scaling with current arc -> ", test_acc_scaling)
