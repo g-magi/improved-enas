@@ -143,3 +143,40 @@ class AccuracyScaling:
 		##
 		
 		return scaled_accuracy
+		
+	def _get_dict_as_numpy_array(dict_type):
+		
+		out_dict = self.normal_train_dict
+		out_list = []
+		if dict_type is "reduce":
+			out_dict = self.reduce_train_dict
+		for key in out_dict:
+			out_list.append(key)
+			out_list.append(out_dict[key])
+		return np.asarray(out_list, dtype=int32)
+			
+	def get_dicts_as_numpy_arrays():
+		out_normal = _get_dict_as_numpy_array("normal")
+		out_reduce = _get_dict_as_numpy_array("reduce")
+		return out_normal, out_reduce
+		
+	def _set_numpy_array_as_dict(dict_type, array):
+		temp_dict = {}
+		for i in range(len(array)//4):
+			x_key = array[i*4+0]
+			x_value = array[i*4+1]
+			y_key = array[i*4+2]
+			x_value = array[i*4+3]
+			temp_dict[x_key] = x_value
+			temp_dict[y_key] = y_value
+		if dict_type is "normal"
+			self.normal_train_dict = temp_dict
+			return self.normal_train_dict
+		elif dict_type is "reduce"
+			self.reduce_train_dict = temp_dict
+			return self.reduce_train_dict
+		
+	def convert_numpy_arrays_to_dicts(normal_array, reduce_array):
+		_set_numpy_array_as_dict("normal", normal_array)
+		_set_numpy_array_as_dict("reduce", reduce_array)
+		return self.normal_train_dict, self.reduce_train_dict
