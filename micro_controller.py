@@ -76,6 +76,9 @@ class MicroController(Controller):
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 		
+		normal_array = tf.placeholder("normal_array")
+		reduce_array = tf.placeholder("reduce_array")
+		self.set_train_dicts = _set_train_dicts(normal_array, reduce_array)
 		
 		self.accuracy_scaling = accuracy_scaling
 		
