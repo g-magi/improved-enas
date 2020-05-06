@@ -309,7 +309,7 @@ def train():
 					print(log_string)
 					print("\tNormal architecture: \n\t",normal_arc)
 					print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
-					print("\tLast received dict: \n\t",temp_normal_dict)
+					#print("\tLast received dict: \n\t",temp_normal_dict)
 					print("\tReduce architecture: \n\t",reduce_arc)
 					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 					#print("Testing acc scaling with current arc -> ", test_acc_scaling)
@@ -323,7 +323,6 @@ def train():
 						for ct_step in range(FLAGS.controller_train_steps *
 											 FLAGS.controller_num_aggregate):
 							temp_normal_array, temp_reduce_array = accuracy_scaling.get_dicts_as_numpy_arrays()
-							temp_normal_dict, temp_reduce_dict = sess.run(controller_ops["set_train_dicts"], feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							
 							
 							run_ops = [
@@ -334,12 +333,13 @@ def train():
 								controller_ops["valid_acc"],
 								controller_ops["normal_arc"],
 								controller_ops["reduce_arc"],
+								controller_ops["set_train_dicts"],
 								controller_ops["scaled_accuracy"],
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
 							]
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_acr, scaled_acc, bl, skip, _ = sess.run(run_ops)
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc,_,_, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							controller_step = sess.run(controller_ops["train_step"])
 
 							if ct_step % FLAGS.log_every == 0:
