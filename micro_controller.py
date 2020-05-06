@@ -231,7 +231,7 @@ class MicroController(Controller):
 
 		return arc_seq, entropy, log_prob, last_c, last_h
 
-	def _set_train_dicts(self, normal_array, reduce_array):
+	def _set_train_dicts(normal_array, reduce_array):
 		return self.accuracy_scaling.convert_numpy_arrays_to_dicts(normal_array, reduce_array)
 	def build_trainer(self, child_model):
 		child_model.build_valid_rl()
