@@ -159,7 +159,7 @@ class AccuracyScaling:
 				out_list.append(key)
 				out_list.append(value)
 		
-		out_array = np.asarray(out_list, dtype=np.int32)
+		out_array = np.asarray(out_list)
 		return out_array
 			
 	def get_dicts_as_numpy_arrays(self):
