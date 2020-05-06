@@ -333,13 +333,12 @@ def train():
 								controller_ops["valid_acc"],
 								controller_ops["normal_arc"],
 								controller_ops["reduce_arc"],
-								controller_ops["set_train_dicts"],
 								controller_ops["scaled_accuracy"],
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
 							]
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc,_,_, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							controller_step = sess.run(controller_ops["train_step"])
 
 							if ct_step % FLAGS.log_every == 0:
