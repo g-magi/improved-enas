@@ -242,10 +242,12 @@ class MicroController(Controller):
 		#acc_to_scale = self.valid_acc + 0.0
 		#self.reward = self.valid_acc 
 		
-		if self.normal_array is not None:
-			self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
+		#if self.normal_array is not None:
+		#	self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
 		
 		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
+									self.normal_array,
+									self.reduce_array,
 									self.valid_acc,
 									self.current_normal_arc,
 									self.current_reduce_arc,
