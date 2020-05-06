@@ -177,14 +177,14 @@ class AccuracyScaling:
 		temp_dict = self.convert_numpy_array_to_dict(array)
 		if dict_type is "normal":
 			self.normal_train_dict = temp_dict
-			return array
+			return self.normal_train_dict
 		elif dict_type is "reduce":
 			self.reduce_train_dict = temp_dict
-			return array
+			return self.reduce_train_dict
 		
 	def convert_numpy_arrays_to_dicts(self, normal_array, reduce_array):
-		self._set_numpy_array_as_dict("normal", normal_array)
-		self._set_numpy_array_as_dict("reduce", reduce_array)
+		normal_array = self._set_numpy_array_as_dict("normal", normal_array)
+		reduce_array = self._set_numpy_array_as_dict("reduce", reduce_array)
 		return normal_array, reduce_array
 	
 
