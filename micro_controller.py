@@ -76,9 +76,9 @@ class MicroController(Controller):
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 		
-		normal_array = tf.placeholder(tf.int32, shape=[None, 1],name="normal_array")
-		reduce_array = tf.placeholder(tf.int32, shape=[None, 1],name="reduce_array")
-		self.set_train_dicts = _set_train_dicts(normal_array, reduce_array)
+		self.normal_array = tf.placeholder(tf.int32, shape=[None, 1],name="normal_array")
+		self.reduce_array = tf.placeholder(tf.int32, shape=[None, 1],name="reduce_array")
+		
 		
 		self.accuracy_scaling = accuracy_scaling
 		
@@ -241,6 +241,9 @@ class MicroController(Controller):
 		self.current_reduce_arc = child_model.current_reduce_arc
 		#acc_to_scale = self.valid_acc + 0.0
 		#self.reward = self.valid_acc 
+		
+		if normal_array is not None:
+			self.set_train_dicts = _set_train_dicts(normal_array, reduce_array)
 		
 		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
 									self.valid_acc,
