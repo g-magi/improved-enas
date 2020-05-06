@@ -344,7 +344,7 @@ def train():
 								controller_ops["normal_dict_array"],
 								controller_ops["reduce_dict_array"],
 							]
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_dict_array, reduce_dict_array = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_dict_array, reduce_dict_array = sess.run(run_ops,feed_dict={"normal_array:0":tf.convert_to_tensor(temp_normal_array), "reduce_array:0":tf.convert_to_tensor(temp_reduce_array)})
 							print("running controller step")
 							controller_step = sess.run(controller_ops["train_step"])
 							
