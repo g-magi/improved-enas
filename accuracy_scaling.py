@@ -173,7 +173,7 @@ class AccuracyScaling:
 			x_key = array[i*4+0]
 			x_value = array[i*4+1]
 			y_key = array[i*4+2]
-			x_value = array[i*4+3]
+			y_value = array[i*4+3]
 			temp_dict[x_key] = x_value
 			temp_dict[y_key] = y_value
 		return temp_dict
