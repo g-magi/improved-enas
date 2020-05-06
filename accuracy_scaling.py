@@ -106,7 +106,7 @@ class AccuracyScaling:
 		return trained_arc
 		
 	def get_scaled_accuracy(self, normal_dict, reduce_dict ,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
-		if normal_dict is None:
+		if normal_dict.shape is ():
 			return 5, normal_dict, reduce_dict
 		#if type(normal_arc) is not np.ndarray:
 		#	return 0.0
