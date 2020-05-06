@@ -162,13 +162,7 @@ class AccuracyScaling:
 	
 	def convert_numpy_array_to_dict(self,array):
 		temp_dict = {}
-		shape = array.shape
-		for i, s in enumerate(shape):
-			if s is not None:
-				temp_dict[i] = s
-			else:
-				temp_dict[i] = 0
-		if tf.is_tensor(array):
+		if array.shape[0] is None:
 			return temp_dict
 		for i in range(array.shape[0]//4):
 			x_key = array[i*4+0]
