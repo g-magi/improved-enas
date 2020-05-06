@@ -245,7 +245,7 @@ class MicroController(Controller):
 		#if self.normal_array is not None:
 		#	self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
 		
-		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
+		self.scaled_acc, self.normal_dict_array, self.reduce_dict_array = self.accuracy_scaling.get_scaled_accuracy(
 									self.normal_array,
 									self.reduce_array,
 									self.valid_acc,
