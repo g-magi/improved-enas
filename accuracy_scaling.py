@@ -144,7 +144,7 @@ class AccuracyScaling:
 		
 		return scaled_accuracy
 		
-	def _get_dict_as_numpy_array(dict_type):
+	def _get_dict_as_numpy_array(self, dict_type):
 		
 		out_dict = self.normal_train_dict
 		out_list = []
@@ -155,7 +155,7 @@ class AccuracyScaling:
 			out_list.append(out_dict[key])
 		return np.asarray(out_list, dtype=int32)
 			
-	def get_dicts_as_numpy_arrays():
+	def get_dicts_as_numpy_arrays(self):
 		out_normal = _get_dict_as_numpy_array("normal")
 		out_reduce = _get_dict_as_numpy_array("reduce")
 		return out_normal, out_reduce
