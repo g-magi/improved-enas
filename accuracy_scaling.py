@@ -147,7 +147,7 @@ class AccuracyScaling:
 		
 	def _get_dict_as_numpy_array(self, dict_type):
 		
-		out_list = [123,456]
+		out_list = []
 		if dict_type is "normal":
 			for key, value in self.normal_train_dict.items():
 				out_list.append(key)
