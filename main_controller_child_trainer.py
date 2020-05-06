@@ -342,9 +342,10 @@ def train():
 								controller_ops["normal_dict_array"],
 								controller_ops["reduce_dict_array"],
 							]
-							print("passing dicts\n\t",temp_normal_array,"\n\t",temp_reduce_array)
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							print("passing dicts:\n\t",temp_normal_array,"\n\t",temp_reduce_array)
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_dict_array, reduce_dict_array = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							controller_step = sess.run(controller_ops["train_step"])
+							print("received dicts:\n\t",normal_dict_array,"\n\t",reduce_dict_array,"\n")
 
 							if ct_step % FLAGS.log_every == 0:
 								curr_time = time.time()
