@@ -169,10 +169,10 @@ class AccuracyScaling:
 			x_value = array[i*4+3]
 			temp_dict[x_key] = x_value
 			temp_dict[y_key] = y_value
-		if dict_type is "normal"
+		if dict_type is "normal":
 			self.normal_train_dict = temp_dict
 			return self.normal_train_dict
-		elif dict_type is "reduce"
+		elif dict_type is "reduce":
 			self.reduce_train_dict = temp_dict
 			return self.reduce_train_dict
 		
