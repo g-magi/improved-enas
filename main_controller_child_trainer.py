@@ -338,6 +338,7 @@ def train():
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
 							]
+							print("passing dicts\n\t",temp_normal_array,"\n\t",temp_reduce_array)
 							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							controller_step = sess.run(controller_ops["train_step"])
 
