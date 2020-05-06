@@ -148,13 +148,15 @@ class AccuracyScaling:
 		
 	def _get_dict_as_numpy_array(self, dict_type):
 		
-		out_dict = self.normal_train_dict
 		out_list = [123,456]
+		if dict_type is "normal":
+			for key, value in self.normal_train_dict.items():
+				out_list.append(key)
+				out_list.append(value)
 		if dict_type is "reduce":
-			out_dict = self.reduce_train_dict
-		for key, value in out_dict.items():
-			out_list.append(key)
-			out_list.append(value)
+			for key, value in self.reduce_train_dict.items():
+				out_list.append(key)
+				out_list.append(value)
 		
 		out_array = np.asarray(out_list, dtype=np.int32)
 		return out_array
