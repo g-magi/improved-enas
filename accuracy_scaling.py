@@ -150,7 +150,7 @@ class AccuracyScaling:
 		for key in out_dict:
 			out_list.append(key)
 			out_list.append(out_dict[key])
-		if out_list
+		
 		out_array = np.asarray(out_list, dtype=np.int32)
 		return out_array
 			
