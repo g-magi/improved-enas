@@ -246,6 +246,7 @@ class MicroController(Controller):
 		
 		#if self.normal_array is not None:
 		#	self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
+		self.scaled_acc = tf.constant(5)
 		if self.in_session:
 			self.scaled_acc, normal_dict_array, reduce_dict_array = self.accuracy_scaling.get_scaled_accuracy(
 									self.normal_array,
@@ -259,6 +260,7 @@ class MicroController(Controller):
 			self.normal_dict_array = tf.convert_to_tensor(normal_dict_array)
 			self.reduce_dict_array = tf.convert_to_tensor(reduce_dict_array)
 		self.in_session = True
+		
 		self.reward = self.scaled_acc
 		
 		if self.entropy_weight is not None:
