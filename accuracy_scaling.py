@@ -182,12 +182,16 @@ class AccuracyScaling:
 	
 	def _set_numpy_array_as_dict(self,dict_type, array):
 		temp_dict = self.convert_numpy_array_to_dict(array)
+		
+		
 		if dict_type is "normal":
+			self.normal_train_dict.clear()
 			for key, value in temp_dict.items():
 				if not tf.is_tensor(value):
 					self.normal_train_dict[key] = value
 			return self._get_dict_as_numpy_array("normal")
 		elif dict_type is "reduce":
+			self.reduce_train_dict.clear()
 			for key, value in temp_dict.items():
 				if not tf.is_tensor(value):
 					self.reduce_train_dict[key] = value
