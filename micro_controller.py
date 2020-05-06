@@ -261,8 +261,10 @@ class MicroController(Controller):
 			self.reduce_dict_array = tf.convert_to_tensor(reduce_dict_array)
 		self.in_session = True
 		
-		self.reward = self.scaled_acc
-		
+		###################
+		#self.reward = self.scaled_acc
+		self.reward = self.valid_acc 
+		###################
 		if self.entropy_weight is not None:
 			self.reward += self.entropy_weight * self.sample_entropy
 
