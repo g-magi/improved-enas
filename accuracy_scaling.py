@@ -171,7 +171,6 @@ class AccuracyScaling:
 	@tf.function
 	def convert_numpy_array_to_dict(self,array):
 		temp_dict = {}
-		@tf.function
 		if array.shape[0] is None:
 			return temp_dict
 		for i in range(array.shape[0]//4):
