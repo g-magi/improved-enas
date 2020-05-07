@@ -10,7 +10,7 @@ class AccuracyScaling:
 		if self.reduce_train_dict is None:
 			self.reduce_train_dict = {}
 		
-	
+	@tf_function
 	def _split_arc_seq(self,arc_seq):
 		arc_seq_length = 0
 		if type(arc_seq) is np.ndarray:
@@ -47,7 +47,7 @@ class AccuracyScaling:
 			y_key = (((i+1)*10)+(y_op+1))*(10)+1
 			self._save_trained_op(x_key, arc_type)
 			self._save_trained_op(y_key, arc_type)
-		
+	@tf_function
 	def _get_trained_op(self,key, arc_type):
 		if arc_type is "normal":
 			if key in self.normal_train_dict:
@@ -61,6 +61,7 @@ class AccuracyScaling:
 				return -10
 	
 	# returns a numpy array of [nodes_amt*5] items that has the same structure as the return from [get_trained_arc]
+	@tf_function
 	def _compute_average_arc(self,nodes_amt, arc_type):
 		average_arc = np.zeros(nodes_amt*2, dtype=int)
 		for i in range(nodes_amt):
@@ -87,7 +88,7 @@ class AccuracyScaling:
 			average_arc[(i*2)+1]=y_total//5
 		
 		return average_arc
-	
+	@tf_function
 	def get_trained_arc(self,arc_seq, arc_type):
 		arc_nodes = self._split_arc_seq(arc_seq)
 		trained_arc = []
@@ -105,6 +106,7 @@ class AccuracyScaling:
 		
 		return trained_arc
 		
+	@tf_function
 	def get_scaled_accuracy(self, normal_dict, reduce_dict ,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		if tf.rank(normal_dict) is 0:
 			return 5, normal_dict, reduce_dict
@@ -146,7 +148,7 @@ class AccuracyScaling:
 		
 		#return scaled_accuracy, self._get_dict_as_numpy_array("normal"), self._get_dict_as_numpy_array("reduce")
 		return scaled_accuracy, normal_dict, reduce_dict
-		
+	@tf_function
 	def _get_dict_as_numpy_array(self, dict_type):
 		
 		out_list = []
@@ -161,12 +163,12 @@ class AccuracyScaling:
 		
 		out_array = np.asarray(out_list)
 		return out_array
-			
+	@tf_function
 	def get_dicts_as_numpy_arrays(self):
 		out_normal = self._get_dict_as_numpy_array("normal")
 		out_reduce = self._get_dict_as_numpy_array("reduce")
 		return out_normal, out_reduce
-	
+	@tf_function
 	def convert_numpy_array_to_dict(self,array):
 		temp_dict = {}
 		if array.shape[0] is None:
@@ -179,7 +181,7 @@ class AccuracyScaling:
 			temp_dict[x_key] = x_value
 			temp_dict[y_key] = y_value
 		return temp_dict
-	
+	@tf_function
 	def _set_numpy_array_as_dict(self,dict_type, array):
 		temp_dict = self.convert_numpy_array_to_dict(array)
 		
@@ -197,6 +199,7 @@ class AccuracyScaling:
 					self.reduce_train_dict[key] = value
 			return self._get_dict_as_numpy_array("reduce")
 		
+	@tf_function
 	def convert_numpy_arrays_to_dicts(self, normal_array, reduce_array):
 		normal_array = self._set_numpy_array_as_dict(dict_type="normal", array=normal_array)
 		reduce_array = self._set_numpy_array_as_dict(dict_type="reduce", array=reduce_array)
