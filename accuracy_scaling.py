@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 
-class AccuracyScaling:
+class ArchitectureTrainingStorage:
 	normal_train_dict = None
 	reduce_train_dict = None
 	def __init__(self):
@@ -10,7 +10,6 @@ class AccuracyScaling:
 		if self.reduce_train_dict is None:
 			self.reduce_train_dict = {}
 		
-	@tf.function
 	def _split_arc_seq(self,arc_seq):
 		arc_seq_length = 0
 		if type(arc_seq) is np.ndarray:
@@ -47,7 +46,7 @@ class AccuracyScaling:
 			y_key = (((i+1)*10)+(y_op+1))*(10)+1
 			self._save_trained_op(x_key, arc_type)
 			self._save_trained_op(y_key, arc_type)
-	@tf.function
+	
 	def _get_trained_op(self,key, arc_type):
 		if arc_type is "normal":
 			if key in self.normal_train_dict:
@@ -61,7 +60,7 @@ class AccuracyScaling:
 				return -10
 	
 	# returns a numpy array of [nodes_amt*5] items that has the same structure as the return from [get_trained_arc]
-	@tf.function
+	
 	def _compute_average_arc(self,nodes_amt, arc_type):
 		average_arc = np.zeros(nodes_amt*2, dtype=int)
 		for i in range(nodes_amt):
@@ -88,7 +87,7 @@ class AccuracyScaling:
 			average_arc[(i*2)+1]=y_total//5
 		
 		return average_arc
-	@tf.function
+	
 	def get_trained_arc(self,arc_seq, arc_type):
 		arc_nodes = self._split_arc_seq(arc_seq)
 		trained_arc = []
@@ -106,7 +105,77 @@ class AccuracyScaling:
 		
 		return trained_arc
 		
+
+class AccuracyScaler
+	
+	def _tf_convert_arc_to_seq(self, arc):
+		# tupla con i, output, arc
+		loop_tuple = (tf.constant(1), tf.constant(0), arc)
+		def _cond(i, output, arc):
+			return tf.less(i, tf.shape(arc)[0])
+		def _body(i, output, arc):
+			current_node = tf.mod(i,4)
+			current_item = tf.math.div(i,4)
+			if tf.math.equal(current_item,1):
+				#x_op
+				output = tf.constant(0)
+			elif tf.math.equal(current_item,3):
+				#y_op
+				output = tf.constant(1)
+			#((i+1)*10)
+			node_const = tf.math.multiply(tf.math.add(i, 1),10)
+			#(y_op+1)
+			op_const = tf.math.add(tf.gather(arc,i),1)
+			const_plus_op = tf.math.add(node_const,op_const)
+			const_plus_op = tf.math.multiply(const_plus_op,10)
+			output = tf.math.add(const_plus_op,output)
+			return tf.math.add(i,2), output, arc
+		
+		return tf.while_loop(_cond, _body, loop_tuple)[1]
+	
+	def _tf_get_arc_training(self, arc_seq, current_dict):
+		loop_tuple = (tf.constant(0), tf.constant(0), arc, current_dict)
+		def _cond(i, output, arc, current_dict):
+			return tf.less(i, tf.shape(arc)[0])
+		def _body(i, output, arc, current_dict):
+			
+	
+	def _tf_get_hash_table_from_dict(self, tf_dict):
+		loop_tuple = (tf.constant(0), tf.constant(0), tf.constant(0), tf_dict)
+		def _cond(i, output_key, output_value, tf_dict):
+			return tf.less(i, tf.shape(tf_dict)[0])
+		def _body(i, output, tf_dict):
+			output_key = tf.gather_nd(tf_dict,[i,0])
+			output_value = tf.gather_nd(tf_dict,[i,1])
+			i = tf.math.add(i,1)
+			return i, output_key, output_value, tf_dict
+		loop_outputs = tf.while_loop(_cond,_body, loop_tuple)
+		keys = loop_outputs[1]
+		values = loop_outputs[2]
+		table = tf.lookup.StaticHashTable(
+			tf.lookup.KeyValueTensorInitializer(keys, values), -1)
+		return table
+		
+	
 	@tf.function
+	def get_scaled_accuracy(self, normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
+		# reshaping dictionaries in [x, 2] tensors and then putting them in hashtables
+		tf_normal_dict = tf.convert_to_tensor(normal_dict)
+		tf_normal_dict = tf.reshape(tf_normal_dict, [-1,2])
+		tf_normal_dict = self._tf_get_hash_table_from_dict(tf_normal_dict)
+		tf_reduce_dict = tf.convert_to_tensor(reduce_dict)
+		tf_reduce_dict = tf.reshape(tf_reduce_dict, [-1,2])
+		tf_reduce_dict = self._tf_get_hash_table_from_dict(tf_reduce_dict)
+		
+		# transforming architectures in sequences of dict keys
+		tf_normal_arc_seq = self._tf_convert_arc_to_seq(normal_arc)
+		tf_reduce_arc_seq = self._tf_convert_arc_to_seq(reduce_arc)
+		
+		
+		## TODO TODO TODO
+		tf_normal_arc_training = self._tf_get_arc_training(tf_normal_arc_seq)
+		tf_normal_arc_training = self._tf_get_arc_training(tf_normal_arc_seq)
+	"""
 	def get_scaled_accuracy(self, normal_dict, reduce_dict ,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		if tf.rank(normal_dict) is 0:
 			return 5, normal_dict, reduce_dict
@@ -148,7 +217,7 @@ class AccuracyScaling:
 		
 		#return scaled_accuracy, self._get_dict_as_numpy_array("normal"), self._get_dict_as_numpy_array("reduce")
 		return scaled_accuracy, normal_dict, reduce_dict
-	@tf.function
+	
 	def _get_dict_as_numpy_array(self, dict_type):
 		
 		out_list = []
@@ -163,12 +232,12 @@ class AccuracyScaling:
 		
 		out_array = np.asarray(out_list)
 		return out_array
-	@tf.function
+	
 	def get_dicts_as_numpy_arrays(self):
 		out_normal = self._get_dict_as_numpy_array("normal")
 		out_reduce = self._get_dict_as_numpy_array("reduce")
 		return out_normal, out_reduce
-	@tf.function
+	
 	def convert_numpy_array_to_dict(self,array):
 		temp_dict = {}
 		if array.shape[0] is None:
@@ -181,7 +250,7 @@ class AccuracyScaling:
 			temp_dict[x_key] = x_value
 			temp_dict[y_key] = y_value
 		return temp_dict
-	@tf.function
+	
 	def _set_numpy_array_as_dict(self,dict_type, array):
 		temp_dict = self.convert_numpy_array_to_dict(array)
 		
@@ -199,11 +268,11 @@ class AccuracyScaling:
 					self.reduce_train_dict[key] = value
 			return self._get_dict_as_numpy_array("reduce")
 		
-	@tf.function
+	
 	def convert_numpy_arrays_to_dicts(self, normal_array, reduce_array):
 		normal_array = self._set_numpy_array_as_dict(dict_type="normal", array=normal_array)
 		reduce_array = self._set_numpy_array_as_dict(dict_type="reduce", array=reduce_array)
 		return normal_array, reduce_array
-	
-
+	"""
+	#
 	
