@@ -20,7 +20,7 @@ from micro_child import MicroChild
 
 import accuracy_scaling as accs
 
-accuracy_scaling = accs.AccuracyScaling()
+accuracy_scaling = accs.ArchitectureTrainingStorage()
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
