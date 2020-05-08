@@ -106,7 +106,7 @@ class ArchitectureTrainingStorage:
 		return trained_arc
 		
 
-class AccuracyScaler
+class AccuracyScaler:
 	
 	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
