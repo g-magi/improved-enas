@@ -337,11 +337,9 @@ def train():
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
-								controller_ops["normal_dict_array"],
-								controller_ops["reduce_dict_array"],
 							]
 							#print("running controller step")
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_dict_array, reduce_dict_array = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							controller_step = sess.run(controller_ops["train_step"])
 							
 
@@ -366,9 +364,6 @@ def train():
 								reduce_train_amt = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
 								normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
 								reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
-								
-								print("passing dicts:\n\t",temp_normal_array,"\n\t",temp_reduce_array, "\nshape: ",temp_normal_array.shape)
-								print("received dicts:\n\t",normal_dict_array,"\n\t",reduce_dict_array,"\n")
 								
 								print("\tNormal architecture: \n\t",normal_arc)
 								print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
