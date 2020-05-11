@@ -108,7 +108,7 @@ class ArchitectureTrainingStorage:
 
 class AccuracyScaler:
 	
-	def _tf_convert_arc_to_seq(arc):
+	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
 		loop_tuple = (tf.constant(1), tf.constant(0), arc)
 		def _cond(i, output, arc):
@@ -133,7 +133,7 @@ class AccuracyScaler:
 		
 		return tf.while_loop(_cond, _body, loop_tuple)[1]
 
-	def _tf_get_arc_training(arc_seq, current_dict):
+	def _tf_get_arc_training(self, arc_seq, current_dict):
 		loop_tuple = (tf.constant(0), tf.constant(0), arc_seq, current_dict)
 		def _cond(i, output, arc_seq, current_dict):
 			return tf.less(i, tf.shape(arc_seq)[0])
@@ -145,7 +145,7 @@ class AccuracyScaler:
 		return tf.while_loop(_cond, _body, loop_tuple)[1]
 			
 
-	def _tf_get_hash_table_from_dict(tf_dict):
+	def _tf_get_hash_table_from_dict(self, tf_dict):
 		loop_tuple = (tf.constant(0), tf.constant(0), tf.constant(0), tf_dict)
 		def _cond(i, output_key, output_value, tf_dict):
 			return tf.less(i, tf.shape(tf_dict)[0])
@@ -162,31 +162,31 @@ class AccuracyScaler:
 		return table
 		
 
-	def tf_compute_average_arc_training(current_dict):
+	def tf_compute_average_arc_training(self, current_dict):
 		tf_full_dict = current_dict.export()
 		tf_average = tf.gather(tf.math.reduce_mean(tf_full_dict,0),[1])
 		return tf_average
 		
 		
-	@staticmethod
+		
 	@tf.function
-	def tf_get_scaled_accuracy(normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
+	def tf_get_scaled_accuracy(self,normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		# reshaping dictionaries in [x, 2] tensors and then putting them in hashtables
 		tf_normal_dict = tf.convert_to_tensor(normal_dict)
 		tf_normal_dict = tf.reshape(tf_normal_dict, [-1,2])
-		tf_normal_dict = _tf_get_hash_table_from_dict(tf_normal_dict)
+		tf_normal_dict = self._tf_get_hash_table_from_dict(tf_normal_dict)
 		tf_reduce_dict = tf.convert_to_tensor(reduce_dict)
 		tf_reduce_dict = tf.reshape(tf_reduce_dict, [-1,2])
-		tf_reduce_dict = _tf_get_hash_table_from_dict(tf_reduce_dict)
+		tf_reduce_dict = self._tf_get_hash_table_from_dict(tf_reduce_dict)
 		
 		# transforming architectures in sequences of dict keys
-		tf_normal_arc_seq = _tf_convert_arc_to_seq(normal_arc)
-		tf_reduce_arc_seq = _tf_convert_arc_to_seq(reduce_arc)
+		tf_normal_arc_seq = self._tf_convert_arc_to_seq(normal_arc)
+		tf_reduce_arc_seq = self._tf_convert_arc_to_seq(reduce_arc)
 		
 		
 		# transforming sequences of dict keys into sequences of training amounts
-		tf_normal_arc_training = _tf_get_arc_training(tf_normal_arc_seq)
-		tf_reduce_arc_training = _tf_get_arc_training(tf_reduce_arc_seq)
+		tf_normal_arc_training = self._tf_get_arc_training(tf_normal_arc_seq)
+		tf_reduce_arc_training = self._tf_get_arc_training(tf_reduce_arc_seq)
 		
 		# sum of the training amounts
 		tf_normal_arc_training_sum = tf.reduce_sum(tf_normal_arc_training)
