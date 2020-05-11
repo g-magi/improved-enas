@@ -213,7 +213,7 @@ class AccuracyScaler:
 			combined_arcs_training = tf_normal_arc_training_sum + tf_reduce_arc_training_sum
 		elif arc_handling is "avg":
 			combined_arcs_training = (tf_normal_arc_training_sum + tf_reduce_arc_training_sum)//2
-		tf.cast(combined_arcs_training, tf.float64)
+		combined_arcs_training = tf.cast(combined_arcs_training, tf.float32)
 		
 		scaled_accuracy = tf.constant(5.0)
 		
@@ -227,7 +227,7 @@ class AccuracyScaler:
 				average_arc_training = average_normal_arc_training+average_reduce_arc_training
 			elif arc_handling is "avg":
 				average_arc_training = (average_normal_arc_training+average_reduce_arc_training)//2
-			tf.cast(average_arc_training, tf.float64)
+			average_arc_training = tf.cast(average_arc_training, tf.float64)
 			scaling_factor = average_arc_training/combined_arcs_training
 			scaled_accuracy = accuracy*scaling_factor
 		
