@@ -81,7 +81,7 @@ class MicroController(Controller):
 		self.reduce_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="reduce_array")
 		
 		
-		self.accuracy_scaling = accs.AccuracyScaling()
+		self.accuracy_scaling = accs.AccuracyScaler()
 		
 		
 
