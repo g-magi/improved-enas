@@ -157,9 +157,8 @@ class AccuracyScaler:
 		loop_outputs = tf.while_loop(_cond,_body, loop_tuple)
 		keys = loop_outputs[1]
 		values = loop_outputs[2]
-		
-		table = tf.lookup.StaticHashTable(
-			tf.lookup.KeyValueTensorInitializer(keys, values), -1)
+		if not tf.equal(tf.size(keys), 0)
+			table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(keys, values), -1)
 		return table
 		
 
