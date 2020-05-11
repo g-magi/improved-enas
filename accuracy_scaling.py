@@ -115,7 +115,7 @@ class AccuracyScaler:
 			return tf.less(i, tf.shape(arc)[0])
 		def _body(i, output, arc):
 			current_node = tf.mod(i,4)
-			current_item = tf.math.div(i,4)
+			current_item = tf.math.divide(i,4)
 			if tf.math.equal(current_item,1):
 				#x_op
 				output = tf.constant(0)
@@ -155,9 +155,9 @@ class AccuracyScaler:
 			i = tf.math.add(i,1)
 			return i, output_key, output_value, tf_dict
 		loop_outputs = tf.while_loop(_cond,_body, loop_tuple)
-		keys = loop_outputs[1]
-		values = loop_outputs[2]
-		table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(tf.constant([1,2,3]), tf.constant([3,4,5])), -1)
+		keys = tf.constant(loop_outputs[1])
+		values = tf.constant(loop_outputs[2])
+		table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(keys, values), -1)
 		return table
 		
 
