@@ -247,7 +247,7 @@ class MicroController(Controller):
 		#if self.normal_array is not None:
 		#	self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
 		print(">>>>>>>>>>>>>",self.normal_array.shape,"<<<<<<<<<<<<")
-		self.scaled_acc, normal_dict_array, reduce_dict_array = self.accuracy_scaling.get_scaled_accuracy(
+		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
 									self.normal_array,
 									self.reduce_array,
 									self.valid_acc,
@@ -255,9 +255,6 @@ class MicroController(Controller):
 									self.current_reduce_arc,
 									scaling_method="linear",
 									arc_handling="sum")
-		normal_dict_array, reduce_dict_array = self.accuracy_scaling.get_dicts_as_numpy_arrays()
-		self.normal_dict_array = tf.convert_to_tensor(normal_dict_array)
-		self.reduce_dict_array = tf.convert_to_tensor(reduce_dict_array)
 		self.reward = self.scaled_acc
 		
 		if self.entropy_weight is not None:
