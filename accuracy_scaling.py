@@ -150,7 +150,6 @@ class AccuracyScaler:
 		output_key = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
 		output_value = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
 		loop_tuple = (i, output_key, output_value, tf_dict)
-		loop_invariants = 
 		def _cond(i, output_key, output_value, tf_dict):
 			return tf.less(i, tf.shape(tf_dict)[0])
 		def _body(i, output, output_value, tf_dict):
