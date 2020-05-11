@@ -157,6 +157,7 @@ class AccuracyScaler:
 		loop_outputs = tf.while_loop(_cond,_body, loop_tuple)
 		keys = loop_outputs[1]
 		values = loop_outputs[2]
+		
 		table = tf.lookup.StaticHashTable(
 			tf.lookup.KeyValueTensorInitializer(keys, values), -1)
 		return table
@@ -172,6 +173,7 @@ class AccuracyScaler:
 	@tf.function
 	def tf_get_scaled_accuracy(self,normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		# reshaping dictionaries in [x, 2] tensors and then putting them in hashtables
+		tf.tables_initializer()
 		tf_normal_dict = tf.convert_to_tensor(normal_dict)
 		tf_normal_dict = tf.reshape(tf_normal_dict, [-1,2])
 		tf_normal_dict = self._tf_get_hash_table_from_dict(tf_normal_dict)
