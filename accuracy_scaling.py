@@ -147,7 +147,9 @@ class AccuracyScaler:
 			output = output.write(i,current_dict.lookup(current_op))
 			return tf.math.add(i,1), output, arc_seq, current_dict
 		
-		output = tf.while_loop(_cond, _body, loop_tuple)[1].stack()
+		output = tf.while_loop(_cond, _body, loop_tuple)
+		output = output[1]
+		output = output.stack()
 		output = tf.reshape(output,[-1])
 		return output
 			
