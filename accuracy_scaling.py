@@ -139,13 +139,13 @@ class AccuracyScaler:
 
 	def _tf_get_arc_training(self, arc_seq, current_dict):
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
-		loop_tuple = (tf.constant(0), output, arc_seq, current_dict)
-		def _cond(i, output, arc_seq, current_dict):
+		loop_tuple = (tf.constant(0), output, arc_seq)
+		def _cond(i, output, arc_seq):
 			return tf.less(i, tf.shape(arc_seq)[0])
-		def _body(i, output, arc_seq, current_dict):
+		def _body(i, output, arc_seq):
 			current_op = tf.gather(arc_seq, [i])
 			output = output.write(i,current_dict.lookup(current_op))
-			return tf.math.add(i,1), output, arc_seq, current_dict
+			return tf.math.add(i,1), output, arc_seq
 		
 		output = tf.while_loop(_cond, _body, loop_tuple)
 		output = output[1]
