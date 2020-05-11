@@ -133,8 +133,9 @@ class AccuracyScaler:
 			current_output = tf.math.add(const_plus_op,current_output)
 			output = output.write(array_index,current_output)
 			return tf.math.add(i,2),tf.math.add(array_index,1), output, arc
-		
-		return tf.while_loop(_cond, _body, loop_tuple)[2].stack()
+		output = tf.while_loop(_cond, _body, loop_tuple)[2].stack()
+		output = tf.reshape(output,[-1])
+		return output
 
 	def _tf_get_arc_training(self, arc_seq, current_dict):
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
@@ -146,7 +147,9 @@ class AccuracyScaler:
 			output = output.write(i,current_dict.lookup(current_op))
 			return tf.math.add(i,1), output, arc_seq, current_dict
 		
-		return tf.while_loop(_cond, _body, loop_tuple)[1].stack()
+		output = tf.while_loop(_cond, _body, loop_tuple)[1].stack()
+		output = tf.reshape(output,[-1])
+		return output
 			
 
 	def _tf_get_hash_table_from_dict(self, tf_dict):
@@ -165,7 +168,9 @@ class AccuracyScaler:
 			return i, output_key, output_value, tf_dict
 		loop_outputs = tf.while_loop(_cond,_body, loop_tuple)
 		keys = loop_outputs[1].stack()
+		keys = tf.reshape(keys, [-1])
 		values = loop_outputs[2].stack()
+		values = tf.reshape(values, [-1])
 		table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(keys, values), -1)
 		return table
 		
