@@ -168,6 +168,7 @@ class AccuracyScaler:
 		return tf_average
 		
 		
+	@staticmethod
 	@tf.function
 	def tf_get_scaled_accuracy(normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		# reshaping dictionaries in [x, 2] tensors and then putting them in hashtables
