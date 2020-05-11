@@ -111,9 +111,9 @@ class AccuracyScaler:
 	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
 		loop_tuple = (tf.constant(1), tf.constant(0), arc)
-		def _cond(i, output, arc):
+		def _cond(self, i, output, arc):
 			return tf.less(i, tf.shape(arc)[0])
-		def _body(i, output, arc):
+		def _body(self, i, output, arc):
 			current_node = tf.mod(i,4)
 			current_item = tf.math.div(i,4)
 			if tf.math.equal(current_item,1):
@@ -135,9 +135,9 @@ class AccuracyScaler:
 	
 	def _tf_get_arc_training(self, arc_seq, current_dict):
 		loop_tuple = (tf.constant(0), tf.constant(0), arc_seq, current_dict)
-		def _cond(i, output, arc_seq, current_dict):
+		def _cond(self, i, output, arc_seq, current_dict):
 			return tf.less(i, tf.shape(arc_seq)[0])
-		def _body(i, output, arc_seq, current_dict):
+		def _body(self, i, output, arc_seq, current_dict):
 			current_op = tf.gather(arc_seq, [i])
 			output = current_dict.lookup(current_op)
 			return tf.math.add(i,1), output, arc_seq, current_dict
@@ -147,9 +147,9 @@ class AccuracyScaler:
 	
 	def _tf_get_hash_table_from_dict(self, tf_dict):
 		loop_tuple = (tf.constant(0), tf.constant(0), tf.constant(0), tf_dict)
-		def _cond(i, output_key, output_value, tf_dict):
+		def _cond(self,i, output_key, output_value, tf_dict):
 			return tf.less(i, tf.shape(tf_dict)[0])
-		def _body(i, output, tf_dict):
+		def _body(self,i, output, tf_dict):
 			output_key = tf.gather_nd(tf_dict,[i,0])
 			output_value = tf.gather_nd(tf_dict,[i,1])
 			i = tf.math.add(i,1)
