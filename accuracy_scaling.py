@@ -110,39 +110,43 @@ class AccuracyScaler:
 	
 	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
-		loop_tuple = (tf.constant(1), tf.constant(0), arc)
-		def _cond(i, output, arc):
+		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
+		loop_tuple = (tf.constant(1), tf.constant(0), output, arc)
+		def _cond(i, array_index, output, arc):
 			return tf.less(i, tf.shape(arc)[0])
-		def _body(i, output, arc):
+		def _body(i, array_index, output, arc):
 			current_node = tf.mod(i,4)
-			current_item = tf.math.divide(i,4)
+			current_item = tf.math.floordiv(i,4)
+			current_output = tf.constant(0)
 			if tf.math.equal(current_item,1):
 				#x_op
-				output = tf.constant(0)
+				current_output = tf.constant(0)
 			elif tf.math.equal(current_item,3):
 				#y_op
-				output = tf.constant(1)
+				current_output = tf.constant(1)
 			#((i+1)*10)
 			node_const = tf.math.multiply(tf.math.add(i, 1),10)
 			#(y_op+1)
 			op_const = tf.math.add(tf.gather(arc,i),1)
 			const_plus_op = tf.math.add(node_const,op_const)
 			const_plus_op = tf.math.multiply(const_plus_op,10)
-			output = tf.math.add(const_plus_op,output)
-			return tf.math.add(i,2), output, arc
+			current_output = tf.math.add(const_plus_op,current_output)
+			output = output.write(array_index,current_output)
+			return tf.math.add(i,2),tf.math.add(array_index,1), output, arc
 		
-		return tf.while_loop(_cond, _body, loop_tuple)[1]
+		return tf.while_loop(_cond, _body, loop_tuple)[2].stack()
 
 	def _tf_get_arc_training(self, arc_seq, current_dict):
-		loop_tuple = (tf.constant(0), tf.constant(0), arc_seq, current_dict)
+		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
+		loop_tuple = (tf.constant(0), output, arc_seq, current_dict)
 		def _cond(i, output, arc_seq, current_dict):
 			return tf.less(i, tf.shape(arc_seq)[0])
 		def _body(i, output, arc_seq, current_dict):
 			current_op = tf.gather(arc_seq, [i])
-			output = current_dict.lookup(current_op)
+			output = output.write(i,current_dict.lookup(current_op))
 			return tf.math.add(i,1), output, arc_seq, current_dict
 		
-		return tf.while_loop(_cond, _body, loop_tuple)[1]
+		return tf.while_loop(_cond, _body, loop_tuple)[1].stack()
 			
 
 	def _tf_get_hash_table_from_dict(self, tf_dict):
