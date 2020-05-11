@@ -104,7 +104,26 @@ class ArchitectureTrainingStorage:
 			trained_arc.append(y_train_amt)
 		
 		return trained_arc
+	
+	def _get_dict_as_numpy_array(self, dict_type):
 		
+		out_list = []
+		if dict_type is "normal":
+			for key, value in self.normal_train_dict.items():
+				out_list.append(key)
+				out_list.append(value)
+		if dict_type is "reduce":
+			for key, value in self.reduce_train_dict.items():
+				out_list.append(key)
+				out_list.append(value)
+		
+		out_array = np.asarray(out_list)
+		return out_array
+	
+	def get_dicts_as_numpy_arrays(self):
+		out_normal = self._get_dict_as_numpy_array("normal")
+		out_reduce = self._get_dict_as_numpy_array("reduce")
+		return out_normal, out_reduce
 
 class AccuracyScaler:
 	
