@@ -199,8 +199,8 @@ class AccuracyScaler:
 		
 		
 		# transforming sequences of dict keys into sequences of training amounts
-		tf_normal_arc_training = self._tf_get_arc_training(tf_normal_arc_seq)
-		tf_reduce_arc_training = self._tf_get_arc_training(tf_reduce_arc_seq)
+		tf_normal_arc_training = self._tf_get_arc_training(tf_normal_arc_seq, tf_normal_dict)
+		tf_reduce_arc_training = self._tf_get_arc_training(tf_reduce_arc_seq, tf_reduce_dict)
 		
 		# sum of the training amounts
 		tf_normal_arc_training_sum = tf.reduce_sum(tf_normal_arc_training)
