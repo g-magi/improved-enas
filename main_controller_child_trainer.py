@@ -167,7 +167,7 @@ def get_ops(images, labels):
 			sync_replicas=FLAGS.controller_sync_replicas,
 			num_aggregate=FLAGS.controller_num_aggregate,
 			num_replicas=FLAGS.controller_num_replicas,
-			accuracy_scaling=accuracy_scaling)
+			accuracy_scaler=accuracy_scaling)
 
 		child_model.connect_controller(controller_model)
 		controller_model.build_trainer(child_model)
