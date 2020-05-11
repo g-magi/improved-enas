@@ -149,7 +149,7 @@ class AccuracyScaler:
 		loop_tuple = (tf.constant(0), tf.constant(0), tf.constant(0), tf_dict)
 		def _cond(i, output_key, output_value, tf_dict):
 			return tf.less(i, tf.shape(tf_dict)[0])
-		def _body(i, output, tf_dict):
+		def _body(i, output, output_value, tf_dict):
 			output_key = tf.gather_nd(tf_dict,[i,0])
 			output_value = tf.gather_nd(tf_dict,[i,1])
 			i = tf.math.add(i,1)
