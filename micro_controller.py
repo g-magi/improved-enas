@@ -38,7 +38,7 @@ class MicroController(Controller):
 				   num_aggregate=None,
 				   num_replicas=None,
 				   name="controller",
-				   accuracy_scaling=None,
+				   accuracy_scaler=None,
 				   num_layers=5,
 				   **kwargs):
 
@@ -81,7 +81,7 @@ class MicroController(Controller):
 		self.reduce_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="reduce_array")
 		
 		
-		self.accuracy_scaling = accs.AccuracyScaler()
+		self.accuracy_scaler = accs.AccuracyScaler()
 		
 		
 
@@ -247,7 +247,7 @@ class MicroController(Controller):
 		#if self.normal_array is not None:
 		#	self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
 		print(">>>>>>>>>>>>>",self.normal_array.shape,"<<<<<<<<<<<<")
-		self.scaled_acc = self.accuracy_scaling.get_scaled_accuracy(
+		self.scaled_acc = self.accuracy_scaler.tf_get_scaled_accuracy(
 									self.normal_array,
 									self.reduce_array,
 									self.valid_acc,
