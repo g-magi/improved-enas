@@ -134,10 +134,15 @@ class AccuracyScaler:
 		return tf.while_loop(_cond, _body, loop_tuple)[1]
 	
 	def _tf_get_arc_training(self, arc_seq, current_dict):
-		loop_tuple = (tf.constant(0), tf.constant(0), arc, current_dict)
-		def _cond(i, output, arc, current_dict):
-			return tf.less(i, tf.shape(arc)[0])
-		def _body(i, output, arc, current_dict):
+		loop_tuple = (tf.constant(0), tf.constant(0), arc_seq, current_dict)
+		def _cond(i, output, arc_seq, current_dict):
+			return tf.less(i, tf.shape(arc_seq)[0])
+		def _body(i, output, arc_seq, current_dict):
+			current_op = tf.gather(arc_seq, [i])
+			output = current_dict.lookup(current_op)
+			return tf.math.add(i,1), output, arc_seq, current_dict
+		
+		return tf.while_loop(_cond, _body, loop_tuple)[1]
 			
 	
 	def _tf_get_hash_table_from_dict(self, tf_dict):
@@ -157,6 +162,13 @@ class AccuracyScaler:
 		return table
 		
 	
+	def tf_compute_average_arc_training(self, current_dict):
+		tf_full_dict = current_dict.export()
+		tf_average = tf.gather(tf.math.reduce_mean(tf_full_dict,0),[1])
+		return tf_average
+		
+		##### TODO TODO TODO
+		
 	@tf.function
 	def tf_get_scaled_accuracy(self, normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		# reshaping dictionaries in [x, 2] tensors and then putting them in hashtables
@@ -172,9 +184,38 @@ class AccuracyScaler:
 		tf_reduce_arc_seq = self._tf_convert_arc_to_seq(reduce_arc)
 		
 		
-		## TODO TODO TODO
+		# transforming sequences of dict keys into sequences of training amounts
 		tf_normal_arc_training = self._tf_get_arc_training(tf_normal_arc_seq)
-		tf_normal_arc_training = self._tf_get_arc_training(tf_normal_arc_seq)
+		tf_reduce_arc_training = self._tf_get_arc_training(tf_reduce_arc_seq)
+		
+		# sum of the training amounts
+		tf_normal_arc_training_sum = tf.reduce_sum(tf_normal_arc_training)
+		tf_reduce_arc_training_sum = tf.reduce_sum(tf_reduce_arc_training)
+		
+		combined_arcs_training = tf.constant(0.0)
+		if arc_handling is "sum":
+			combined_arcs_training = tf_normal_arc_training_sum + tf_reduce_arc_training_sum
+		elif arc_handling is "avg":
+			combined_arcs_training = (tf_normal_arc_training_sum + tf_reduce_arc_training_sum)//2
+		tf.cast(combined_arcs_training, tf.float64)
+		
+		scaled_accuracy = tf.constant(5.0)
+		
+		if scaling_method is "linear":
+			scaled_accuracy = accuracy * combined_arcs_training
+		elif scaling_method is "compare_avg":
+			average_normal_arc_training = tf_compute_average_arc_training(normal_dict)
+			average_reduce_arc_training = tf_compute_average_arc_training(reduce_dict)
+			average_arc_training = tf.constant(5.0)
+			if arc_handling is "sum":
+				average_arc_training = average_normal_arc_training+average_reduce_arc_training
+			elif arc_handling is "avg":
+				average_arc_training = (average_normal_arc_training+average_reduce_arc_training)//2
+			tf.cast(average_arc_training, tf.float64)
+			scaling_factor = average_arc_training/combined_arcs_training
+			scaled_accuracy = accuracy*scaling_factor
+		
+		return scaled_accuracy
 	"""
 	def get_scaled_accuracy(self, normal_dict, reduce_dict ,accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
 		if tf.rank(normal_dict) is 0:
