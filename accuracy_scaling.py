@@ -177,7 +177,7 @@ class AccuracyScaler:
 		tf_normal_dict = _tf_get_hash_table_from_dict(tf_normal_dict)
 		tf_reduce_dict = tf.convert_to_tensor(reduce_dict)
 		tf_reduce_dict = tf.reshape(tf_reduce_dict, [-1,2])
-		tf_reduce_dict = _tf_get_hash_table_from_dict(tf_reduce_dict)
+		tf_reduce_dict = self._tf_get_hash_table_from_dict(tf_reduce_dict)
 		
 		# transforming architectures in sequences of dict keys
 		tf_normal_arc_seq = self._tf_convert_arc_to_seq(normal_arc)
