@@ -146,10 +146,10 @@ class AccuracyScaler:
 			
 	
 	def _tf_get_hash_table_from_dict(self, tf_dict):
-		loop_tuple = (tf.constant(0), tf.constant(0), tf.constant(0), tf_dict)
+		loop_tuple = (self, tf.constant(0), tf.constant(0), tf.constant(0), tf_dict)
 		def _cond(self,i, output_key, output_value, tf_dict):
 			return tf.less(i, tf.shape(tf_dict)[0])
-		def _body(self,i, output, tf_dict):
+		def _body(self, i, output, tf_dict):
 			output_key = tf.gather_nd(tf_dict,[i,0])
 			output_value = tf.gather_nd(tf_dict,[i,1])
 			i = tf.math.add(i,1)
@@ -167,7 +167,6 @@ class AccuracyScaler:
 		tf_average = tf.gather(tf.math.reduce_mean(tf_full_dict,0),[1])
 		return tf_average
 		
-		##### TODO TODO TODO
 		
 	@tf.function
 	def tf_get_scaled_accuracy(self, normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum"):
