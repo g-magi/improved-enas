@@ -243,7 +243,8 @@ class MicroController(Controller):
 		#if self.normal_array is not None:
 		#	self.set_train_dicts = self._set_train_dicts(self.normal_array, self.reduce_array)
 		print(">>>>>>>>>>>>>",self.normal_array.shape,"<<<<<<<<<<<<")
-		self.scaled_acc = accs.AccuracyScaler.tf_get_scaled_accuracy(
+		scaler = accs.AccuracyScaler()
+		self.scaled_acc = scaler.tf_get_scaled_accuracy(
 									self.normal_array,
 									self.reduce_array,
 									self.valid_acc,
