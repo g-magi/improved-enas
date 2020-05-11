@@ -146,17 +146,23 @@ class AccuracyScaler:
 			
 
 	def _tf_get_hash_table_from_dict(self, tf_dict):
-		loop_tuple = (tf.constant(0), tf.constant(0), tf.constant(0), tf_dict)
+		i = tf.constant(0)
+		output_key = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
+		output_value = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
+		loop_tuple = (i, output_key, output_value, tf_dict)
+		loop_invariants = 
 		def _cond(i, output_key, output_value, tf_dict):
 			return tf.less(i, tf.shape(tf_dict)[0])
 		def _body(i, output, output_value, tf_dict):
-			output_key = tf.gather_nd(tf_dict,[i,0])
-			output_value = tf.gather_nd(tf_dict,[i,1])
+			key = tf.gather_nd(tf_dict,[i,0])
+			output_key = output_key.write(i,key)
+			value = tf.gather_nd(tf_dict,[i,1])
+			output_value = output_value.write(i,value)
 			i = tf.math.add(i,1)
 			return i, output_key, output_value, tf_dict
 		loop_outputs = tf.while_loop(_cond,_body, loop_tuple)
-		keys = tf.constant(loop_outputs[1])
-		values = tf.constant(loop_outputs[2])
+		keys = loop_outputs[1]
+		values = loop_outputs[2]
 		table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(keys, values), -1)
 		return table
 		
