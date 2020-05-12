@@ -258,4 +258,4 @@ class AccuracyScaler:
 		
 		scaling_factor = scaled_accuracy/accuracy
 		
-		return scaled_accuracy, scaling_factor, accuracy
+		return scaled_accuracy, average_arc_training, combined_arcs_training
