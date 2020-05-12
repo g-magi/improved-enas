@@ -126,7 +126,7 @@ class ArchitectureTrainingStorage:
 		return out_normal, out_reduce
 
 class AccuracyScaler:
-
+	"""
 	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
@@ -137,31 +137,7 @@ class AccuracyScaler:
 			current_node = tf.mod(i,4)
 			current_item = tf.math.floordiv(i,4)
 			current_output = tf.constant(0)
-			"""
-			def _x_op():
-				node_const = tf.math.multiply(tf.math.add(i, 1),10)
-				op_const = tf.math.add(tf.gather(arc,i),1)
-				const_plus_op = tf.math.add(node_const,op_const)
-				const_plus_op = tf.math.multiply(const_plus_op,10)
-				current_output = tf.math.add(const_plus_op,tf.constant(0))
-				output = output.write(array_index,current_output)
-				return tf.math.add(array_index,1)
-				
-			def _y_op(): 
-				node_const = tf.math.multiply(tf.math.add(i, 1),10)
-				op_const = tf.math.add(tf.gather(arc,i),1)
-				const_plus_op = tf.math.add(node_const,op_const)
-				const_plus_op = tf.math.multiply(const_plus_op,10)
-				current_output = tf.math.add(const_plus_op,tf.constant(1))
-				output = output.write(array_index,current_output)
-				return tf.math.add(array_index,1)
 			
-			def _no_op():
-				return array_index
-			
-			array_index = tf.case([(tf.equal(current_item,1),_x_op),(tf.equal(current_item,3),_y_op)],default=_no_op, exclusive=True)
-			
-			"""
 			if tf.math.equal(current_item,1):
 				node_const = tf.math.multiply(tf.math.add(i, 1),10)
 				op_const = tf.math.add(tf.gather(arc,i),1)
@@ -185,6 +161,35 @@ class AccuracyScaler:
 		output = tf.reshape(output,[-1])
 		return output
 	
+	"""
+	def _tf_convert_arc_to_seq(self, arc):
+		arc = arc[1::2]
+		seq = tf.TensorArray(tf.int32, size = 0, dynamic_size = True)
+		i = tf.constant(0)
+		loop_tuple = (i, seq, arc)
+		def _cond(i, seq, arc):
+			return tf.math.less(i,tf.shape(arc)[0])
+		def _body(i, seq, arc):
+			def _body_x():
+				return tf.constant(0)
+			def _body_y():
+				return tf.constant(1)
+			x_or_y = tf.math.equal(tf.math.floormod(i, 2),0)
+			op_x_or_y = tf.cond(x_or_y,_body_x,body_y)
+			node_id = tf.math.add(i,1)
+			node_id = tf.math.multiply(node_id,100)
+			op_id = tf.gather(arc, i)
+			op_id = tf.math.add(op_id,1)
+			op_id = tf.math.multiply(op_id,10)
+			key = node_id+op_id+x_or_y
+			# return vars
+			seq = seq.write(i,key)
+			i = tf.math.add(i, 1)
+			return i, seq, arc
+		
+		seq = tf.while_loop(_cond, _body, loop_tuple)[1]
+		return seq
+		
 	"""
 	def _tf_convert_arc_to_seq(self, arc):
 		raw_seq = tf.TensorArray(tf.int32, size = 0, dynamic_size = True)
