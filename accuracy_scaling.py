@@ -163,8 +163,8 @@ class AccuracyScaler:
 			return tf.math.less(i, tf.shape(arc_seq)[0])
 		def _body(i, output, arc_seq):
 			current_op = tf.gather(arc_seq, [i])
-			#output = output.write(i,current_dict.lookup(current_op))
-			output = output.write(i,10)
+			output = output.write(i,current_dict.lookup(current_op))
+			#output = output.write(i,10)
 			return tf.math.add(i,1), output, arc_seq
 		
 		output = tf.while_loop(_cond, _body, loop_tuple)
