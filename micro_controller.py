@@ -250,8 +250,8 @@ class MicroController(Controller):
 									self.valid_acc,
 									self.current_normal_arc,
 									self.current_reduce_arc,
-									scaling_method=tf.constant("linear"),
-									arc_handling=tf.constant("sum"))
+									scaling_method=tf.constant("average"),
+									arc_handling=tf.constant("avg"))
 		self.reward = self.scaled_acc
 		
 		if self.entropy_weight is not None:
