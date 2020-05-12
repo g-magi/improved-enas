@@ -137,18 +137,31 @@ class AccuracyScaler:
 			current_node = tf.mod(i,4)
 			current_item = tf.math.floordiv(i,4)
 			current_output = tf.constant(0)
-			def _x_op(): return tf.constant(0)
-			def _y_op(): return tf.constant(1)
-			current_output = tf.case([(tf.equal(current_item,1),_x_op),(tf.equal(current_item,3),_y_op)],exclusive=True)
-			#((i+1)*10)
-			node_const = tf.math.multiply(tf.math.add(i, 1),10)
-			#(y_op+1)
-			op_const = tf.math.add(tf.gather(arc,i),1)
-			const_plus_op = tf.math.add(node_const,op_const)
-			const_plus_op = tf.math.multiply(const_plus_op,10)
-			current_output = tf.math.add(const_plus_op,current_output)
-			output = output.write(array_index,current_output)
-			return tf.math.add(i,2),tf.math.add(array_index,1), output, arc
+			
+			def _x_op():
+				node_const = tf.math.multiply(tf.math.add(i, 1),10)
+				op_const = tf.math.add(tf.gather(arc,i),1)
+				const_plus_op = tf.math.add(node_const,op_const)
+				const_plus_op = tf.math.multiply(const_plus_op,10)
+				current_output = tf.math.add(const_plus_op,tf.constant(0))
+				output = output.write(array_index,current_output)
+				return tf.math.add(array_index,1)
+				
+			def _y_op(): 
+				node_const = tf.math.multiply(tf.math.add(i, 1),10)
+				op_const = tf.math.add(tf.gather(arc,i),1)
+				const_plus_op = tf.math.add(node_const,op_const)
+				const_plus_op = tf.math.multiply(const_plus_op,10)
+				current_output = tf.math.add(const_plus_op,tf.constant(1))
+				output = output.write(array_index,current_output)
+				return tf.math.add(array_index,1)
+			
+			def _no_op():
+				return array_index
+			
+			array_index = tf.case([(tf.equal(current_item,1),_x_op),(tf.equal(current_item,3),_y_op)],default=_no_op, exclusive=True)
+			
+			return tf.math.add(i,1),array_index, output, arc
 		output = tf.while_loop(_cond, _body, loop_tuple)[2].stack()
 		output = tf.reshape(output,[-1])
 		return output
