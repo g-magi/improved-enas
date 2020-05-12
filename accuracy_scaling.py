@@ -126,42 +126,7 @@ class ArchitectureTrainingStorage:
 		return out_normal, out_reduce
 
 class AccuracyScaler:
-	"""
-	def _tf_convert_arc_to_seq(self, arc):
-		# tupla con i, output, arc
-		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
-		loop_tuple = (tf.constant(1), tf.constant(0), output, arc)
-		def _cond(i, array_index, output, arc):
-			return tf.math.less(i, tf.shape(arc)[0])
-		def _body(i, array_index, output, arc):
-			current_node = tf.mod(i,4)
-			current_item = tf.math.floordiv(i,4)
-			current_output = tf.constant(0)
-			
-			if tf.math.equal(current_item,1):
-				node_const = tf.math.multiply(tf.math.add(i, 1),10)
-				op_const = tf.math.add(tf.gather(arc,i),1)
-				const_plus_op = tf.math.add(node_const,op_const)
-				const_plus_op = tf.math.multiply(const_plus_op,10)
-				current_output = tf.math.add(const_plus_op,tf.constant(0))
-				output = output.write(array_index,current_output)
-				array_index = tf.math.add(array_index,1)
-			elif tf.math.equal(current_item,3):
-				node_const = tf.math.multiply(tf.math.add(i, 1),10)
-				op_const = tf.math.add(tf.gather(arc,i),1)
-				const_plus_op = tf.math.add(node_const,op_const)
-				const_plus_op = tf.math.multiply(const_plus_op,10)
-				current_output = tf.math.add(const_plus_op,tf.constant(1))
-				output = output.write(array_index,current_output)
-				array_index = tf.math.add(array_index,1)
-			
-			
-			return tf.math.add(i,1),array_index, output, arc
-		output = tf.while_loop(_cond, _body, loop_tuple)[2].stack()
-		output = tf.reshape(output,[-1])
-		return output
-	
-	"""
+
 	def _tf_convert_arc_to_seq(self, arc):
 		arc = arc[1::2]
 		seq = tf.TensorArray(tf.int32, size = 0, dynamic_size = True)
@@ -191,17 +156,6 @@ class AccuracyScaler:
 		seq = tf.reshape(seq.stack(),[-1])
 		return seq
 		
-	"""
-	def _tf_convert_arc_to_seq(self, arc):
-		raw_seq = tf.TensorArray(tf.int32, size = 0, dynamic_size = True)
-		i = tf.constant(0)
-		loop_tuple = (i, raw_seq, arc)
-		def _cond(i, raw_seq, arc):
-			return tf.less(i, tf.shape(arc)[0])
-		
-		
-		raw_seq = tf.while_loop()[1]
-	"""
 	def _tf_get_arc_training(self, arc_seq, current_dict):
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
 		loop_tuple = (tf.constant(0), output, arc_seq)
