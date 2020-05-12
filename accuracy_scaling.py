@@ -232,7 +232,7 @@ class AccuracyScaler:
 			return tf.math.add(tf_normal_arc_training_sum,tf_reduce_arc_training_sum)
 		def _cat_avg(): 
 			combined_arcs_training = (tf_normal_arc_training_sum + tf_reduce_arc_training_sum)//2
-			return tf.cast(combined_arcs_training, tf.float32)
+			return tf.cast(combined_arcs_training, tf.int32)
 		
 		combined_arcs_training = tf.cond(tf.equal(arc_handling,tf.constant("sum")),_cat_sum,_cat_avg)
 		
