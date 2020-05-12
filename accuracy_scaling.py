@@ -181,7 +181,7 @@ class AccuracyScaler:
 			op_id = tf.gather(arc, i)
 			op_id = tf.math.add(op_id,1)
 			op_id = tf.math.multiply(op_id,10)
-			key = node_id+op_id+x_or_y
+			key = node_id+op_id+op_x_or_y
 			# return vars
 			seq = seq.write(i,key)
 			i = tf.math.add(i, 1)
