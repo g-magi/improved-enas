@@ -186,6 +186,8 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
+			"normal_dict": controller_model.normal_dict
+			"reduce_dict": controller_model.reduce_dict
 		}
 		
 
@@ -337,9 +339,11 @@ def train():
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
+								controller_ops["normal_dict"],
+								controller_ops["reduce_dict"]
 							]
 							#print("running controller step")
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _ = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_dict, reduce_dict = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							controller_step = sess.run(controller_ops["train_step"])
 							
 
@@ -370,6 +374,7 @@ def train():
 								print("\tReduce architecture: \n\t",reduce_arc)
 								print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 								print("\tScaled acc: \n\t",scaled_acc)
+								print("\tReceived Dicts: \n\t", normal_dict,"\n\t", reduce_dict)
 								print(log_string)
 
 						print("Here are 10 architectures")
