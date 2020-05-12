@@ -137,12 +137,9 @@ class AccuracyScaler:
 			current_node = tf.mod(i,4)
 			current_item = tf.math.floordiv(i,4)
 			current_output = tf.constant(0)
-			if tf.math.equal(current_item,1):
-				#x_op
-				current_output = tf.constant(0)
-			elif tf.math.equal(current_item,3):
-				#y_op
-				current_output = tf.constant(1)
+			def _x_op(): return tf.constant(0)
+			def _y_op(): return tf.constant(1)
+			current_output = tf.case([(tf.equal(current_item,1),_x_op),(tf.equal(current_item,3),_y_op)],exclusive=True)
 			#((i+1)*10)
 			node_const = tf.math.multiply(tf.math.add(i, 1),10)
 			#(y_op+1)
