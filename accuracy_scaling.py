@@ -256,7 +256,7 @@ class AccuracyScaler:
 		tf_normal_arc_training_sum = tf.reduce_sum(tf_normal_arc_training)
 		tf_reduce_arc_training_sum = tf.reduce_sum(tf_reduce_arc_training)
 		
-		combined_arcs_training = tf.constant(0.0)
+		combined_arcs_training = tf.constant(-10.0)
 		def _cat_sum(): 
 			return tf.math.add(tf_normal_arc_training_sum,tf_reduce_arc_training_sum)
 		def _cat_avg(): 
@@ -265,9 +265,9 @@ class AccuracyScaler:
 		
 		combined_arcs_training = tf.cond(tf.equal(arc_handling,tf.constant("sum")),_cat_sum,_cat_avg)
 		
-		scaled_accuracy = tf.constant(5.0)
-		average_normal_arc_training = tf.constant(5.0)
-		average_reduce_arc_training = tf.constant(5.0)
+		scaled_accuracy = tf.constant(-10.0)
+		average_normal_arc_training = tf.constant(-10.0)
+		average_reduce_arc_training = tf.constant(-10.0)
 		combined_arcs_training = tf.cast(combined_arcs_training, tf.float32)
 		def _scale_linear():
 			return accuracy*combined_arcs_training
