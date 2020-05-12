@@ -141,7 +141,7 @@ class AccuracyScaler:
 				return tf.constant(1)
 			x_or_y = tf.math.equal(tf.math.floormod(i, 2),0)
 			op_x_or_y = tf.cond(x_or_y,_body_x,_body_y)
-			node_id = tf.math.add(i,1)
+			node_id = tf.math.add(tf.math.floormod(i, 2),1)
 			node_id = tf.math.multiply(node_id,100)
 			op_id = tf.gather(arc, i)
 			op_id = tf.math.add(op_id,1)
