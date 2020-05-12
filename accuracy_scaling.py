@@ -127,12 +127,12 @@ class ArchitectureTrainingStorage:
 
 class AccuracyScaler:
 
-	def _tf_convert_arc_to_seq(self, arc):
+	def _tf_convert_arc_to_seq_old(self, arc):
 		# tupla con i, output, arc
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
 		loop_tuple = (tf.constant(1), tf.constant(0), output, arc)
 		def _cond(i, array_index, output, arc):
-			return tf.less(i, tf.shape(arc)[0])
+			return tf.math.less(i, tf.shape(arc)[0])
 		def _body(i, array_index, output, arc):
 			current_node = tf.mod(i,4)
 			current_item = tf.math.floordiv(i,4)
@@ -184,12 +184,23 @@ class AccuracyScaler:
 		output = tf.while_loop(_cond, _body, loop_tuple)[2].stack()
 		output = tf.reshape(output,[-1])
 		return output
-
+	
+	"""
+	def _tf_convert_arc_to_seq(self, arc):
+		raw_seq = tf.TensorArray(tf.int32, size = 0, dynamic_size = True)
+		i = tf.constant(0)
+		loop_tuple = (i, raw_seq, arc)
+		def _cond(i, raw_seq, arc):
+			return tf.less(i, tf.shape(arc)[0])
+		
+		
+		raw_seq = tf.while_loop()[1]
+	"""
 	def _tf_get_arc_training(self, arc_seq, current_dict):
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
 		loop_tuple = (tf.constant(0), output, arc_seq)
 		def _cond(i, output, arc_seq):
-			return tf.less(i, tf.shape(arc_seq)[0])
+			return tf.math.less(i, tf.shape(arc_seq)[0])
 		def _body(i, output, arc_seq):
 			current_op = tf.gather(arc_seq, [i])
 			#output = output.write(i,current_dict.lookup(current_op))
@@ -209,7 +220,7 @@ class AccuracyScaler:
 		output_value = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
 		loop_tuple = (i, output_key, output_value, tf_dict)
 		def _cond(i, output_key, output_value, tf_dict):
-			return tf.less(i, tf.shape(tf_dict)[0])
+			return tf.math.less(i, tf.shape(tf_dict)[0])
 		def _body(i, output_key, output_value, tf_dict):
 			key = tf.gather_nd(tf_dict,[i,0])
 			output_key = output_key.write(i,key)
@@ -264,7 +275,7 @@ class AccuracyScaler:
 			temp_combined_arcs_training = (tf_normal_arc_training_sum + tf_reduce_arc_training_sum)//2
 			return tf.cast(temp_combined_arcs_training, tf.int32)
 		
-		combined_arcs_training = tf.cond(tf.equal(arc_handling,tf.constant("sum")),_cat_sum,_cat_avg)
+		combined_arcs_training = tf.cond(tf.math.equal(arc_handling,tf.constant("sum")),_cat_sum,_cat_avg)
 		
 		scaled_accuracy = tf.constant(-10.0)
 		average_normal_arc_training = tf.constant(-10.0)
@@ -279,12 +290,12 @@ class AccuracyScaler:
 		def _scale_avg():
 			average_normal_arc_training = self.tf_compute_average_arc_training(tf_normal_dict)
 			average_reduce_arc_training = self.tf_compute_average_arc_training(tf_reduce_dict)
-			average_arc_training = tf.cond(tf.equal(arc_handling,tf.constant("sum")),_scale_avg_sum,_scale_avg_avg)
+			average_arc_training = tf.cond(tf.math.equal(arc_handling,tf.constant("sum")),_scale_avg_sum,_scale_avg_avg)
 			average_arc_training = tf.cast(average_arc_training, tf.float32)
 			scaling_factor = average_arc_training/combined_arcs_training
 			return accuracy*scaling_factor
 			
-		scaled_accuracy = tf.cond(tf.equal(scaling_method, tf.constant("linear")),_scale_linear,_scale_avg)
+		scaled_accuracy = tf.cond(tf.math.equal(scaling_method, tf.constant("linear")),_scale_linear,_scale_avg)
 		
 		
-		return scaled_accuracy, tf_normal_arc_training, tf_reduce_arc_training
+		return scaled_accuracy, tf_normal_arc_seq, tf_reduce_arc_seq
