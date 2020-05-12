@@ -256,4 +256,4 @@ class AccuracyScaler:
 		scaled_accuracy = tf.cond(tf.math.equal(scaling_method, tf.constant("linear")),_scale_linear,_scale_avg)
 		
 		
-		return scaled_accuracy, tf_normal_arc_seq, tf_reduce_arc_seq
+		return scaled_accuracy, average_normal_arc_training, average_reduce_arc_training
