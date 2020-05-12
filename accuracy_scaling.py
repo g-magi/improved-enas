@@ -188,6 +188,7 @@ class AccuracyScaler:
 			return i, seq, arc
 		
 		seq = tf.while_loop(_cond, _body, loop_tuple)[1]
+		seq = tf.reshape(seq,[-1])
 		return seq
 		
 	"""
