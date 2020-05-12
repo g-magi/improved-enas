@@ -126,7 +126,7 @@ class ArchitectureTrainingStorage:
 		return out_normal, out_reduce
 
 class AccuracyScaler:
-	@tf.function
+
 	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
