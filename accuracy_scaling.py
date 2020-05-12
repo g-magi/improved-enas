@@ -178,6 +178,8 @@ class AccuracyScaler:
 				current_output = tf.math.add(const_plus_op,tf.constant(1))
 				output = output.write(array_index,current_output)
 				array_index = tf.math.add(array_index,1)
+			
+			
 			return tf.math.add(i,1),array_index, output, arc
 		output = tf.while_loop(_cond, _body, loop_tuple)[2].stack()
 		output = tf.reshape(output,[-1])
