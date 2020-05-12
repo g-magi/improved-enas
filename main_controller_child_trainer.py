@@ -362,8 +362,6 @@ def train():
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
 								print("Controller step #",controller_step,":")
-								accuracy_scaling.save_trained_arc(normal_arc, "normal")
-								accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
 								normal_train_amt = accuracy_scaling.get_trained_arc(normal_arc, "normal")
 								reduce_train_amt = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
 								normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
