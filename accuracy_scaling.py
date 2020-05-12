@@ -126,7 +126,7 @@ class ArchitectureTrainingStorage:
 		return out_normal, out_reduce
 
 class AccuracyScaler:
-	
+	@tf.function
 	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
@@ -197,8 +197,8 @@ class AccuracyScaler:
 		
 
 	def tf_compute_average_arc_training(self, current_dict):
-		tf_full_dict = current_dict.export()
-		tf_average = tf.gather(tf.math.reduce_mean(tf_full_dict,0),[1])
+		tf_full_dict = current_dict.export()[1]
+		tf_average = tf.reduce_mean(tf_full_dict)
 		return tf_average
 		
 		
@@ -246,8 +246,8 @@ class AccuracyScaler:
 				average_arc_training = average_normal_arc_training+average_reduce_arc_training
 			elif arc_handling is "avg":
 				average_arc_training = (average_normal_arc_training+average_reduce_arc_training)//2
-			average_arc_training = tf.cast(average_arc_training, tf.float64)
+			average_arc_training = tf.cast(average_arc_training, tf.float32)
 			scaling_factor = average_arc_training/combined_arcs_training
 			scaled_accuracy = accuracy*scaling_factor
 		
-		return scaled_accuracy
+		return scaled_accuracy, tf_normal_dict.export().stack(), tf_reduce_dict.export().stack()
