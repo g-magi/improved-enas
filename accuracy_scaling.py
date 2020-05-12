@@ -127,7 +127,7 @@ class ArchitectureTrainingStorage:
 
 class AccuracyScaler:
 
-	def _tf_convert_arc_to_seq_old(self, arc):
+	def _tf_convert_arc_to_seq(self, arc):
 		# tupla con i, output, arc
 		output = tf.TensorArray(tf.int32, size = 0, dynamic_size=True)
 		loop_tuple = (tf.constant(1), tf.constant(0), output, arc)
