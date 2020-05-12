@@ -258,4 +258,4 @@ class AccuracyScaler:
 		
 		scaling_factor = scaled_accuracy/accuracy
 		
-		return scaled_accuracy, scaling_factor, tf_normal_dict.export()[1]
+		return scaled_accuracy, tf_normal_arc_training_sum, tf_normal_dict.export()[1]
