@@ -316,7 +316,7 @@ def train():
 				logline +=str(global_step)+";"
 				logline +=normal_arc_str+";"
 				logline +=reduce_arc_str+";"
-				logline +=str(float(curr_time - start_time))
+				logline +="{:10.4f}".format(float(curr_time - start_time))
 				
 				child_logfile.write(logline+"\n")
 				
@@ -386,7 +386,7 @@ def train():
 							logline +=normal_arc_training_str+";"
 							logline +=reduce_arc_training_str+";"
 							logline +=str(val_acc)+";"
-							logline +=str(float(curr_time - start_time))
+							logline +="{:10.4f}".format(float(curr_time - start_time))
 				
 							controller_logfile.write(logline+"\n")
 							###
