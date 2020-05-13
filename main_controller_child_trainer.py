@@ -12,6 +12,7 @@ from utils import DEFINE_float
 from utils import DEFINE_integer
 from utils import DEFINE_string
 from utils import print_user_flags
+from utils import silently_remove_file
 
 import data_utils
 
