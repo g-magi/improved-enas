@@ -127,11 +127,11 @@ class ArchitectureTrainingStorage:
 
 class AccuracyScaler:
 
-	def _tf_convert_arc_to_seq(self, arc):
-		arc = arc[1::2]
+	def _tf_convert_arc_to_seq(self, arc_):
+		arc_short = arc_[1::2]
 		seq = tf.TensorArray(tf.int32, size = 0, dynamic_size = True)
 		i = tf.constant(0)
-		loop_tuple = (i, seq, arc)
+		loop_tuple = (i, seq, arc_short)
 		def _cond(i, seq, arc):
 			return tf.math.less(i,tf.shape(arc)[0])
 		def _body(i, seq, arc):
@@ -258,4 +258,4 @@ class AccuracyScaler:
 		
 		scaling_factor = scaled_accuracy/accuracy
 		
-		return scaled_accuracy, tf_normal_arc_training, tf_reduce_arc_training
+		return scaled_accuracy, tf_normal_arc_seq, tf_reduce_arc_seq
