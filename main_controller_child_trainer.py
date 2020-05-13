@@ -27,6 +27,8 @@ FLAGS = flags.FLAGS
 
 ################## YOU Should write under parameter ######################
 DEFINE_string("output_dir", "./output" , "")
+DEFINE_string("child_log_filename","child_log.txt","")
+DEFINE_string("controller_log_filename","controller_log.txt","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
@@ -186,8 +188,8 @@ def get_ops(images, labels):
 			"normal_arc": controller_model.current_normal_arc,
 			"reduce_arc": controller_model.current_reduce_arc,
 			"scaled_accuracy": controller_model.scaled_acc,
-			"normal_dict": controller_model.normal_dict,
-			"reduce_dict": controller_model.reduce_dict,
+			"normal_arc_training": controller_model.normal_arc_training,
+			"reduce_arc_training": controller_model.reduce_arc_training,
 		}
 		
 
@@ -236,9 +238,20 @@ def train():
 	
 
 	g = tf.Graph()
+	## creating log file names and removing old files if present
+	child_log_filename = FLAGS.output_dir+"/"+FLAGS.child_log_filename
+	silently_remove_file(child_log_filename)
+	controller_log_filename = FLAGS.output_dir+"/"+FLAGS.controller_log_filename
+	silently_remove_file(controller_log_filename)
+	child_logfile = open(child_log_filename, "a+")
+	controller_logfile = open(controller_log_filename, "a+")
+	##
 	with g.as_default():
 		ops =get_ops(images, labels)
 		#controller_model = ops["controller_model"]
+		
+		
+		
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
 
@@ -286,15 +299,25 @@ def train():
 				reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
 					#test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
 				
-				
-				
-				
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
 				else:
 					actual_step = global_step
 				epoch = actual_step // ops["num_train_batches"]
 				curr_time = time.time()
+				
+				# LOGGING CHILD STEP
+				## building log line
+				### contains: [epoch];[global_step];[normal_arc];[reduce_arc];[elapsed_time];
+				logline = str(epoch)+";"
+						+str(global_step)+";"
+						+normal_arc.tostring()+";"
+						+reduce_arc.tostring()+";"
+						+str(float(curr_time - start_time))
+				
+				child_logfile.write(logline+"\n")
+				
+				
 				if global_step % FLAGS.log_every == 0:
 					log_string = ""
 					log_string += "epoch = {:<6d}".format(epoch)
@@ -339,16 +362,27 @@ def train():
 								controller_ops["baseline"],
 								controller_ops["skip_rate"],
 								controller_ops["train_op"],
-								controller_ops["normal_dict"],
-								controller_ops["reduce_dict"]
+								controller_ops["normal_arc_training"],
+								controller_ops["reduce_arc_training"]
 							]
 							#print("running controller step")
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_dict, reduce_dict = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_arc_training, reduce_arc_training = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
 							controller_step = sess.run(controller_ops["train_step"])
-							
-
+							curr_time = time.time()
+							### controller log
+							logline = str(epoch)+";"
+										+str(controller_step)+";"
+										+normal_arc.tostring()+";"
+										+reduce_arc.tostring()+";"
+										+normal_arc_training.tostring()+";"
+										+reduce_arc_training.tostring()+";"
+										+str(val_acc)+";"
+										+str(float(curr_time - start_time))
+				
+							controller_logfile.write(logline+"\n")
+							###
 							if ct_step % FLAGS.log_every == 0:
-								curr_time = time.time()
+								
 								log_string = ""
 								log_string += "ctrl_step = {:<6d}".format(controller_step)
 								log_string += " loss = {:<7.3f}".format(loss)
@@ -372,7 +406,7 @@ def train():
 								print("\tReduce architecture: \n\t",reduce_arc)
 								print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
 								print("\tScaled acc: \n\t",scaled_acc)
-								print("\tReceived Dicts: \n\t", normal_dict,"\n\t", reduce_dict)
+								print("\tReceived Arc trainings: \n\t", normal_arc_training,"\n\t", reduce_arc_training)
 								print(log_string)
 
 						print("Here are 10 architectures")
@@ -404,7 +438,9 @@ def train():
 
 				if epoch >= FLAGS.num_epochs:
 					break
-
+	child_logfile.close()
+	controller_logfile.close()
+	
 def main(_):
 	print("-" * 80)
 	if not os.path.isdir(FLAGS.output_dir):
