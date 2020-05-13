@@ -258,4 +258,4 @@ class AccuracyScaler:
 		
 		scaling_factor = scaled_accuracy/accuracy
 		
-		return scaled_accuracy, tf_normal_arc_seq, tf_reduce_arc_seq
+		return scaled_accuracy, tf_normal_arc_training, tf_reduce_arc_training
