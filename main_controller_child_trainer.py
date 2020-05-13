@@ -310,10 +310,12 @@ def train():
 				# LOGGING CHILD STEP
 				## building log line
 				### contains: [epoch];[global_step];[normal_arc];[reduce_arc];[elapsed_time];
+				normal_arc_str = ','.join(['%' % num for num in normal_arc])
+				reduce_arc_str = ','.join(['%' % num for num in reduce_arc])
 				logline = str(epoch)+";"
 				logline +=str(global_step)+";"
-				logline +=normal_arc.tostring()+";"
-				logline +=reduce_arc.tostring()+";"
+				logline +=normal_arc_str+";"
+				logline +=reduce_arc_str+";"
 				logline +=str(float(curr_time - start_time))
 				
 				child_logfile.write(logline+"\n")
@@ -371,12 +373,18 @@ def train():
 							controller_step = sess.run(controller_ops["train_step"])
 							curr_time = time.time()
 							### controller log
+							
+							normal_arc_str = ','.join(['%' % num for num in normal_arc])
+							reduce_arc_str = ','.join(['%' % num for num in reduce_arc])
+							normal_arc_training_str = ','.join(['%' % num for num in normal_arc_training])
+							reduce_arc_training_str = ','.join(['%' % num for num in reduce_arc_training])
+							
 							logline = str(epoch)+";"
 							logline +=str(controller_step)+";"
-							logline +=normal_arc.tostring()+";"
-							logline +=reduce_arc.tostring()+";"
-							logline +=normal_arc_training.tostring()+";"
-							logline +=reduce_arc_training.tostring()+";"
+							logline +=normal_arc_str+";"
+							logline +=reduce_arc_str+";"
+							logline +=normal_arc_training_str+";"
+							logline +=reduce_arc_training_str+";"
 							logline +=str(val_acc)+";"
 							logline +=str(float(curr_time - start_time))
 				
