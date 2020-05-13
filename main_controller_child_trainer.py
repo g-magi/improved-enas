@@ -310,8 +310,8 @@ def train():
 				# LOGGING CHILD STEP
 				## building log line
 				### contains: [epoch];[global_step];[normal_arc];[reduce_arc];[elapsed_time];
-				normal_arc_str = ','.join(['%' % num for num in normal_arc])
-				reduce_arc_str = ','.join(['%' % num for num in reduce_arc])
+				normal_arc_str = ','.join(['%d' % num for num in normal_arc])
+				reduce_arc_str = ','.join(['%d' % num for num in reduce_arc])
 				logline = str(epoch)+";"
 				logline +=str(global_step)+";"
 				logline +=normal_arc_str+";"
@@ -374,10 +374,10 @@ def train():
 							curr_time = time.time()
 							### controller log
 							
-							normal_arc_str = ','.join(['%' % num for num in normal_arc])
-							reduce_arc_str = ','.join(['%' % num for num in reduce_arc])
-							normal_arc_training_str = ','.join(['%' % num for num in normal_arc_training])
-							reduce_arc_training_str = ','.join(['%' % num for num in reduce_arc_training])
+							normal_arc_str = ','.join(['%d' % num for num in normal_arc])
+							reduce_arc_str = ','.join(['%d' % num for num in reduce_arc])
+							normal_arc_training_str = ','.join(['%d' % num for num in normal_arc_training])
+							reduce_arc_training_str = ','.join(['%d' % num for num in reduce_arc_training])
 							
 							logline = str(epoch)+";"
 							logline +=str(controller_step)+";"
