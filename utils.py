@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import tensorflow.compat.v1 as tf
 import matplotlib.pyplot as plt
-import os
+import os, errno
 
 user_flags = []
 
@@ -25,6 +25,13 @@ def DEFINE_boolean(name, default_value, doc_string):
 	tf.app.flags.DEFINE_boolean(name, default_value, doc_string)
 	global user_flags
 	user_flags.append(name)
+	
+def silently_remove_file(filename)
+	try:
+		os.remove(filename)
+	except OSError as e: # this would be "except OSError, e:" before Python 2.6
+		if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+			raise # re-raise exception if a different error occurred
 
 def print_user_flags(line_limit = 80):
 	print("-" * 80)
