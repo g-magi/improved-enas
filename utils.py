@@ -26,7 +26,7 @@ def DEFINE_boolean(name, default_value, doc_string):
 	global user_flags
 	user_flags.append(name)
 	
-def silently_remove_file(filename)
+def silently_remove_file(filename):
 	try:
 		os.remove(filename)
 	except OSError as e: # this would be "except OSError, e:" before Python 2.6
