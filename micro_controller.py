@@ -250,7 +250,7 @@ class MicroController(Controller):
 									self.valid_acc,
 									self.current_normal_arc,
 									self.current_reduce_arc,
-									scaling_method=tf.constant("average"),
+									scaling_method=tf.constant("none"),
 									arc_handling=tf.constant("sum"))
 		self.reward = self.scaled_acc
 		
