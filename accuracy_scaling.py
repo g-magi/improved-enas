@@ -283,12 +283,12 @@ class AccuracyScaler:
 		linear_case 		= tf.constant("linear")
 		average_case 		= tf.constant("average")
 		none_case 			= tf.constant("none")
-		greedy-average_case = tf.constant("greedy-average")
+		greedy_average_case = tf.constant("greedy-average")
 		scaled_accuracy = tf.case([
 				(tf.math.equal(scaling_method,linear_case),_scale_linear),
 				(tf.math.equal(scaling_method,average_case),_scale_avg),
 				(tf.math.equal(scaling_method,none_case),_scale_none),
-				(tf.math.equal(scaling_method,greedy-average_case),_scale_greedy_avg)
+				(tf.math.equal(scaling_method,greedy_average_case),_scale_greedy_avg)
 				],default = _scale_none, exclusive = True)
 		#scaled_accuracy = tf.cond(tf.math.equal(scaling_method, tf.constant("linear")),_scale_linear,_scale_avg)
 		
