@@ -79,11 +79,11 @@ class MovingAverageStructure():
 		self.dtype = dtype
 		self.storage = np.zeros(window_size, dtype=self.dtype)
 	
-	def push(self, data)
+	def push(self, data):
 		self.storage = np.roll(self.storage, 1)
 		self.storage[0] = data
 	
-	def get_mov_average()
+	def get_mov_average():
 		indices = np.nonzero(self.storage)
 		count = 0.0
 		for i in indices:
