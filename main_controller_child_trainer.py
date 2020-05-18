@@ -13,6 +13,7 @@ from utils import DEFINE_integer
 from utils import DEFINE_string
 from utils import print_user_flags
 from utils import silently_remove_file
+from utils import MovingAverageStructure
 
 import data_utils
 
@@ -247,6 +248,10 @@ def train():
 	child_logfile = open(child_log_filename, "a+")
 	controller_logfile = open(controller_log_filename, "a+")
 	##
+	
+	## creating moving averages
+	mov_avg_accuracy_struct = MovingAverageStructure(10,np.float32)
+	
 	with g.as_default():
 		ops =get_ops(images, labels)
 		#controller_model = ops["controller_model"]
@@ -369,10 +374,19 @@ def train():
 								controller_ops["reduce_arc_training"]
 							]
 							#print("running controller step")
-							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_arc_training, reduce_arc_training = sess.run(run_ops,feed_dict={"normal_array:0":temp_normal_array, "reduce_array:0":temp_reduce_array})
+							mov_avg_accuracy = mov_avg_accuracy_struct.get_mov_average()
+							
+							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_arc_training, reduce_arc_training = sess.run(
+									run_ops,
+									feed_dict=
+										{"normal_array:0":temp_normal_array, 
+										"reduce_array:0":temp_reduce_array},
+										"mov_avg_accuracy:0": mov_avg_accuracy)
 							controller_step = sess.run(controller_ops["train_step"])
 							curr_time = time.time()
 							### controller log
+							
+							mov_avg_accuracy_struct.push(val_acc)
 							
 							normal_arc_str = ','.join(['%d' % num for num in normal_arc])
 							reduce_arc_str = ','.join(['%d' % num for num in reduce_arc])
@@ -399,6 +413,7 @@ def train():
 								log_string += "   lr = {:<6.4f}".format(lr)
 								log_string += "   |g| = {:<8.4f}".format(gn)
 								log_string += " acc = {:<6.4f}".format(val_acc)
+								log_string += " mov_avg_acc = {:<6.4f}".format(mov_avg_accuracy)
 								#log_string += " s_acc = "
 								#log_string += str(scaled_acc)
 								log_string += "   bl = {:<5.2f}".format(bl)

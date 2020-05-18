@@ -205,7 +205,7 @@ class AccuracyScaler:
 		
 		
 	@tf.function
-	def tf_get_scaled_accuracy(self,normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, scaling_method=tf.constant("linear"), arc_handling=tf.constant("sum")):
+	def tf_get_scaled_accuracy(self,normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, mov_avg_accuracy, scaling_method=tf.constant("linear"), arc_handling=tf.constant("sum")):
 		# reshaping dictionaries in [x, 2] tensors and then putting them in hashtables
 		tf.tables_initializer()
 		tf_normal_dict = tf.convert_to_tensor(normal_dict)
@@ -243,10 +243,13 @@ class AccuracyScaler:
 		average_reduce_arc_training = self.tf_compute_average_arc_training(tf_reduce_dict)
 		combined_arcs_training = tf.cast(combined_arcs_training, tf.float32)
 		## linear scaling
+			# multiplies accuracy of arc by its total training
 			# "linear"
 		def _scale_linear():
 			return tf.math.multiply(accuracy,combined_arcs_training)
 		## average scaling
+			# multiplies accuracy of arc by a scaling factor
+			# the scaling factor is [average training]/[arc training]
 			# "average"
 		def _scale_avg_sum():
 			return tf.math.add(average_normal_arc_training,average_reduce_arc_training)
@@ -264,6 +267,9 @@ class AccuracyScaler:
 		##
 		
 		## greedy average scaling
+			# multiplies accuracy of arc by a scaling factor
+			# the scaling factor is [arc training]/[average training]
+			# "greedy-average"
 		def _scale_greedy_avg_sum():
 			return tf.math.add(average_normal_arc_training,average_reduce_arc_training)
 		def _scale_greedy_avg_avg():
@@ -279,6 +285,16 @@ class AccuracyScaler:
 			scaling_factor = combined_arcs_training/average_arc_training
 			return accuracy*scaling_factor
 		##
+		
+		## greedy accuracy scaling
+			# multiplies accuracy of arc by a scaling factor
+			# the scaling factor depends on [current accuracy] compared
+			# to [moving average accuracy], boosting better architectures
+		
+		def _scale_greedy_accuracy():
+			scaling factor = accuracy/mov_avg_accuracy
+			return accuracy*scaling_factor
+		
 		###
 		linear_case 		= tf.constant("linear")
 		average_case 		= tf.constant("average")

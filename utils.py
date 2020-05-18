@@ -72,6 +72,27 @@ def plot_data_label(images, labels, channels, width, height, figsize):
 	plt.savefig(file_name)
 	plt.close()        
 
+class MovingAverageStructure():
+	
+	def __init__(self, window_size, dtype=np.int32):
+		self.window_size = window_size
+		self.dtype = dtype
+		self.storage = np.zeros(window_size, dtype=self.dtype)
+	
+	def push(self, data)
+		self.storage = np.roll(self.storage, 1)
+		self.storage[0] = data
+	
+	def get_mov_average()
+		indices = np.nonzero(self.storage)
+		count = 0.0
+		for i in indices:
+			count += self.storage[i]
+		return count/len(indices)
+	
+	
+
+
 class Logger(object):
 	def __init__(self, output_file):
 		self.terminal = sys.stdout
