@@ -380,8 +380,8 @@ def train():
 									run_ops,
 									feed_dict=
 										{"normal_array:0":temp_normal_array, 
-										"reduce_array:0":temp_reduce_array},
-										"mov_avg_accuracy:0": mov_avg_accuracy)
+										"reduce_array:0":temp_reduce_array,
+										"mov_avg_accuracy:0":mov_avg_accuracy})
 							controller_step = sess.run(controller_ops["train_step"])
 							curr_time = time.time()
 							### controller log
