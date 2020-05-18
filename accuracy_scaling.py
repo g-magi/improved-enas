@@ -292,7 +292,7 @@ class AccuracyScaler:
 			# to [moving average accuracy], boosting better architectures
 		
 		def _scale_greedy_accuracy():
-			scaling factor = accuracy/mov_avg_accuracy
+			scaling_factor = accuracy/mov_avg_accuracy
 			return accuracy*scaling_factor
 		
 		###
