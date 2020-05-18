@@ -251,7 +251,7 @@ class MicroController(Controller):
 									self.current_normal_arc,
 									self.current_reduce_arc,
 									self.mov_avg_accuracy,
-									scaling_method=tf.constant("greedy-average"),
+									scaling_method=tf.constant("greedy-accuracy"),
 									arc_handling=tf.constant("sum"))
 		self.reward = self.scaled_acc
 		
