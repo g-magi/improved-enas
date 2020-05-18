@@ -78,7 +78,7 @@ class MicroController(Controller):
 		
 		self.normal_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="normal_array")
 		self.reduce_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="reduce_array")
-		self.mov_avg_accuracy = tf.placeholder(tf.float32, name="mov_avg_accuracy")
+		self.mov_avg_accuracy = tf.placeholder(tf.float32, shape=(), name="mov_avg_accuracy")
 		
 
 	def _create_params(self):
