@@ -292,7 +292,13 @@ class AccuracyScaler:
 			# to [moving average accuracy], boosting better architectures
 		
 		def _scale_greedy_accuracy():
-			scaling_factor = accuracy/mov_avg_accuracy
+			def _case_zero():
+				return tf.constant(0.1, tf.float32)
+			def _case_default():
+				return accuracy/mov_avg_accuracy
+			scaling_factor = tf.cond(tf.math.equal(mov_avg_accuracy,tf.constant(0.0),
+								_case_zero,
+								_case_default)
 			return accuracy*scaling_factor
 		
 		###
