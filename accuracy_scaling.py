@@ -262,13 +262,33 @@ class AccuracyScaler:
 		def _scale_none():
 			return accuracy
 		##
-		linear_case 	= tf.constant("linear")
-		average_case 	= tf.constant("average")
-		none_case 		= tf.constant("none")
+		
+		## greedy average scaling
+		def _scale_greedy_avg_sum():
+			return tf.math.add(average_normal_arc_training,average_reduce_arc_training)
+		def _scale_greedy_avg_avg():
+			return tf.math.floordiv(_scale_avg_sum(), 2)
+		
+		def _scale_greedy_avg():
+			average_arc_training = tf.cond(
+				tf.math.equal(arc_handling,tf.constant("sum")),
+				_scale_greedy_avg_sum,
+				_scale_greedy_avg_avg)
+			
+			average_arc_training = tf.cast(average_arc_training, tf.float32)
+			scaling_factor = combined_arcs_training/average_arc_training
+			return accuracy*scaling_factor
+		##
+		###
+		linear_case 		= tf.constant("linear")
+		average_case 		= tf.constant("average")
+		none_case 			= tf.constant("none")
+		greedy-average_case = tf.constant("greedy-average")
 		scaled_accuracy = tf.case([
 				(tf.math.equal(scaling_method,linear_case),_scale_linear),
 				(tf.math.equal(scaling_method,average_case),_scale_avg),
-				(tf.math.equal(scaling_method,none_case),_scale_none)
+				(tf.math.equal(scaling_method,none_case),_scale_none),
+				(tf.math.equal(scaling_method,greedy-average_case),_scale_greedy_avg)
 				],default = _scale_none, exclusive = True)
 		#scaled_accuracy = tf.cond(tf.math.equal(scaling_method, tf.constant("linear")),_scale_linear,_scale_avg)
 		
