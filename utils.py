@@ -89,6 +89,8 @@ class MovingAverageStructure():
 		for i in indices:
 			count += self.storage[i]
 		n = len(indices)
+		print("count:",count)
+		print("n:",n)
 		return float(count)/float(n)
 	
 	
