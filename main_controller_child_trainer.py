@@ -375,7 +375,6 @@ def train():
 							]
 							#print("running controller step")
 							mov_avg_accuracy = mov_avg_accuracy_struct.get_mov_average()
-							print("mov avg accuracy = ", mov_avg_accuracy)
 							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_arc_training, reduce_arc_training = sess.run(
 									run_ops,
 									feed_dict=
