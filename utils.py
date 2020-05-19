@@ -84,15 +84,13 @@ class MovingAverageStructure():
 		self.storage[0] = data
 	
 	def get_mov_average(self):
-		indices = np.nonzero(self.storage)
+		indices = np.nonzero(self.storage)[0]
 		count = 0.0
 		if len(indices) == 0:
 			return count
 		for i in indices:
 			count += self.storage[i]
 		n = len(indices)
-		print("indices:",indices)
-		print("n:",n)
 		return float(count)/float(n)
 	
 	
