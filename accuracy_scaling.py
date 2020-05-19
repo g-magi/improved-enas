@@ -298,7 +298,7 @@ class AccuracyScaler:
 				return accuracy/mov_avg_accuracy
 			scaling_factor = tf.cond(tf.math.equal(mov_avg_accuracy,tf.constant(0.0),
 								_case_zero,
-								_case_default)
+								_case_default))
 			return accuracy*scaling_factor
 		
 		###
