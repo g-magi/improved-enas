@@ -86,7 +86,7 @@ class MovingAverageStructure():
 	def get_mov_average(self):
 		indices = np.nonzero(self.storage)
 		count = 0.0
-		if not indices:
+		if len(indices) == 0:
 			return count
 		for i in indices:
 			count += self.storage[i]
