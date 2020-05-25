@@ -348,9 +348,9 @@ class AccuracyScaler:
 		
 			#_scaling_factor_threshold_low_medium
 			#_scaling_factor_threshold_medium_high
-			is_factor_high = tf.math.greater(scaling_factor,_scaling_factor_threshold_medium_high)
+			is_factor_high = tf.math.greater(scaling_factor_acc,_scaling_factor_threshold_medium_high)
 			
-			is_factor_low = tf.math.less(scaling_factor,_scaling_factor_threshold_low_medium)
+			is_factor_low = tf.math.less(scaling_factor_acc,_scaling_factor_threshold_low_medium)
 			
 			is_factor_medium = tf.math.logical_and(
 								tf.math.logical_not(is_factor_high),
