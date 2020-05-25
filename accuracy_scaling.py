@@ -206,6 +206,12 @@ class AccuracyScaler:
 		
 	@tf.function
 	def tf_get_scaled_accuracy(self,normal_dict, reduce_dict, accuracy, normal_arc, reduce_arc, mov_avg_accuracy, scaling_method=tf.constant("linear"), arc_handling=tf.constant("sum")):
+		# initializing constants
+		
+		_scaling_factor_threshold_low_medium = tf.constant(0.7, tf.float32)
+		_scaling_factor_threshold_medium_high = tf.constant(1.1, tf.float32)
+	
+	
 		# reshaping dictionaries in [x, 2] tensors and then putting them in hashtables
 		tf.tables_initializer()
 		tf_normal_dict = tf.convert_to_tensor(normal_dict)
@@ -246,7 +252,7 @@ class AccuracyScaler:
 			# multiplies accuracy of arc by its total training
 			# "linear"
 		def _scale_linear():
-			return tf.math.multiply(accuracy,combined_arcs_training)
+			return combined_arcs_training
 		## average scaling
 			# multiplies accuracy of arc by a scaling factor
 			# the scaling factor is [average training]/[arc training]
@@ -259,11 +265,11 @@ class AccuracyScaler:
 			average_arc_training = tf.cond(tf.math.equal(arc_handling,tf.constant("sum")),_scale_avg_sum,_scale_avg_avg)
 			average_arc_training = tf.cast(average_arc_training, tf.float32)
 			scaling_factor = average_arc_training/combined_arcs_training
-			return accuracy*scaling_factor
+			return scaling_factor
 		## no scaling
 			# "none"
 		def _scale_none():
-			return accuracy
+			return tf.constant(1.0,tf.float32)
 		##
 		
 		## greedy average scaling
@@ -283,7 +289,7 @@ class AccuracyScaler:
 			
 			average_arc_training = tf.cast(average_arc_training, tf.float32)
 			scaling_factor = combined_arcs_training/average_arc_training
-			return accuracy*scaling_factor
+			return scaling_factor
 		##
 		
 		## greedy accuracy scaling
@@ -293,13 +299,58 @@ class AccuracyScaler:
 		
 		def _scale_greedy_accuracy():
 			def _case_zero():
-				return tf.constant(0.1, tf.float32)
+				return tf.constant(1.0, tf.float32)
 			def _case_default():
 				return accuracy/mov_avg_accuracy
 			scaling_factor = tf.cond(tf.math.equal(mov_avg_accuracy,tf.constant(0.0)),
 								_case_zero,
 								_case_default)
-			return accuracy*scaling_factor
+			return scaling_factor
+		
+		##
+		
+		## combined accuracy scaling
+			# multiplies accuracy of arc by a scaling factor
+			# the scaling factor depends on [current accuracy] compared
+			# to [moving average accuracy], boosting better architectures
+			# also 
+		
+		def _scale_combined():
+			
+			scaling_factor_acc = _scale_greedy_accuracy()
+			
+			scaling_factor_train = _scale_avg()
+			
+			
+			def _case_factor_high():
+				return scaling_factor_acc
+			
+			def _case_factor_medium():
+				return scaling_factor_train*scaling_factor_acc
+			
+			def _case_factor_low():
+				return tf.constant(0.1, tf.float32)
+		
+			#_scaling_factor_threshold_low_medium
+			#_scaling_factor_threshold_medium_high
+			is_factor_high = tf.math.greater(scaling_factor,_scaling_factor_threshold_medium_high)
+			
+			is_factor_low = tf.math.less(scaling_factor,_scaling_factor_threshold_low_medium)
+			
+			is_factor_medium = tf.math.logical_and(
+								tf.math.logical_not(is_factor_high),
+								tf.math.logical_not(is_factor_low)
+															)
+			
+			scaling_factor = tf.case([
+					(is_factor_high,_case_factor_high),
+					(is_factor_low,_case_factor_low),
+					(is_factor_medium,_case_factor_medium)
+				],default = _case_factor_medium)
+				
+			return scaling_factor
+		
+		##
 		
 		###
 		linear_case 		= tf.constant("linear")
@@ -307,7 +358,7 @@ class AccuracyScaler:
 		none_case 			= tf.constant("none")
 		greedy_average_case = tf.constant("greedy-average")
 		greedy_accuracy_case = tf.constant("greedy-accuracy")
-		scaled_accuracy = tf.case([
+		scaling_factor = tf.case([
 				(tf.math.equal(scaling_method,linear_case),_scale_linear),
 				(tf.math.equal(scaling_method,average_case),_scale_avg),
 				(tf.math.equal(scaling_method,none_case),_scale_none),
@@ -316,6 +367,6 @@ class AccuracyScaler:
 				],default = _scale_none, exclusive = True)
 		#scaled_accuracy = tf.cond(tf.math.equal(scaling_method, tf.constant("linear")),_scale_linear,_scale_avg)
 		
-		scaling_factor = scaled_accuracy/accuracy
+		scaled_accuracy = accuracy*scaling_factor
 		
 		return scaled_accuracy, tf_normal_arc_training, tf_reduce_arc_training
