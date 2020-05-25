@@ -388,7 +388,7 @@ def train():
 							### controller log
 							
 							mov_avg_accuracy_struct.push(val_acc)
-							mov_avg_training_struct.push(np.sum(normal_arc_training)+np.sum(reduce_arc_training)
+							mov_avg_training_struct.push(np.sum(normal_arc_training)+np.sum(reduce_arc_training))
 							
 							normal_arc_str = ','.join(['%d' % num for num in normal_arc])
 							reduce_arc_str = ','.join(['%d' % num for num in reduce_arc])
