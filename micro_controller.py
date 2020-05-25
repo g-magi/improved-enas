@@ -79,7 +79,7 @@ class MicroController(Controller):
 		self.normal_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="normal_array")
 		self.reduce_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="reduce_array")
 		self.mov_avg_accuracy = tf.placeholder(tf.float32, shape=(), name="mov_avg_accuracy")
-		
+		self.mov_avg_training = tf.placeholder(tf.float32, shape=(), name="mov_avg_training")
 
 	def _create_params(self):
 		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
@@ -251,7 +251,8 @@ class MicroController(Controller):
 									self.current_normal_arc,
 									self.current_reduce_arc,
 									self.mov_avg_accuracy,
-									scaling_method=tf.constant("greedy-accuracy"),
+									self.mov_avg_training,
+									scaling_method=tf.constant("combined"),
 									arc_handling=tf.constant("sum"))
 		self.reward = self.scaled_acc
 		

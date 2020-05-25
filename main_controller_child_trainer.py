@@ -251,7 +251,7 @@ def train():
 	
 	## creating moving averages
 	mov_avg_accuracy_struct = MovingAverageStructure(10,np.float32)
-	
+	mov_avg_training_struct = MovingAverageStructure(10,np.int32)
 	with g.as_default():
 		ops =get_ops(images, labels)
 		#controller_model = ops["controller_model"]
@@ -375,17 +375,20 @@ def train():
 							]
 							#print("running controller step")
 							mov_avg_accuracy = mov_avg_accuracy_struct.get_mov_average()
+							mov_avg_training = mov_avg_training_struct.get_mov_average()
 							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, normal_arc_training, reduce_arc_training = sess.run(
 									run_ops,
 									feed_dict=
 										{"normal_array:0":temp_normal_array, 
 										"reduce_array:0":temp_reduce_array,
-										"mov_avg_accuracy:0":mov_avg_accuracy})
+										"mov_avg_accuracy:0":mov_avg_accuracy,
+										"mov_avg_training:0":mov_avg_training})
 							controller_step = sess.run(controller_ops["train_step"])
 							curr_time = time.time()
 							### controller log
 							
 							mov_avg_accuracy_struct.push(val_acc)
+							mov_avg_training_struct.push(np.sum(normal_arc_training)+np.sum(reduce_arc_training)
 							
 							normal_arc_str = ','.join(['%d' % num for num in normal_arc])
 							reduce_arc_str = ','.join(['%d' % num for num in reduce_arc])
