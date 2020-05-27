@@ -338,7 +338,7 @@ class AccuracyScaler:
 			
 			
 			def _case_factor_high():
-				return scaling_factor_acc
+				return scaling_factor_train*scaling_factor_acc
 			
 			def _case_factor_medium():
 				return scaling_factor_train*scaling_factor_acc
