@@ -254,6 +254,10 @@ def train():
 	mov_avg_training_struct = MovingAverageStructure(10,np.int32)
 	with g.as_default():
 		ops =get_ops(images, labels)
+		
+		print("images shape:", images.shape)
+		print("labels shape:", labels.shape)
+		
 		#controller_model = ops["controller_model"]
 		
 		
