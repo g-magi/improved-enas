@@ -255,8 +255,12 @@ def train():
 	with g.as_default():
 		ops =get_ops(images, labels)
 		
-		print("images shape:", images.shape)
-		print("labels shape:", labels.shape)
+		print("images - train shape:", np.shape(images["train"]))
+		print("labels - train shape:", np.shape(labels["train"]))
+		print("images - valid shape:", np.shape(images["valid"]))
+		print("labels - valid shape:", np.shape(labels["valid"]))
+		print("images - test shape:", np.shape(images["test"]))
+		print("labels - test shape:", np.shape(labels["test"]))
 		
 		#controller_model = ops["controller_model"]
 		
