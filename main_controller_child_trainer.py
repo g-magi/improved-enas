@@ -232,7 +232,7 @@ def train():
 	images = {}
 	labels = {}
 	if FLAGS.data_source is "parents":
-		images, labels = data_utils.parents_get_data()
+		images, labels = data_utils.parents_get_data(pathTrain = "data/TrainSet.txt", pathTest="data/TestSet.txt")
 	else:
 		images, labels = data_utils.read_data(FLAGS.train_data_dir,
 											  FLAGS.val_data_dir,
