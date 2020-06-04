@@ -76,8 +76,10 @@ class MicroController(Controller):
 		self.sample_entropy = entropy_1 + entropy_2
 		self.sample_log_prob = log_prob_1 + log_prob_2
 		
-		self.normal_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="normal_array")
-		self.reduce_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="reduce_array")
+		#self.normal_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="normal_array")
+		self.normal_array = tf.placeholder(tf.int32, shape=[None],name="normal_array")
+		#self.reduce_array = tf.placeholder(tf.int32, shape=[2*num_cells*2*5],name="reduce_array")
+		self.reduce_array = tf.placeholder(tf.int32, shape=[None],name="reduce_array")
 		self.mov_avg_accuracy = tf.placeholder(tf.float32, shape=(), name="mov_avg_accuracy")
 		self.mov_avg_training = tf.placeholder(tf.float32, shape=(), name="mov_avg_training")
 
