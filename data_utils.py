@@ -299,12 +299,12 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 
 	X_train, X_VT, y_train, y_VT= ms.train_test_split(all_combinations, all_labels, test_size=0.3, random_state=1)
 	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
-
+	
 	dictionary_data={}
 	dictionary_labels={}
-	dictionary_data['train']=X_train
-	dictionary_data['test']=X_test
-	dictionary_data['valid']=X_validation
+	dictionary_data['train']=X_train.astype(np.float32)
+	dictionary_data['test']=X_test.astype(np.float32)
+	dictionary_data['valid']=X_validation.astype(np.float32)
 	dictionary_labels['train']=y_train
 	dictionary_labels['test']=y_test
 	dictionary_labels['valid']=y_validation
