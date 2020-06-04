@@ -236,10 +236,16 @@ def _cifar10_load_data():
 	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar10.load_data()
 	
 	num_classes = 10
-	#y_train = tf.keras.utils.to_categorical(y_train, num_classes)
-	#y_VT = tf.keras.utils.to_categorical(y_VT, num_classes)
+	
+	# from 2d to 1d
 	y_train = y_train.reshape(-1)
 	y_VT = y_VT.reshape(-1)
+	
+	# from 0-255 to 0-1
+	X_train /= 255
+	X_VT /= 255
+	
+	# split off valid and test
 	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
 	print("X_train shape: ", X_train.shape)
 	print("X_test shape: ", X_test.shape)
@@ -248,7 +254,7 @@ def _cifar10_load_data():
 	print("y_test shape: ", y_test.shape)
 	print("y_validation shape: ", y_validation.shape)
 	
-	
+	# add to dicts
 	dictionary_data={}
 	dictionary_labels={}
 	dictionary_data['train']=X_train.astype(np.float32)
