@@ -234,7 +234,13 @@ def img_augmentation(image):
 
 def _cifar10_load_data():
 	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar10.load_data()
+	
+	num_classes = 10
+	y_train = keras.utils.to_categorical(y_train, num_classes)
+	y_VT = keras.utils.to_categorical(y_test, num_classes)
+	
 	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
+	
 	dictionary_data={}
 	dictionary_labels={}
 	dictionary_data['train']=X_train.astype(np.float32)
