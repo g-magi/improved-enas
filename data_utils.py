@@ -260,7 +260,7 @@ def _parents_read_file(file_name):
 def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=300):
 	
 	##train set fisso contiene anche le coppie spaiate, train set normale invece non le contiene
-	_,labels,fP,fC=read_file(pathTrain)
+	_,labels,fP,fC=_parents_read_file(pathTrain)
 	labels=halving_arrays(labels)
 
 
