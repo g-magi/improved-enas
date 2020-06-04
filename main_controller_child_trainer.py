@@ -37,6 +37,7 @@ DEFINE_string("test_data_dir", "./data/test", "")
 DEFINE_integer("channel",1, "MNIST: 1, Cifar10: 3")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
+DEFINE_string("data_source","parents","either parents, mnist, cifar10")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
@@ -228,13 +229,18 @@ def get_ops(images, labels):
 
 
 def train():
-	images, labels = data_utils.read_data(FLAGS.train_data_dir,
-										  FLAGS.val_data_dir,
-										  FLAGS.test_data_dir,
-										  FLAGS.channel,
-										  FLAGS.img_size,
-										  FLAGS.n_aug_img)
-	
+	images = {}
+	labels = {}
+	if FLAGS.data_source is "parents":
+		images, labels = data_utils.parents_get_data()
+	else:
+		images, labels = data_utils.read_data(FLAGS.train_data_dir,
+											  FLAGS.val_data_dir,
+											  FLAGS.test_data_dir,
+											  FLAGS.channel,
+											  FLAGS.img_size,
+											  FLAGS.n_aug_img)
+		
 	n_data = np.shape(images["train"])[0]
 	print("Number of training data: %d" % (n_data))
 	

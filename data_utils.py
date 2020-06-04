@@ -3,6 +3,7 @@ import sys
 import random
 import cv2
 import numpy as np
+from sklearn import model_selection as ms
 from glob import *
 import utils
 from utils import plot_data_label
@@ -227,6 +228,79 @@ def img_augmentation(image):
 	return image
 
 
+#### Metodi per l'importazione dei dati del progetto di tesi di Luca Marzella
+
+def _parents_read_file(file_name):
+	feat_lst = []
+	feat_parent = []
+	feat_children = []
+	class_lst = []
+	pairs_lst = []
+	i = 0
+	with open(file_name) as fr:
+		reader = csv.reader(fr, delimiter=',')
+		for row in reader:
+			clas = int(float(row[-1]))
+		  
+			row = row[:-1]
+			s_feat = [float(i) for i in row]
+			s_feat = s_feat
+			if (i % 2 == 0):
+				feat_parent.append(s_feat)
+			else:
+				feat_children.append(s_feat)
+			feat_lst.append(s_feat)
+
+			class_lst.append(clas)
+		 
+			i = i + 1
+	return feat_lst, class_lst, feat_parent, feat_children
+
+
+def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=300):
+	
+	##train set fisso contiene anche le coppie spaiate, train set normale invece non le contiene
+	_,labels,fP,fC=read_file(pathTrain)
+	labels=halving_arrays(labels)
+
+
+
+	##test set fisso contiene anche le coppie spaiate, test set normale invece non le contiene
+	_,test_label,test_fP,test_fC=read_file(pathTest)
+	test_label=halving_arrays(test_label)
+
+	datasetP=np.array(fP+test_fP)
+	datasetC=np.array(fC+test_fC)
+	datasetL=np.array(labels+test_label)
+
+	all_combinations=np.empty(shape=(data_cap*data_cap,512,2,1))
+	all_labels=np.empty(shape=(data_cap*data_cap))
+	z=0
+	for i in range(data_cap):
+		for j in range(data_cap):
+			boh=np.concatenate((datasetP[i].reshape(512,1),datasetC[j].reshape(512,1)),axis=1)
+			boh=boh.reshape(512,2,1)
+			all_combinations[z]=boh
+			if(i==j):
+				all_labels[z]=datasetL[i]
+			else:
+				all_labels[z]=4
+			z=z+1
+
+	
+
+	X_train, X_VT, y_train, y_VT= ms.train_test_split(all_combinations, all_labels, test_size=0.3, random_state=1)
+	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
+
+	dictionary_data={}
+	dictionary_labels={}
+	dictionary_data['train']=X_train
+	dictionary_data['test']=X_test
+	dictionary_data['valid']=X_validation
+	dictionary_labels['train']=y_train
+	dictionary_labels['test']=y_test
+	dictionary_labels['valid']=y_validation
+	return dictionary_data,dictionary_labels
 
 
 
