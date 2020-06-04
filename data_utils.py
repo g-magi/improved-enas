@@ -242,8 +242,9 @@ def _cifar10_load_data():
 	y_VT = y_VT.reshape(-1)
 	
 	# from 0-255 to 0-1
-	X_train /= 255
-	X_VT /= 255
+	
+	X_train = np.divide(X_train, 255)
+	X_VT = np.divide(X_VT, 255)
 	
 	# split off valid and test
 	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
