@@ -3,6 +3,7 @@ import sys
 import random
 import cv2
 import csv
+import random
 import numpy as np
 from sklearn import model_selection as ms
 from glob import *
@@ -281,9 +282,21 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 	datasetC=np.array(fC+test_fC)
 	datasetL=np.array(labels+test_label)
 
-	all_combinations=np.empty(shape=(data_cap*data_cap,32,32,1))
-	all_labels=np.empty(shape=(data_cap*data_cap))
-	z=0
+	all_combinations=np.empty(shape=(data_cap*2,32,32,1))
+	all_labels=np.empty(shape=(data_cap*2))
+	#z=0
+	for i in range(data_cap):
+		boh=np.concatenate((datasetP[i].reshape(512,1),datasetC[i].reshape(512,1)),axis=1)
+		boh=boh.reshape(512,2,1)
+		boh=boh.reshape(32,32,1)
+		all_combinations[i]=boh
+	for i in range(data_cap):
+		indices = random.sample(range(0,data_cap),2)
+		boh=np.concatenate((datasetP[indices[0]].reshape(512,1),datasetC[indices[1]].reshape(512,1)),axis=1)
+		boh=boh.reshape(512,2,1)
+		boh=boh.reshape(32,32,1)
+		all_combinations[data_cap+i]=boh
+	"""
 	for i in range(data_cap):
 		for j in range(data_cap):
 			boh=np.concatenate((datasetP[i].reshape(512,1),datasetC[j].reshape(512,1)),axis=1)
@@ -295,7 +308,7 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 			else:
 				all_labels[z]=4
 			z=z+1
-
+	"""
 	
 
 	X_train, X_VT, y_train, y_VT= ms.train_test_split(all_combinations, all_labels, test_size=0.3, random_state=1)
@@ -306,9 +319,9 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 	dictionary_data['train']=X_train.astype(np.float32)
 	dictionary_data['test']=X_test.astype(np.float32)
 	dictionary_data['valid']=X_validation.astype(np.float32)
-	dictionary_labels['train']=y_train
-	dictionary_labels['test']=y_test
-	dictionary_labels['valid']=y_validation
+	dictionary_labels['train']=y_train.astype(np.int32)
+	dictionary_labels['test']=y_test.astype(np.int32)
+	dictionary_labels['valid']=y_validation.astype(np.int32)
 	return dictionary_data,dictionary_labels
 
 
