@@ -266,7 +266,7 @@ def _parents_read_file(file_name):
 	return feat_lst, class_lst, feat_parent, feat_children
 
 
-def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=300):
+def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=600):
 	
 	##train set fisso contiene anche le coppie spaiate, train set normale invece non le contiene
 	_,labels,fP,fC=_parents_read_file(pathTrain)
