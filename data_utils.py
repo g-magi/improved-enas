@@ -290,12 +290,14 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=6
 		boh=boh.reshape(512,2,1)
 		boh=boh.reshape(32,32,1)
 		all_combinations[i]=boh
+		all_labels[i] = datasetL[i]
 	for i in range(data_cap):
 		indices = random.sample(range(0,data_cap),2)
 		boh=np.concatenate((datasetP[indices[0]].reshape(512,1),datasetC[indices[1]].reshape(512,1)),axis=1)
 		boh=boh.reshape(512,2,1)
 		boh=boh.reshape(32,32,1)
 		all_combinations[data_cap+i]=boh
+		all_labels[data_cap+i]=4
 	"""
 	for i in range(data_cap):
 		for j in range(data_cap):
