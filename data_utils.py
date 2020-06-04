@@ -230,6 +230,13 @@ def img_augmentation(image):
 
 #### Metodi per l'importazione dei dati del progetto di tesi di Luca Marzella
 
+def _parents_halving_arrays(array):
+	new_array = []
+	for i in range(len(array)):
+		if (i % 2 == 0):
+			new_array.append(array[i])
+	return new_array
+
 def _parents_read_file(file_name):
 	feat_lst = []
 	feat_parent = []
@@ -261,13 +268,13 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 	
 	##train set fisso contiene anche le coppie spaiate, train set normale invece non le contiene
 	_,labels,fP,fC=_parents_read_file(pathTrain)
-	labels=halving_arrays(labels)
+	labels=_parents_halving_arrays(labels)
 
 
 
 	##test set fisso contiene anche le coppie spaiate, test set normale invece non le contiene
 	_,test_label,test_fP,test_fC=read_file(pathTest)
-	test_label=halving_arrays(test_label)
+	test_label=_parents_halving_arrays(test_label)
 
 	datasetP=np.array(fP+test_fP)
 	datasetC=np.array(fC+test_fC)
