@@ -274,7 +274,7 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 
 
 	##test set fisso contiene anche le coppie spaiate, test set normale invece non le contiene
-	_,test_label,test_fP,test_fC=read_file(pathTest)
+	_,test_label,test_fP,test_fC=_parents_read_file(pathTest)
 	test_label=_parents_halving_arrays(test_label)
 
 	datasetP=np.array(fP+test_fP)
