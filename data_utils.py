@@ -288,6 +288,7 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 		for j in range(data_cap):
 			boh=np.concatenate((datasetP[i].reshape(512,1),datasetC[j].reshape(512,1)),axis=1)
 			boh=boh.reshape(512,2,1)
+			boh=boh.reshape(32,32,1)
 			all_combinations[z]=boh
 			if(i==j):
 				all_labels[z]=datasetL[i]
