@@ -9,6 +9,7 @@ from sklearn import model_selection as ms
 from glob import *
 import utils
 from utils import plot_data_label
+import tensorflow.compat.v1 as tf
 
 random.seed(random.randint(0, 2 ** 31 - 1))
 
