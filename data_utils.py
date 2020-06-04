@@ -229,6 +229,22 @@ def img_augmentation(image):
 
 	return image
 
+### Metodi per il caricamento di cifar10
+
+def _cifar10_load_data():
+	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar10.load_data()
+	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
+	dictionary_data={}
+	dictionary_labels={}
+	dictionary_data['train']=X_train.astype(np.float32)
+	dictionary_data['test']=X_test.astype(np.float32)
+	dictionary_data['valid']=X_validation.astype(np.float32)
+	dictionary_labels['train']=y_train.astype(np.int32)
+	dictionary_labels['test']=y_test.astype(np.int32)
+	dictionary_labels['valid']=y_validation.astype(np.int32)
+	return dictionary_data,dictionary_labels
+
+
 
 #### Metodi per l'importazione dei dati del progetto di tesi di Luca Marzella
 
@@ -298,20 +314,6 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=6
 		boh=boh.reshape(32,32,1)
 		all_combinations[data_cap+i]=boh
 		all_labels[data_cap+i]=4
-	"""
-	for i in range(data_cap):
-		for j in range(data_cap):
-			boh=np.concatenate((datasetP[i].reshape(512,1),datasetC[j].reshape(512,1)),axis=1)
-			boh=boh.reshape(512,2,1)
-			boh=boh.reshape(32,32,1)
-			all_combinations[z]=boh
-			if(i==j):
-				all_labels[z]=datasetL[i]
-			else:
-				all_labels[z]=4
-			z=z+1
-	"""
-	
 
 	X_train, X_VT, y_train, y_VT= ms.train_test_split(all_combinations, all_labels, test_size=0.3, random_state=1)
 	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
