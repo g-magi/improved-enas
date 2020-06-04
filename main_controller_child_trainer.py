@@ -37,14 +37,14 @@ DEFINE_string("test_data_dir", "./data/test", "")
 DEFINE_integer("channel",1, "MNIST: 1, Cifar10: 3")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
-DEFINE_string("data_source","parents","either parents, mnist, cifar10")
+DEFINE_string("data_source","cifar10","either 'parents', 'mnist', 'cifar10'")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
 DEFINE_string("data_format","NHWC", "'NHWC or NCHW'")
 DEFINE_string("search_for", "micro","")
 
-DEFINE_integer("batch_size",32,"")
+DEFINE_integer("batch_size",128,"")
 DEFINE_integer("num_epochs", 100," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
