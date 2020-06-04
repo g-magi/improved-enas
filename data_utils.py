@@ -281,7 +281,7 @@ def parents_get_data(pathTrain="TrainSet.txt",pathTest="TestSet.txt", data_cap=3
 	datasetC=np.array(fC+test_fC)
 	datasetL=np.array(labels+test_label)
 
-	all_combinations=np.empty(shape=(data_cap*data_cap,512,2,1))
+	all_combinations=np.empty(shape=(data_cap*data_cap,32,32,1))
 	all_labels=np.empty(shape=(data_cap*data_cap))
 	z=0
 	for i in range(data_cap):
