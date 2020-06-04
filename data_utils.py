@@ -240,6 +240,13 @@ def _cifar10_load_data():
 	y_VT = tf.keras.utils.to_categorical(y_VT, num_classes)
 	
 	X_test, X_validation, y_test, y_validation= ms.train_test_split(X_VT, y_VT, test_size=0.3, random_state=1)
+	print("X_train shape: ", X_train.shape)
+	print("X_test shape: ", X_test.shape)
+	print("X_validation shape: ", X_validation.shape)
+	print("y_train shape: ", y_train.shape)
+	print("y_test shape: ", y_test.shape)
+	print("y_validation shape: ", y_validation.shape)
+	
 	
 	dictionary_data={}
 	dictionary_labels={}
