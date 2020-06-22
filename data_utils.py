@@ -316,7 +316,7 @@ def _parents_read_images(img_size=64, channels=3):
 			print("\tReading image: ",parent_img_path)
 			parent_img = cv2.imread(parent_img_path)
 			parent_img = cv2.resize(parent_img,(img_size,img_size))
-			parent_img = np.reshape(parent_img, [1,img_size,img_size,channels])
+			parent_img = np.reshape(parent_img, [img_size,img_size,channels])
 			
 			child_img_path = data["paths"][i]
 			child_img_number = str(j+1).zfill(3)
@@ -324,12 +324,12 @@ def _parents_read_images(img_size=64, channels=3):
 			child_img_path += os.sep+child_img_filename
 			child_img = cv2.imread(child_img_path)
 			child_img = cv2.resize(child_img,(img_size,img_size))
-			child_img = np.reshape(child_img, [1,img_size,img_size,channels])
+			child_img = np.reshape(child_img, [img_size,img_size,channels])
 			
 			data["pairs"][i]["parent"].append(parent_img)
 			data["pairs"][i]["child"].append(child_img)
 	
-	pairs = []
+	pairs = np.empty(2000,64,64,6)
 	labels = []
 	
 	for i in range(4):
@@ -338,8 +338,10 @@ def _parents_read_images(img_size=64, channels=3):
 		for j in range(250):
 			parent_img = data["pairs"][i]["parent"][j]
 			child_img = data["pairs"][i]["child"][j]
-			merged_image = np.concatenate((parent_img,child_img),axis=3)
-			pairs.append(merged_image.astype(np.float32))
+			merged_image = np.concatenate((parent_img,child_img),axis=2)
+			if i==0 and j==0:
+				print("merged image shape:",merged_image.shape)
+			pairs[(250*i)+j]=merged_image.astype(np.float32)
 			labels.append(i)
 		
 		#negative pairs
@@ -350,9 +352,14 @@ def _parents_read_images(img_size=64, channels=3):
 				child_img = data["pairs"][i]["child"][0]
 			else:
 				child_img = data["pairs"][i]["child"][j+1]
-			merged_image = np.concatenate((parent_img,child_img),axis=3)
-			pairs.append(merged_image.astype(np.float32))
+			merged_image = np.concatenate((parent_img,child_img),axis=2)
+			pairs[(250*i)+j+250]=merged_image.astype(np.float32)
 			labels.append(4)
+	
+	print("pairs shape:\n",pairs.shape)
+	
+	sec = input('Let us wait for user input. Let me know how many seconds to sleep now.\n')
+	
 	
 	X_train, X_VT, y_train, y_VT = ms.train_test_split(pairs,labels,test_size=0.3, random_state=1)
 	X_validation, X_test, y_validation, y_test = ms.train_test_split(X_VT,y_VT,test_size=0.3)
