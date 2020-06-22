@@ -302,7 +302,7 @@ def _parents_read_images(img_size=64, channels=3):
 	
 	data = {
 		"paths": [fd-path,fs-path,md-path,ms-path],
-		"prefixes:" [fd-prefix,fs-prefix,md-prefix,ms-prefix],
+		"prefixes": [fd-prefix,fs-prefix,md-prefix,ms-prefix],
 		"pairs":[fd-pairs,fs-pairs,md-pairs,ms-pairs]
 	}
 	
