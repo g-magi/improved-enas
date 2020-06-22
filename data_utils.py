@@ -273,37 +273,37 @@ def _cifar10_load_data():
 def _parents_read_images(img_size=64, channels=3):
 	main_directory_path = os.sep+"KinFaceW-II"+os.sep+"images"+os.sep
 	#father-daughter
-	fd-path = main_directory_path+"father-dau"
-	fd-prefix = "fd"
-	fd-pairs={
+	fd_path = main_directory_path+"father-dau"
+	fd_prefix = "fd"
+	fd_pairs={
 		"parent": [],
 		"child": []}
 	
 	#father-son
-	fs-path = main_directory_path+"father-son"
-	fs-prefix = "fs"
-	fs-pairs={
+	fs_path = main_directory_path+"father-son"
+	fs_prefix = "fs"
+	fs_pairs={
 		"parent": [],
 		"child": []}
 	
 	#mother-daughter
-	md-path = main_directory_path+"mother-dau"
-	md-prefix = "md"
-	md-pairs={
+	md_path = main_directory_path+"mother-dau"
+	md_prefix = "md"
+	md_pairs={
 		"parent": [],
 		"child": []}
 	
 	#mother-son
-	ms-path = main_directory_path+"mother-son"
-	ms-prefix = "ms"
-	ms-pairs={
+	ms_path = main_directory_path+"mother-son"
+	ms_prefix = "ms"
+	ms_pairs={
 		"parent": [],
 		"child": []}
 	
 	data = {
-		"paths": [fd-path,fs-path,md-path,ms-path],
-		"prefixes": [fd-prefix,fs-prefix,md-prefix,ms-prefix],
-		"pairs":[fd-pairs,fs-pairs,md-pairs,ms-pairs]
+		"paths": [fd_path,fs_path,md_path,ms_path],
+		"prefixes": [fd_prefix,fs_prefix,md_prefix,ms_prefix],
+		"pairs":[fd_pairs,fs_pairs,md_pairs,ms_pairs]
 	}
 	
 	for i in range(4):
