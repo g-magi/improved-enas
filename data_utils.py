@@ -314,7 +314,7 @@ def _parents_read_images(img_size=64, channels=3):
 			parent_img_path += os.sep+parent_img_filename
 			parent_img = cv2.imread(parent_img_path)
 			parent_img = cv2.resize(img,(img_size,img_size))
-			parent_img = np.reshape(img, [1,img_size,img_size,channels]
+			parent_img = np.reshape(img, [1,img_size,img_size,channels])
 			
 			child_img_path = data["paths"][i]
 			child_img_number = str(j).zfill(3)
