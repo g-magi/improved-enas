@@ -271,7 +271,7 @@ def _cifar10_load_data():
 
 
 def _parents_read_images(img_size=64, channels=3):
-	main_directory_path = os.sep+"KinFaceW-II"+os.sep+"images"+os.sep
+	main_directory_path = "."+os.sep+"content"+os.sep+"KinFaceW-II"+os.sep+"images"+os.sep
 	#father-daughter
 	fd_path = main_directory_path+"father-dau"
 	fd_prefix = "fd"
