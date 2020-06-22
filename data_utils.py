@@ -313,7 +313,6 @@ def _parents_read_images(img_size=64, channels=3):
 			parent_img_number = str(j+1).zfill(3)
 			parent_img_filename = data["prefixes"][i]+"_"+parent_img_number+"_1.jpg"
 			parent_img_path += os.sep+parent_img_filename
-			print("\tReading image: ",parent_img_path)
 			parent_img = cv2.imread(parent_img_path)
 			parent_img = cv2.resize(parent_img,(img_size,img_size))
 			parent_img = np.reshape(parent_img, [img_size,img_size,channels])
@@ -339,8 +338,6 @@ def _parents_read_images(img_size=64, channels=3):
 			parent_img = data["pairs"][i]["parent"][j]
 			child_img = data["pairs"][i]["child"][j]
 			merged_image = np.concatenate((parent_img,child_img),axis=2)
-			if i==0 and j==0:
-				print("merged image shape:",merged_image.shape)
 			pairs[(250*i)+j]=merged_image.astype(np.float32)
 			labels[(250*i)+j+250]=i
 		
