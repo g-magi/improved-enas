@@ -313,16 +313,16 @@ def _parents_read_images(img_size=64, channels=3):
 			parent_img_filename = data["prefixes"][i]+"_"+parent_img_number+"_1.jpg"
 			parent_img_path += os.sep+parent_img_filename
 			parent_img = cv2.imread(parent_img_path)
-			parent_img = cv2.resize(img,(img_size,img_size))
-			parent_img = np.reshape(img, [1,img_size,img_size,channels])
+			parent_img = cv2.resize(parent_img,(img_size,img_size))
+			parent_img = np.reshape(parent_img, [1,img_size,img_size,channels])
 			
 			child_img_path = data["paths"][i]
 			child_img_number = str(j).zfill(3)
 			child_img_filename = data["prefixes"][i]+"_"+child_img_number+"_2.jpg"
 			child_img_path += os.sep+child_img_filename
 			child_img = cv2.imread(child_img_path)
-			child_img = cv2.resize(img,(img_size,img_size))
-			child_img = np.reshape(img, [1,img_size,img_size,channels])
+			child_img = cv2.resize(child_img,(img_size,img_size))
+			child_img = np.reshape(child_img, [1,img_size,img_size,channels])
 			
 			data["pairs"][i]["parent"].append(parent_img)
 			data["pairs"][i]["child"].append(child_img)
