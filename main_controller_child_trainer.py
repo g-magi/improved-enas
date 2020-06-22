@@ -37,7 +37,7 @@ DEFINE_string("test_data_dir", "./data/test", "")
 DEFINE_integer("channel",6, "MNIST: 1, Cifar10: 3, parents: 3, parents_img: 6")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
-DEFINE_string("data_source","parents","either 'parents', 'mnist', 'cifar10', 'parents_img' ")
+DEFINE_string("data_source","parents_img","either 'parents', 'mnist', 'cifar10', 'parents_img' ")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
