@@ -270,7 +270,7 @@ def _cifar10_load_data():
 ### Metodi per importare i dati di Marzella
 
 
-def _parents_read_images(img_size=64, channels=3)
+def _parents_read_images(img_size=64, channels=3):
 	main_directory_path = os.sep+"KinFaceW-II"+os.sep+"images"+os.sep
 	#father-daughter
 	fd-path = main_directory_path+"father-dau"
