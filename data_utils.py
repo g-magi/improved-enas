@@ -266,7 +266,21 @@ def _cifar10_load_data():
 	dictionary_labels['valid']=y_validation.astype(np.int32)
 	return dictionary_data,dictionary_labels
 
+### Metodi per importare i dati di Marzella
 
+def _parents_read_images(main_directory_path):
+	class_list = os.listdir(main_directory_path)
+	#class_list.sort()
+	n_classes = len(class_list)
+	
+	images = []
+	labels = []
+	
+	for i in range(n_classes):
+		img_class = glob(os.path.join(main_directory_path,class_list[i]) + '/*.jpg')
+		images += img_class
+		for j in range(len(img_class)):
+			labels += [i]
 
 #### Metodi per l'importazione dei dati del progetto di tesi di Luca Marzella
 
