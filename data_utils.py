@@ -358,7 +358,7 @@ def _parents_read_images(img_size=64, channels=3):
 	
 	print("pairs shape:\n",pairs.shape)
 	
-	sec = input('Let us wait for user input. Let me know how many seconds to sleep now.\n')
+	#sec = input('Let us wait for user input. Let me know how many seconds to sleep now.\n')
 	
 	
 	X_train, X_VT, y_train, y_VT = ms.train_test_split(pairs,labels,test_size=0.3, random_state=1)
