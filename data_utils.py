@@ -5,6 +5,7 @@ import cv2
 import csv
 import random
 import numpy as np
+import itertools
 from sklearn import model_selection as ms
 from glob import *
 import utils
@@ -268,19 +269,102 @@ def _cifar10_load_data():
 
 ### Metodi per importare i dati di Marzella
 
-def _parents_read_images(main_directory_path):
-	class_list = os.listdir(main_directory_path)
-	#class_list.sort()
-	n_classes = len(class_list)
+
+def _parents_read_images(img_size=64, channels=3)
+	main_directory_path = os.sep+"KinFaceW-II"+os.sep+"images"+os.sep
+	#father-daughter
+	fd-path = main_directory_path+"father-dau"
+	fd-prefix = "fd"
+	fd-pairs={
+		"parent": [],
+		"child": []}
 	
-	images = []
+	#father-son
+	fs-path = main_directory_path+"father-son"
+	fs-prefix = "fs"
+	fs-pairs={
+		"parent": [],
+		"child": []}
+	
+	#mother-daughter
+	md-path = main_directory_path+"mother-dau"
+	md-prefix = "md"
+	md-pairs={
+		"parent": [],
+		"child": []}
+	
+	#mother-son
+	ms-path = main_directory_path+"mother-son"
+	ms-prefix = "ms"
+	ms-pairs={
+		"parent": [],
+		"child": []}
+	
+	data = {
+		"paths": [fd-path,fs-path,md-path,ms-path],
+		"prefixes:" [fd-prefix,fs-prefix,md-prefix,ms-prefix],
+		"pairs":[fd-pairs,fs-pairs,md-pairs,ms-pairs]
+	}
+	
+	for i in range(4):
+		for j in range(250):
+			parent_img_path = data["paths"][i]
+			parent_img_number = str(j).zfill(3)
+			parent_img_filename = data["prefixes"][i]+"_"+parent_img_number+"_1.jpg"
+			parent_img_path += os.sep+"parent_img_filename
+			parent_img = cv2.imread(parent_img_path)
+			parent_img = cv2.resize(img,(img_size,img_size))
+			parent_img = np.reshape(img, [1,img_size,img_size,channels]
+			
+			child_img_path = data["paths"][i]
+			child_img_number = str(j).zfill(3)
+			child_img_filename = data["prefixes"][i]+"_"+child_img_number+"_2.jpg"
+			child_img_path += os.sep+"child_img_filename
+			child_img = cv2.imread(child_img_path)
+			child_img = cv2.resize(img,(img_size,img_size))
+			child_img = np.reshape(img, [1,img_size,img_size,channels]
+			
+			data["pairs"][i]["parent"].append(parent_img)
+			data["pairs"][i]["child"].append(child_img)
+	
+	pairs = []
 	labels = []
 	
-	for i in range(n_classes):
-		img_class = glob(os.path.join(main_directory_path,class_list[i]) + '/*.jpg')
-		images += img_class
-		for j in range(len(img_class)):
-			labels += [i]
+	for i in range(4):
+		#positive pairs
+		
+		for j in range(250):
+			parent_img = data["pairs"][i]["parent"][j]
+			child_img = data["pairs"][i]["child"][j]
+			merged_image = np.concatenate((parent_img,child_img),axis=3)
+			pairs.append(merged_image.astype(np.float32))
+			labels.append(i)
+		
+		#negative pairs
+		
+		for j in range(250):
+			parent_img = data["pairs"][i]["parent"][j]
+			if j is 249:
+				child_img = data["pairs"][i]["child"][0]
+			else:
+				child_img = data["pairs"][i]["child"][j+1]
+			merged_image = np.concatenate((parent_img,child_img),axis=3)
+			pairs.append(merged_image.astype(np.float32))
+			labels.append(4)
+	
+	X_train, X_VT, y_train, y_VT = ms.train_test_split(pairs,labels,test_size=0.3, random_state=1)
+	X_validation, X_test, y_validation, y_test = ms.train_test_split(X_VT,y_VT,test_size=0.3)
+	
+	dictionary_data={}
+	dictionary_labels={}
+	dictionary_data['train']=X_train
+	dictionary_data['test']=X_test
+	dictionary_data['valid']=X_validation
+	dictionary_labels['train']=y_train
+	dictionary_labels['test']=y_test
+	dictionary_labels['valid']=y_validation
+	return dictionary_data,dictionary_labels
+	
 
 #### Metodi per l'importazione dei dati del progetto di tesi di Luca Marzella
 
