@@ -329,7 +329,7 @@ def _parents_read_images(img_size=64, channels=3):
 			data["pairs"][i]["parent"].append(parent_img)
 			data["pairs"][i]["child"].append(child_img)
 	
-	pairs = np.empty(2000,64,64,6)
+	pairs = np.empty(shape=(2000,64,64,6))
 	labels = []
 	
 	for i in range(4):
