@@ -307,6 +307,7 @@ def _parents_read_images(img_size=64, channels=3):
 	}
 	
 	for i in range(4):
+		print("Reading images in: ", data["paths"][i])
 		for j in range(250):
 			parent_img_path = data["paths"][i]
 			parent_img_number = str(j).zfill(3)
@@ -332,7 +333,7 @@ def _parents_read_images(img_size=64, channels=3):
 	
 	for i in range(4):
 		#positive pairs
-		
+		print("Creating positive pairs for: ", data["prefixes"][i])
 		for j in range(250):
 			parent_img = data["pairs"][i]["parent"][j]
 			child_img = data["pairs"][i]["child"][j]
@@ -341,7 +342,7 @@ def _parents_read_images(img_size=64, channels=3):
 			labels.append(i)
 		
 		#negative pairs
-		
+		print("Creating negative pairs for: ", data["prefixes"][i])
 		for j in range(250):
 			parent_img = data["pairs"][i]["parent"][j]
 			if j is 249:
