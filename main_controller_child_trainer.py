@@ -44,7 +44,7 @@ DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
 DEFINE_string("data_format","NHWC", "'NHWC or NCHW'")
 DEFINE_string("search_for", "micro","")
 
-DEFINE_integer("batch_size",16,"") #original 128
+DEFINE_integer("batch_size",64,"") #original 128
 DEFINE_integer("num_epochs", 200," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
@@ -97,7 +97,7 @@ DEFINE_boolean("controller_training", True, "")
 DEFINE_boolean("controller_use_critic", False, "")
 
 DEFINE_integer("log_every", 10, "How many steps (how many batches) to log") # original 50
-DEFINE_integer("eval_every_epochs", 1, "How many epochs to eval")
+DEFINE_integer("eval_every_epochs", 5, "How many epochs to eval")
 
 channel = FLAGS.channel
 
