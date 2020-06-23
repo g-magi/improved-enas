@@ -341,7 +341,7 @@ def _parents_read_images(img_size=64, channels=3):
 			child_img = data["pairs"][i]["child"][j]
 			merged_image = np.concatenate((parent_img,child_img),axis=2)
 			pairs[(250*i)+j]=merged_image.astype(np.float32)
-			labels[(250*i)+j+250]=i
+			labels[(250*i)+j+250]=0
 		
 		#negative pairs
 		print("Creating negative pairs for: ", data["prefixes"][i])
@@ -353,7 +353,7 @@ def _parents_read_images(img_size=64, channels=3):
 				child_img = data["pairs"][i]["child"][j+1]
 			merged_image = np.concatenate((parent_img,child_img),axis=2)
 			pairs[(250*i)+j+250]=merged_image.astype(np.float32)
-			labels[(250*i)+j+250]=4
+			labels[(250*i)+j+250]=1
 	
 	print("pairs shape:\n",pairs.shape)
 	
