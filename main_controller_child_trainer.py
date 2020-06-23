@@ -96,7 +96,7 @@ DEFINE_boolean("controller_sync_replicas", True, "To sync or not to sync.")
 DEFINE_boolean("controller_training", True, "")
 DEFINE_boolean("controller_use_critic", False, "")
 
-DEFINE_integer("log_every", 50, "How many steps to log")
+DEFINE_integer("log_every", 5, "How many steps (how many batches) to log") # original 50
 DEFINE_integer("eval_every_epochs", 1, "How many epochs to eval")
 
 channel = FLAGS.channel
