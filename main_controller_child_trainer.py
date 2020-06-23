@@ -85,9 +85,9 @@ DEFINE_float("controller_temperature", 5.0, "") #original None
 DEFINE_float("controller_entropy_weight", 0.0001, "")
 DEFINE_float("controller_skip_target", 0.4, "") #original 0.8
 DEFINE_float("controller_skip_weight", 0.0, "")
-DEFINE_integer("controller_num_aggregate", 10, "")
+DEFINE_integer("controller_num_aggregate", 3, "") # original 10
 DEFINE_integer("controller_num_replicas", 1, "")
-DEFINE_integer("controller_train_steps", 5, "") # original 30
+DEFINE_integer("controller_train_steps", 30, "") # original 30
 DEFINE_integer("controller_forwards_limit", 2, "")
 DEFINE_integer("controller_train_every", 1,
 			   "train the controller after this number of epochs")
@@ -96,7 +96,7 @@ DEFINE_boolean("controller_sync_replicas", True, "To sync or not to sync.")
 DEFINE_boolean("controller_training", True, "")
 DEFINE_boolean("controller_use_critic", False, "")
 
-DEFINE_integer("log_every", 5, "How many steps (how many batches) to log") # original 50
+DEFINE_integer("log_every", 10, "How many steps (how many batches) to log") # original 50
 DEFINE_integer("eval_every_epochs", 1, "How many epochs to eval")
 
 channel = FLAGS.channel
