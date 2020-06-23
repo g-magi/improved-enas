@@ -45,7 +45,7 @@ DEFINE_string("data_format","NHWC", "'NHWC or NCHW'")
 DEFINE_string("search_for", "micro","")
 
 DEFINE_integer("batch_size",64,"") #original 128
-DEFINE_integer("num_epochs", 100," = (10+ 20+ 40+ 80)") #original 150
+DEFINE_integer("num_epochs", 200," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
 DEFINE_integer("child_num_layers", 6, "Number of layer. IN this case we will calculate 4 conv and 2 pooling layers") # default 6
@@ -87,7 +87,7 @@ DEFINE_float("controller_skip_target", 0.4, "") #original 0.8
 DEFINE_float("controller_skip_weight", 0.0, "")
 DEFINE_integer("controller_num_aggregate", 10, "")
 DEFINE_integer("controller_num_replicas", 1, "")
-DEFINE_integer("controller_train_steps", 30, "")
+DEFINE_integer("controller_train_steps", 5, "") # original 30
 DEFINE_integer("controller_forwards_limit", 2, "")
 DEFINE_integer("controller_train_every", 1,
 			   "train the controller after this number of epochs")
