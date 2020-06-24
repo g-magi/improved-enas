@@ -246,12 +246,12 @@ class AccuracyScaler:
 			average_arc_training = tf.cast(average_arc_training, tf.float32)
 			scaling_factor = average_arc_training/combined_arcs_training
 			return scaling_factor
+		"""
 		## no scaling
 			# "none"
 		def _scale_none():
 			return tf.constant(1.0,tf.float32)
 		##
-		"""
 		## moving average scaling
 			# multiplies accuracy of arc by a scaling factor
 			# the scaling factor is [mov_avg_training]/[arc training]
@@ -405,4 +405,4 @@ class AccuracyScaler:
 		
 		scaled_accuracy = accuracy*scaling_factor
 		
-		return scaled_accuracy, tf_normal_arc_training, tf_reduce_arc_training
+		return scaled_accuracy, accuracy, scaling_factor
