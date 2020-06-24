@@ -67,7 +67,7 @@ DEFINE_float("child_keep_prob", 0.9, "")
 DEFINE_float("child_drop_path_keep_prob", 0.6, "minimum drop_path_keep_prob")
 DEFINE_float("child_l2_reg", 1e-4, "")
 DEFINE_float("child_lr_max", 0.05, "for lr schedule")
-DEFINE_float("child_lr_min", 0.001, "for lr schedule") #0.0005 original
+DEFINE_float("child_lr_min", 0.0005, "for lr schedule") #0.0005 original
 DEFINE_string("child_skip_pattern", None, "Must be ['dense', None]")
 DEFINE_string("child_fixed_arc", None, "")
 DEFINE_boolean("child_use_aux_heads", True, "Should we use an aux head")
@@ -79,11 +79,11 @@ DEFINE_float("controller_lr_dec_rate", 1.0, "")
 DEFINE_float("controller_keep_prob", 0.5, "")
 DEFINE_float("controller_l2_reg", 0.0, "")
 DEFINE_float("controller_bl_dec", 0.99, "")
-DEFINE_float("controller_tanh_constant", 2.5, "") #original 1.10
+DEFINE_float("controller_tanh_constant", 1.10, "") #original 1.10
 DEFINE_float("controller_op_tanh_reduce", 2.5, "")
-DEFINE_float("controller_temperature", 5.0, "") #original None
+DEFINE_float("controller_temperature", None, "") #original None
 DEFINE_float("controller_entropy_weight", 0.0001, "")
-DEFINE_float("controller_skip_target", 0.4, "") #original 0.8
+DEFINE_float("controller_skip_target", 0.8, "") #original 0.8
 DEFINE_float("controller_skip_weight", 0.0, "")
 DEFINE_integer("controller_num_aggregate", 3, "") # original 10
 DEFINE_integer("controller_num_replicas", 1, "")
