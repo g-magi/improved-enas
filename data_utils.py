@@ -239,6 +239,11 @@ def _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT):
 	y_train = y_train.reshape(-1)
 	y_VT = y_VT.reshape(-1)
 	
+	if X_train.ndim is 3:
+		X_train = np.expand_dims(X_train, axis=3)
+	if X_VT.ndim is 3:
+		X_VT = np.expand_dims(X_VT, axis=3)
+	
 	# from 0-255 to 0-1
 	
 	X_train = np.divide(X_train, 255)
