@@ -231,13 +231,10 @@ def img_augmentation(image):
 
 	return image
 
-### Metodi per il caricamento di cifar10
+### Metodi per il caricamento di dataset keras
 
-def _cifar10_load_data():
-	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar10.load_data()
-	
-	num_classes = 10
-	
+def _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT):
+
 	# from 2d to 1d
 	y_train = y_train.reshape(-1)
 	y_VT = y_VT.reshape(-1)
@@ -265,7 +262,45 @@ def _cifar10_load_data():
 	dictionary_labels['train']=y_train.astype(np.int32)
 	dictionary_labels['test']=y_test.astype(np.int32)
 	dictionary_labels['valid']=y_validation.astype(np.int32)
+	
 	return dictionary_data,dictionary_labels
+
+### Metodo per il caricamento di cifar10
+
+def _cifar10_load_data():
+	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar10.load_data()
+	num_classes = 10
+	return _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT)
+	
+### Metodo per il caricamento di mnist-fashion
+
+def _fashion_mnist_load_data():
+	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.fashion_mnist.load_data()
+	
+	num_classes = 10
+	
+	return _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT)
+
+### Metodo per il caricamento di cifar100
+
+def _cifar100_load_data(label_mode = "coarse"):
+	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar100.load_data(label_mode="coarse")
+	
+	num_classes = 100
+	if label_mode is "coarse":
+		num_classes = 20
+	
+	return _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT)
+
+###
+def _mnist_load_data():
+	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.mnist.load_data()
+	
+	num_classes = 10
+	
+	return _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT)
+
+
 
 ### Metodi per importare i dati di Marzella
 
