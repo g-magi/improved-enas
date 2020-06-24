@@ -256,7 +256,7 @@ class AccuracyScaler:
 			# multiplies accuracy of arc by a scaling factor
 			# the scaling factor is [mov_avg_training]/[arc training]
 			# "average"
-		"""
+		
 		def _scale_mov_avg():
 			def _case_zero():
 				return tf.constant(1.0, tf.float32)
@@ -303,7 +303,7 @@ class AccuracyScaler:
 								_case_zero,
 								_case_default)
 			return scaling_factor
-		"""
+		
 		## greedy average scaling
 			# multiplies accuracy of arc by a scaling factor
 			# the scaling factor is [arc training]/[average training]
@@ -352,7 +352,7 @@ class AccuracyScaler:
 			
 			scaling_factor_acc = _scale_greedy_accuracy()
 			
-			#scaling_factor_train = _scale_mov_avg()
+			scaling_factor_train = _scale_mov_avg()
 			scaling_factor_train = tf.constant(1.0, tf.float32)
 			
 			def _case_factor_high():
