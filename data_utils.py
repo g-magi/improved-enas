@@ -244,6 +244,13 @@ def _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT):
 	if X_VT.ndim is 3:
 		X_VT = np.expand_dims(X_VT, axis=3)
 	
+	# Check whether the image size is a multiple of 2 (unfortunately needed thanks to how enas works)
+	image_size = X_train.shape[1]
+	if image_size == 28
+		X_train = np.pad(X_train, ((0,0),(1,1),(1,1),(0,0)), mode='edge')
+		X_VT = np.pad(X_VT, ((0,0),(1,1),(1,1),(0,0)), mode='edge')
+		
+	
 	# from 0-255 to 0-1
 	
 	X_train = np.divide(X_train, 255)
