@@ -34,8 +34,8 @@ DEFINE_string("controller_log_filename","controller_log.txt","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
-DEFINE_integer("channel",2, "MNIST: 1, Cifar10: 3, parents: 3, parents_img: 2")
-DEFINE_integer("img_size", 64, "enlarge image size")
+DEFINE_integer("channel",1, "MNIST: 1, Cifar10: 3, parents: 3, parents_img: 2")
+DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
 DEFINE_string("data_source","parents_img","either 'parents', 'mnist', 'cifar10', 'parents_img' ")
 ##########################################################################
@@ -44,8 +44,8 @@ DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
 DEFINE_string("data_format","NHWC", "'NHWC or NCHW'")
 DEFINE_string("search_for", "micro","")
 
-DEFINE_integer("batch_size",32,"") #original 128
-DEFINE_integer("num_epochs", 200," = (10+ 20+ 40+ 80)") #original 150
+DEFINE_integer("batch_size",128,"") #original 128
+DEFINE_integer("num_epochs", 100," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
 DEFINE_integer("child_num_layers", 6, "Number of layer. IN this case we will calculate 4 conv and 2 pooling layers") # default 6
@@ -96,8 +96,8 @@ DEFINE_boolean("controller_sync_replicas", True, "To sync or not to sync.")
 DEFINE_boolean("controller_training", True, "")
 DEFINE_boolean("controller_use_critic", False, "")
 
-DEFINE_integer("log_every", 10, "How many steps (how many batches) to log") # original 50
-DEFINE_integer("eval_every_epochs", 5, "How many epochs to eval")
+DEFINE_integer("log_every", 50, "How many steps (how many batches) to log") # original 50
+DEFINE_integer("eval_every_epochs", 1, "How many epochs to eval")
 
 channel = FLAGS.channel
 
