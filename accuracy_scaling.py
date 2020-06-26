@@ -352,14 +352,14 @@ class AccuracyScaler:
 			
 			scaling_factor_acc = _scale_greedy_accuracy()
 			
-			scaling_factor_train = _scale_mov_avg()
-			scaling_factor_train = tf.constant(1.0, tf.float32)
+			#scaling_factor_train = _scale_mov_avg()
+			#scaling_factor_train = tf.constant(1.0, tf.float32)
 			
 			def _case_factor_high():
 				return scaling_factor_acc
 			
 			def _case_factor_medium():
-				return scaling_factor_train*scaling_factor_acc
+				return _scale_mov_avg()*scaling_factor_acc
 			
 			def _case_factor_low():
 				return tf.constant(0.1, tf.float32)
