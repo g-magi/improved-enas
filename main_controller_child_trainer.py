@@ -34,10 +34,10 @@ DEFINE_string("controller_log_filename","controller_log.txt","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
-DEFINE_integer("channel",1, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 2")
+DEFINE_integer("channel",6, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 2")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
-DEFINE_string("data_source","fashion_mnist","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
+DEFINE_string("data_source","parents_img","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
