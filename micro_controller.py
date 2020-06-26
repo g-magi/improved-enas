@@ -254,7 +254,7 @@ class MicroController(Controller):
 									self.current_reduce_arc,
 									self.mov_avg_accuracy,
 									self.mov_avg_training,
-									scaling_method=tf.constant("none"),
+									scaling_method=tf.constant("combined"),
 									arc_handling=tf.constant("sum"))
 		self.reward = self.scaled_acc
 		
