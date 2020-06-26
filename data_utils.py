@@ -361,7 +361,7 @@ def _parents_read_images(img_size=64, channels=3):
 			parent_img_filename = data["prefixes"][i]+"_"+parent_img_number+"_1.jpg"
 			parent_img_path += os.sep+parent_img_filename
 			parent_img = cv2.imread(parent_img_path)
-			parent_img = cv2.cvtColor(parent_img, cv2.COLOR_BGR2GRAY)
+			#parent_img = cv2.cvtColor(parent_img, cv2.COLOR_BGR2GRAY)
 			parent_img = cv2.resize(parent_img,(img_size,img_size))
 			parent_img = np.reshape(parent_img, [img_size,img_size,1])
 			
@@ -370,14 +370,14 @@ def _parents_read_images(img_size=64, channels=3):
 			child_img_filename = data["prefixes"][i]+"_"+child_img_number+"_2.jpg"
 			child_img_path += os.sep+child_img_filename
 			child_img = cv2.imread(child_img_path)
-			child_img = cv2.cvtColor(child_img, cv2.COLOR_BGR2GRAY)
+			#child_img = cv2.cvtColor(child_img, cv2.COLOR_BGR2GRAY)
 			child_img = cv2.resize(child_img,(img_size,img_size))
 			child_img = np.reshape(child_img, [img_size,img_size,1])
 			
 			data["pairs"][i]["parent"].append(parent_img)
 			data["pairs"][i]["child"].append(child_img)
 	
-	pairs = np.empty(shape=(2000,64,64,2), dtype=np.float32)
+	pairs = np.empty(shape=(2000,64,64,6), dtype=np.float32)
 	labels = np.empty(shape=(2000), dtype=np.int32)
 	
 	for i in range(4):
@@ -388,7 +388,7 @@ def _parents_read_images(img_size=64, channels=3):
 			child_img = data["pairs"][i]["child"][j]
 			merged_image = np.concatenate((parent_img,child_img),axis=2)
 			pairs[(250*i)+j]=merged_image.astype(np.float32)
-			labels[(250*i)+j+250]=0
+			labels[(250*i)+j+250]=i
 		
 		#negative pairs
 		print("Creating negative pairs for: ", data["prefixes"][i])
@@ -400,7 +400,7 @@ def _parents_read_images(img_size=64, channels=3):
 				child_img = data["pairs"][i]["child"][j+1]
 			merged_image = np.concatenate((parent_img,child_img),axis=2)
 			pairs[(250*i)+j+250]=merged_image.astype(np.float32)
-			labels[(250*i)+j+250]=1
+			labels[(250*i)+j+250]=4
 	
 	print("pairs shape:\n",pairs.shape)
 	
