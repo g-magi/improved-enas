@@ -268,6 +268,8 @@ def train():
 	## creating moving averages
 	mov_avg_accuracy_struct = MovingAverageStructure(10,np.float32)
 	mov_avg_training_struct = MovingAverageStructure(10,np.int32)
+	
+	##
 	with g.as_default():
 		ops =get_ops(images, labels)
 		
@@ -406,7 +408,9 @@ def train():
 										{"normal_array:0":temp_normal_array, 
 										"reduce_array:0":temp_reduce_array,
 										"mov_avg_accuracy:0":mov_avg_accuracy,
-										"mov_avg_training:0":mov_avg_training})
+										"mov_avg_training:0":mov_avg_training,
+										"arc_handling:0":"sum",
+										"scaling_method:0":"combined"})
 							controller_step = sess.run(controller_ops["train_step"])
 							curr_time = time.time()
 							### controller log

@@ -82,6 +82,8 @@ class MicroController(Controller):
 		self.reduce_array = tf.placeholder(tf.int32, shape=[None],name="reduce_array")
 		self.mov_avg_accuracy = tf.placeholder(tf.float32, shape=(), name="mov_avg_accuracy")
 		self.mov_avg_training = tf.placeholder(tf.float32, shape=(), name="mov_avg_training")
+		self.arc_handling = tf.placeholder(tf.string, shape=(), name="arc_handling")
+		self.scaling_method = tf.placeholder(tf.string, shape=(), name="scaling_method")
 
 	def _create_params(self):
 		initializer = tf.random_uniform_initializer(minval=-0.1, maxval=0.1)
@@ -254,8 +256,8 @@ class MicroController(Controller):
 									self.current_reduce_arc,
 									self.mov_avg_accuracy,
 									self.mov_avg_training,
-									scaling_method=tf.constant("combined"),
-									arc_handling=tf.constant("sum"))
+									self.scaling_method,
+									self.arc_handling)
 		self.reward = self.scaled_acc
 		
 		if self.entropy_weight is not None:
