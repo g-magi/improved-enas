@@ -269,6 +269,7 @@ def train():
 	mov_avg_accuracy_struct = MovingAverageStructure(10,np.float32)
 	mov_avg_training_struct = MovingAverageStructure(10,np.int32)
 	
+	
 	##
 	with g.as_default():
 		ops =get_ops(images, labels)
