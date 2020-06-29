@@ -127,6 +127,8 @@ class ArchitectureTrainingStorage:
 
 class AccuracyScaler:
 
+	"""
+
 	def _tf_convert_arc_to_seq(self, arc_):
 		arc_short = arc_[1::2]
 		seq = tf.TensorArray(tf.int32, size = 0, dynamic_size = True)
@@ -202,7 +204,7 @@ class AccuracyScaler:
 		tf_average = tf.reduce_mean(tf_full_dict)
 		return tf_average
 		
-		
+	"""
 		
 	@tf.function
 	def tf_get_scaled_accuracy(self,
@@ -256,7 +258,7 @@ class AccuracyScaler:
 			# multiplies accuracy of arc by a scaling factor
 			# the scaling factor is [mov_avg_training]/[arc training]
 			# "average"
-		
+		"""
 		def _scale_mov_avg():
 			def _case_zero():
 				return tf.constant(1.0, tf.float32)
@@ -303,7 +305,7 @@ class AccuracyScaler:
 								_case_zero,
 								_case_default)
 			return scaling_factor
-		
+		"""
 		## greedy average scaling
 			# multiplies accuracy of arc by a scaling factor
 			# the scaling factor is [arc training]/[average training]
@@ -352,14 +354,17 @@ class AccuracyScaler:
 			
 			scaling_factor_acc = _scale_greedy_accuracy()
 			
-			scaling_factor_train = _scale_mov_avg()
+			#scaling_factor_train = _scale_mov_avg()
 			#scaling_factor_train = tf.constant(1.0, tf.float32)
 			
 			def _case_factor_high():
 				return scaling_factor_acc
 			
+			#def _case_factor_medium():
+			#	return (scaling_factor_train+scaling_factor_acc)/2
 			def _case_factor_medium():
-				return (scaling_factor_train+scaling_factor_acc)/2
+				return _case_factor_high()
+			
 			
 			def _case_factor_low():
 				return tf.constant(0.01, tf.float32)

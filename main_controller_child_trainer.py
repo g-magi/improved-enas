@@ -323,14 +323,14 @@ def train():
 				reduce_train_dict_length = 0
 				test_acc_scaling = 0
 				
-				
-				accuracy_scaling.save_trained_arc(normal_arc, "normal")
-				accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
-				normal_train_amt = accuracy_scaling.get_trained_arc(normal_arc, "normal")
-				reduce_train_amt = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
-				normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
-				reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
-					#test_acc_scaling = controller_model.accuracy_scaling.get_scaled_accuracy(0.5, normal_arc, reduce_arc, scaling_method="linear", arc_handling="sum")
+				### REMOVED TRAIN SCALING
+				#accuracy_scaling.save_trained_arc(normal_arc, "normal")
+				#accuracy_scaling.save_trained_arc(reduce_arc, "reduce")
+				#normal_train_amt = accuracy_scaling.get_trained_arc(normal_arc, "normal")
+				#reduce_train_amt = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+				#normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
+				#reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
+					
 				
 				if FLAGS.child_sync_replicas:
 					actual_step = global_step * FLAGS.num_aggregate
@@ -367,12 +367,12 @@ def train():
 						float(curr_time - start_time) / 60)
 					print(log_string)
 					print("\tNormal architecture: \n\t",normal_arc)
-					print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
-					#print("\tLast received dict: \n\t",temp_normal_dict)
+					##print("\tTrain amount: \n\t",normal_train_amt, "Total train: ", np.sum(normal_train_amt),"\t Dict size: ", normal_train_dict_length)
+					##print("\tLast received dict: \n\t",temp_normal_dict)
 					print("\tReduce architecture: \n\t",reduce_arc)
-					print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
-					print("\tNormal dict: \n\t",accuracy_scaling.normal_train_dict)
-					print("\tReduce dict: \n\t",accuracy_scaling.reduce_train_dict)
+					##print("\tTrain amount: \n\t",reduce_train_amt, "Total train: ", np.sum(reduce_train_amt),"\t Dict size: ", reduce_train_dict_length)
+					##print("\tNormal dict: \n\t",accuracy_scaling.normal_train_dict)
+					##print("\tReduce dict: \n\t",accuracy_scaling.reduce_train_dict)
 					#print("Testing acc scaling with current arc -> ", test_acc_scaling)
 					
 					
@@ -383,8 +383,9 @@ def train():
 						print("Epoch {}: Training controller".format(epoch))
 						for ct_step in range(FLAGS.controller_train_steps *
 											 FLAGS.controller_num_aggregate):
-							temp_normal_array, temp_reduce_array = accuracy_scaling.get_dicts_as_numpy_arrays()
-							
+							#temp_normal_array, temp_reduce_array = accuracy_scaling.get_dicts_as_numpy_arrays()
+							temp_normal_array = np.zeros(1)
+							temp_reduce_array = np.zeros(1)
 							run_ops = [
 								controller_ops["loss"],
 								controller_ops["entropy"],
@@ -401,8 +402,10 @@ def train():
 								controller_ops["reduce_arc_training"]
 							]
 							#print("running controller step")
-							mov_avg_accuracy = mov_avg_accuracy_struct.get_mov_average()
-							mov_avg_training = mov_avg_training_struct.get_mov_average()
+							#mov_avg_accuracy = mov_avg_accuracy_struct.get_mov_average()
+							mov_avg_accuracy = 0.0
+							#mov_avg_training = mov_avg_training_struct.get_mov_average()
+							mov_avg_training = 0.0
 							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, _, scaling_factor = sess.run(
 									run_ops,
 									feed_dict=
@@ -417,21 +420,21 @@ def train():
 							### controller log
 							
 							mov_avg_accuracy_struct.push(val_acc)
-							normal_arc_training = accuracy_scaling.get_trained_arc(normal_arc, "normal")
-							reduce_arc_training = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
-							mov_avg_training_struct.push(np.sum(normal_arc_training)+np.sum(reduce_arc_training))
+							#normal_arc_training = accuracy_scaling.get_trained_arc(normal_arc, "normal")
+							#reduce_arc_training = accuracy_scaling.get_trained_arc(reduce_arc, "reduce")
+							#mov_avg_training_struct.push(np.sum(normal_arc_training)+np.sum(reduce_arc_training))
 							
 							normal_arc_str = ','.join(['%d' % num for num in normal_arc])
 							reduce_arc_str = ','.join(['%d' % num for num in reduce_arc])
-							normal_arc_training_str = ','.join(['%d' % num for num in normal_arc_training])
-							reduce_arc_training_str = ','.join(['%d' % num for num in reduce_arc_training])
+							#normal_arc_training_str = ','.join(['%d' % num for num in normal_arc_training])
+							#reduce_arc_training_str = ','.join(['%d' % num for num in reduce_arc_training])
 							
 							logline = str(epoch)+";"
 							logline +=str(controller_step)+";"
 							logline +=normal_arc_str+";"
 							logline +=reduce_arc_str+";"
-							logline +=normal_arc_training_str+";"
-							logline +=reduce_arc_training_str+";"
+							#logline +=normal_arc_training_str+";"
+							#logline +=reduce_arc_training_str+";"
 							logline +=str(val_acc)+";"
 							logline +="{:10.4f}".format(float(curr_time - start_time))
 				
@@ -453,13 +456,13 @@ def train():
 								log_string += "  mins = {:<.2f}".format(
 									float(curr_time - start_time) / 60)
 								print("Controller step #",controller_step,":")
-								normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
-								reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
+								#normal_train_dict_length = len(accuracy_scaling.normal_train_dict)
+								#reduce_train_dict_length = len(accuracy_scaling.reduce_train_dict)
 								
 								print("\tNormal architecture: \n\t",normal_arc)
-								print("\tTrain amount: \n\t",normal_arc_training, "Total train: ", np.sum(normal_arc_training),"\t Dict size: ", normal_train_dict_length)
+								#print("\tTrain amount: \n\t",normal_arc_training, "Total train: ", np.sum(normal_arc_training),"\t Dict size: ", normal_train_dict_length)
 								print("\tReduce architecture: \n\t",reduce_arc)
-								print("\tTrain amount: \n\t",reduce_arc_training, "Total train: ", np.sum(reduce_arc_training),"\t Dict size: ", reduce_train_dict_length)
+								#print("\tTrain amount: \n\t",reduce_arc_training, "Total train: ", np.sum(reduce_arc_training),"\t Dict size: ", reduce_train_dict_length)
 								print("\tScaled acc: \n\t",scaled_acc)
 								print(log_string)
 
