@@ -402,8 +402,8 @@ def train():
 								controller_ops["reduce_arc_training"]
 							]
 							#print("running controller step")
-							#mov_avg_accuracy = mov_avg_accuracy_struct.get_mov_average()
-							mov_avg_accuracy = 0.0
+							mov_avg_accuracy = mov_avg_accuracy_struct.get_mov_average()
+							#mov_avg_accuracy = 0.0
 							#mov_avg_training = mov_avg_training_struct.get_mov_average()
 							mov_avg_training = 0.0
 							loss, entropy, lr, gn, val_acc, normal_arc, reduce_arc, scaled_acc, bl, skip, _, _, scaling_factor = sess.run(
