@@ -359,10 +359,10 @@ class AccuracyScaler:
 				return scaling_factor_acc
 			
 			def _case_factor_medium():
-				return scaling_factor_train*scaling_factor_acc
+				return (scaling_factor_train+scaling_factor_acc)/2
 			
 			def _case_factor_low():
-				return tf.constant(0.1, tf.float32)
+				return tf.constant(0.01, tf.float32)
 		
 			#_scaling_factor_threshold_low_medium
 			#_scaling_factor_threshold_medium_high
