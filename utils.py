@@ -71,6 +71,28 @@ def plot_data_label(images, labels, channels, width, height, figsize):
 		file_name = path + "/image" + str(order) + ".png"
 	plt.savefig(file_name)
 	plt.close()        
+	
+class StackStructure():
+	def __init__(self, stack_size = 10):
+		self.stack_size = stack_size
+		self.storage = [[] for i in range(self.stack_size)]
+	def push(self, data):
+		# remove oldest
+		self.storage.pop(0)
+		# add newest
+		self.storage.append(data)
+	def get_newest(self):
+		return self.storage[-1]
+	def get_oldest(self):
+		return self.storage[0]
+	def get_full_stack(self, reverse=False):
+		if reverse:
+			return self.storage[::-1]
+		else:
+			return self.storage
+		
+		
+		
 
 class MovingAverageStructure():
 	
