@@ -414,7 +414,7 @@ def train():
 										"mov_avg_accuracy:0":mov_avg_accuracy,
 										"mov_avg_training:0":mov_avg_training,
 										"arc_handling:0":"sum",
-										"scaling_method:0":"combined"})
+										"scaling_method:0":"none"})
 							controller_step = sess.run(controller_ops["train_step"])
 							curr_time = time.time()
 							### controller log
