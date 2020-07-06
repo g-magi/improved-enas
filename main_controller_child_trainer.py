@@ -4,6 +4,7 @@ import sys
 import time
 
 import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import numpy as np
 
 from utils import Logger
@@ -287,7 +288,6 @@ def train():
 		
 		child_ops = ops["child"]
 		controller_ops = ops["controller"]
-		tf.disable_v2_behavior()
 		saver = tf.train.Saver(max_to_keep=2)
 		checkpoint_saver_hook = tf.train.CheckpointSaverHook(
 			FLAGS.output_dir, save_steps=child_ops["num_train_batches"], saver=saver)
