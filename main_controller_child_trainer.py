@@ -303,7 +303,7 @@ def train():
 		print("-" * 80)
 		print("Starting session")
 		config = tf.ConfigProto(allow_soft_placement=True)
-		print("*-"*20,"\nthis is the global step tensor: ",child_ops["global_step"])
+		print("*-"*20,"\nthis is the global step tensor: ",g.get_tensor_by_name('global_step:0'))
 		with tf.train.SingularMonitoredSession(
 				config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
