@@ -91,8 +91,21 @@ class StackStructure():
 		else:
 			return self.storage
 		
-		
-		
+class ArcOrderedList():
+	def __init__(self, list_size = 20):
+		self.list_size = list_size
+		self.storage = [{"normal_arc":[],"reduce_arc":[],"acc"=0.0,"added_at_epoch"=-1} for i in range(self.list_size)]
+	
+	def add_arc(self, normal_arc, reduce_arc, acc, current_epoch):
+		found = False
+		i = 0
+		while not found:
+			if i == self.list_size:
+				self.storage.pop(0)
+				temp_arc = {
+						"normal_arc":[],"reduce_arc":[],"acc"=0.0,"added_at_epoch"=-1
+					}
+				self.storage.append(
 
 class MovingAverageStructure():
 	
