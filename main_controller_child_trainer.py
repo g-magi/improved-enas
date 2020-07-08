@@ -510,9 +510,9 @@ def train():
 					
 					
 					current_threshold = epoch // 10
+					if current_threshold < 5: current_threshold = 5
 					multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
 					current_threshold = int( (multiplier * 6) * current_threshold)
-					if current_threshold < 5: current_threshold = 5
 					
 					last_best = best_arcs_list.get_last_best_epoch() 
 					max_acc = best_arcs_list.get_best_acc()
