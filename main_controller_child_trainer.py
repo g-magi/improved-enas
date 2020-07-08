@@ -502,12 +502,11 @@ def train():
 							best_arcs_list.add_arc(normal_arc,reduce_arc,acc,epoch)
 							
 							
-
 					print("Epoch {}: Eval".format(epoch))
 					if FLAGS.child_fixed_arc is None:
 						ops["eval_func"](sess, "valid")
 					ops["eval_func"](sess, "test")
-				current_threshold = epochs // 10
+				current_threshold = epoch // 10
 				multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
 				current_threshold = int( (multiplier * 6) * current_threshold)
 				if current_threshold < 5: current_threshold = 5
