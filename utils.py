@@ -125,6 +125,31 @@ class ArcOrderedList():
 	def get_last_best_epoch(self):
 		return self.get_best_arc()["added_at_epoch"]
 	
+	def get_list_as_csv_data(self):
+		csv_string = ""
+		for i, arc in enumerate(self.storage):
+			temp_string = ""
+			## normal arc
+			temp_string += "["
+			temp_string += ','.join(str(x) for x in arc["normal_arc"])
+			temp_string += "];"
+			## reduce arc
+			temp_string += "["
+			temp_string += ','.join(str(x) for x in arc["reduce_arc"])
+			temp_string += "];"
+			## acc
+			temp_string += str(arc["acc"])
+			temp_string += ";"
+			## added_at_epoch
+			temp_string += str(arc["added_at_epoch"])
+			
+			
+			temp_string += "\n"
+			
+			csv_string += temp_string
+		
+		return csv_string
+	
 
 
 class MovingAverageStructure():

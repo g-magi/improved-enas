@@ -15,6 +15,7 @@ from utils import DEFINE_string
 from utils import print_user_flags
 from utils import silently_remove_file
 from utils import MovingAverageStructure
+from utils import ArcOrderedList
 
 import data_utils
 
@@ -32,6 +33,7 @@ FLAGS = flags.FLAGS
 DEFINE_string("output_dir", "./output" , "")
 DEFINE_string("child_log_filename","child_log.txt","")
 DEFINE_string("controller_log_filename","controller_log.txt","")
+DEFINE_string("best_arcs_filename","best_arcs.csv","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
@@ -270,6 +272,9 @@ def train():
 	mov_avg_accuracy_struct = MovingAverageStructure(10,np.float32)
 	mov_avg_training_struct = MovingAverageStructure(10,np.int32)
 	
+	best_arcs_list = ArcOrderedList(list_size = 40)
+	
+	
 	
 	##
 	with g.as_default():
@@ -468,32 +473,56 @@ def train():
 								print(log_string)
 
 						print("Here are 10 architectures")
-						for _ in range(10):
+						for i in range(50):
 							arc, acc = sess.run([
 								controller_ops["sample_arc"],
 								controller_ops["valid_acc"],
 							])
-							if FLAGS.search_for == "micro":
-								normal_arc, reduce_arc = arc
-								print(np.reshape(normal_arc, [-1]))
-								print(np.reshape(reduce_arc, [-1]))
-							else:
-								start = 0
-								for layer_id in range(FLAGS.child_num_layers):
-									if FLAGS.controller_search_whole_channels:
-										end = start + 1 + layer_id
-									else:
-										end = start + 2 * FLAGS.child_num_branches + layer_id
-									print(np.reshape(arc[start: end], [-1]))
-									start = end
-							print("val_acc = {:<6.4f}".format(acc))
-							print("-" * 80)
+							
+							if i % 5 == 0:
+								if FLAGS.search_for == "micro":
+									normal_arc, reduce_arc = arc
+									print(np.reshape(normal_arc, [-1]))
+									print(np.reshape(reduce_arc, [-1]))
+								else:
+									start = 0
+									for layer_id in range(FLAGS.child_num_layers):
+										if FLAGS.controller_search_whole_channels:
+											end = start + 1 + layer_id
+										else:
+											end = start + 2 * FLAGS.child_num_branches + layer_id
+										print(np.reshape(arc[start: end], [-1]))
+										start = end
+								print("val_acc = {:<6.4f}".format(acc))
+								print("-" * 80)
+							
+							
+							## saving arcs in structure
+							normal_arc, reduce_arc = arc
+							best_arcs_list.add_arc(normal_arc,reduce_arc,acc,epoch)
+							
+							
 
 					print("Epoch {}: Eval".format(epoch))
 					if FLAGS.child_fixed_arc is None:
 						ops["eval_func"](sess, "valid")
 					ops["eval_func"](sess, "test")
-
+				current_threshold = epochs // 10
+				multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
+				current_threshold = int( (multiplier * 6) * current_threshold)
+				if current_threshold < 5: current_threshold = 5
+				
+				last_best = best_arcs_list.get_last_best_epoch() 
+				if epoch - last_best >= current_threshold
+					print("Maximum accuracy hasn't improved in the last ",current_threshold," epochs, shutting down and saving the best arcs to file")
+					csv_string = best_arcs_list.get_list_as_csv_data()
+					best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
+					silently_remove_file(best_arcs_filename)
+					best_arcs_file = open(best_arcs_filename, "w")
+					best_arcs_file.write(csv_string)
+					best_arcs_file.close()
+					break
+				
 				if epoch >= FLAGS.num_epochs:
 					break
 	child_logfile.close()
