@@ -99,13 +99,33 @@ class ArcOrderedList():
 	def add_arc(self, normal_arc, reduce_arc, acc, current_epoch):
 		found = False
 		i = 0
+		temp_arc = {
+						"normal_arc":normal_arc,
+						"reduce_arc":reduce_arc,
+						"acc"=acc,
+						"added_at_epoch"=current_epoch
+					}
+		
 		while not found:
 			if i == self.list_size:
 				self.storage.pop(0)
-				temp_arc = {
-						"normal_arc":[],"reduce_arc":[],"acc"=0.0,"added_at_epoch"=-1
-					}
-				self.storage.append(
+				self.storage.append(temp_arc)
+				found = True
+			elif self.storage[i]["acc"] > acc:
+				self.storage.insert(i,temp_arc)
+				self.storage.pop(0)
+				found = True
+			else:
+				i+=1
+		return i
+	
+	def get_best_arc(self):
+		return self.storage[-1]
+	
+	def get_last_best_epoch(self):
+		return self.get_best_arc()["added_at_epoch"]
+	
+
 
 class MovingAverageStructure():
 	
