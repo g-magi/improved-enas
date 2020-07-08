@@ -94,7 +94,7 @@ class StackStructure():
 class ArcOrderedList():
 	def __init__(self, list_size = 20):
 		self.list_size = list_size
-		self.storage = [{"normal_arc":[],"reduce_arc":[],"acc"=0.0,"added_at_epoch"=-1} for i in range(self.list_size)]
+		self.storage = [{"normal_arc":[],"reduce_arc":[],"acc":0.0,"added_at_epoch":-1} for i in range(self.list_size)]
 	
 	def add_arc(self, normal_arc, reduce_arc, acc, current_epoch):
 		found = False
@@ -102,8 +102,8 @@ class ArcOrderedList():
 		temp_arc = {
 						"normal_arc":normal_arc,
 						"reduce_arc":reduce_arc,
-						"acc"=acc,
-						"added_at_epoch"=current_epoch
+						"acc":acc,
+						"added_at_epoch":current_epoch
 					}
 		
 		while not found:
