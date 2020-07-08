@@ -506,35 +506,38 @@ def train():
 					if FLAGS.child_fixed_arc is None:
 						ops["eval_func"](sess, "valid")
 					ops["eval_func"](sess, "test")
-				current_threshold = epoch // 10
-				multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
-				current_threshold = int( (multiplier * 6) * current_threshold)
-				if current_threshold < 5: current_threshold = 5
-				
-				last_best = best_arcs_list.get_last_best_epoch() 
-				max_acc = best_arcs_list.get_best_acc()
-				## check if we reached epoch limit
-				if epoch >= FLAGS.num_epochs:
-					print("Reached upper epoch limit, ENAS is stopping and saving the best arcs to file")
-					csv_string = best_arcs_list.get_list_as_csv_data()
-					best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
-					silently_remove_file(best_arcs_filename)
-					best_arcs_file = open(best_arcs_filename, "w")
-					best_arcs_file.write(csv_string)
-					best_arcs_file.close()
-					break
-				## check if accuracy hasn't improved
-				if epoch - last_best >= current_threshold:
-					print("Maximum accuracy of ",max_acc," hasn't improved in the last ",current_threshold," epochs, shutting down and saving the best arcs to file")
-					csv_string = best_arcs_list.get_list_as_csv_data()
-					best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
-					silently_remove_file(best_arcs_filename)
-					best_arcs_file = open(best_arcs_filename, "w")
-					best_arcs_file.write(csv_string)
-					best_arcs_file.close()
-					break
-				else:
-					print("Maximum accuracy (",max_acc,") achieved in epoch ", last_best, ", which is ", (epoch-last_best)," epochs ago.\nTraining is proceeding normally.")
+					
+					
+					
+					current_threshold = epoch // 10
+					multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
+					current_threshold = int( (multiplier * 6) * current_threshold)
+					if current_threshold < 5: current_threshold = 5
+					
+					last_best = best_arcs_list.get_last_best_epoch() 
+					max_acc = best_arcs_list.get_best_acc()
+					## check if we reached epoch limit
+					if epoch >= FLAGS.num_epochs:
+						print("Reached upper epoch limit, ENAS is stopping and saving the best arcs to file")
+						csv_string = best_arcs_list.get_list_as_csv_data()
+						best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
+						silently_remove_file(best_arcs_filename)
+						best_arcs_file = open(best_arcs_filename, "w")
+						best_arcs_file.write(csv_string)
+						best_arcs_file.close()
+						break
+					## check if accuracy hasn't improved
+					if epoch - last_best >= current_threshold:
+						print("Maximum accuracy of ",max_acc," hasn't improved in the last ",current_threshold," epochs, shutting down and saving the best arcs to file")
+						csv_string = best_arcs_list.get_list_as_csv_data()
+						best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
+						silently_remove_file(best_arcs_filename)
+						best_arcs_file = open(best_arcs_filename, "w")
+						best_arcs_file.write(csv_string)
+						best_arcs_file.close()
+						break
+					else:
+						print("Maximum accuracy (",max_acc,") achieved in epoch ", last_best, ", which is ", (epoch-last_best)," epochs ago.\nTraining is proceeding normally.")
 				
 	child_logfile.close()
 	controller_logfile.close()
