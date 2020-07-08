@@ -122,6 +122,9 @@ class ArcOrderedList():
 	def get_best_arc(self):
 		return self.storage[-1]
 	
+	def get_best_acc(self):
+		return self.get_best_arc()["acc"]
+	
 	def get_last_best_epoch(self):
 		return self.get_best_arc()["added_at_epoch"]
 	

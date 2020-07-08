@@ -47,8 +47,8 @@ DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
 DEFINE_string("data_format","NHWC", "'NHWC or NCHW'")
 DEFINE_string("search_for", "micro","")
 
-DEFINE_integer("batch_size",128,"") #original 128
-DEFINE_integer("num_epochs", 150," = (10+ 20+ 40+ 80)") #original 150
+DEFINE_integer("batch_size",256,"") #original 128
+DEFINE_integer("num_epochs", 500," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
 DEFINE_integer("child_num_layers", 6, "Number of layer. IN this case we will calculate 4 conv and 2 pooling layers") # default 6
@@ -512,8 +512,10 @@ def train():
 				if current_threshold < 5: current_threshold = 5
 				
 				last_best = best_arcs_list.get_last_best_epoch() 
-				if epoch - last_best >= current_threshold:
-					print("Maximum accuracy hasn't improved in the last ",current_threshold," epochs, shutting down and saving the best arcs to file")
+				max_acc = best_arcs_list.get_best_acc()
+				## check if we reached epoch limit
+				if epoch >= FLAGS.num_epochs:
+					print("Reached upper epoch limit, ENAS is stopping and saving the best arcs to file")
 					csv_string = best_arcs_list.get_list_as_csv_data()
 					best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
 					silently_remove_file(best_arcs_filename)
@@ -521,9 +523,19 @@ def train():
 					best_arcs_file.write(csv_string)
 					best_arcs_file.close()
 					break
-				
-				if epoch >= FLAGS.num_epochs:
+				## check if accuracy hasn't improved
+				if epoch - last_best >= current_threshold:
+					print("Maximum accuracy of ",max_acc," hasn't improved in the last ",current_threshold," epochs, shutting down and saving the best arcs to file")
+					csv_string = best_arcs_list.get_list_as_csv_data()
+					best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
+					silently_remove_file(best_arcs_filename)
+					best_arcs_file = open(best_arcs_filename, "w")
+					best_arcs_file.write(csv_string)
+					best_arcs_file.close()
 					break
+				else:
+					print("Maximum accuracy (",max_acc,") achieved in epoch ", last_best, ", which is ", (epoch-last_best)," epochs ago.\nTraining is proceeding normally.")
+				
 	child_logfile.close()
 	controller_logfile.close()
 	
