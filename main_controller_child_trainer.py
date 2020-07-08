@@ -513,7 +513,7 @@ def train():
 				if current_threshold < 5: current_threshold = 5
 				
 				last_best = best_arcs_list.get_last_best_epoch() 
-				if epoch - last_best >= current_threshold
+				if epoch - last_best >= current_threshold:
 					print("Maximum accuracy hasn't improved in the last ",current_threshold," epochs, shutting down and saving the best arcs to file")
 					csv_string = best_arcs_list.get_list_as_csv_data()
 					best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
