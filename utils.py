@@ -98,6 +98,7 @@ class ArcOrderedList():
 	
 	def add_arc(self, normal_arc, reduce_arc, acc, current_epoch):
 		found = False
+		acc = round(acc,5)
 		i = 0
 		temp_arc = {
 						"normal_arc":normal_arc,
