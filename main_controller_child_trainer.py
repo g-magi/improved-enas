@@ -510,9 +510,9 @@ def train():
 					
 					
 					current_threshold = epoch // 10
-					if current_threshold < 5: current_threshold = 5
 					multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
 					current_threshold = int( (multiplier * 6) * current_threshold)
+					if current_threshold < 10: current_threshold = 10
 					
 					last_best = best_arcs_list.get_last_best_epoch() 
 					max_acc = best_arcs_list.get_best_acc()
@@ -528,7 +528,7 @@ def train():
 						break
 					## check if accuracy hasn't improved
 					if epoch - last_best >= current_threshold:
-						print("Maximum accuracy of ",max_acc," hasn't improved in the last ",current_threshold," epochs, shutting down and saving the best arcs to file")
+						print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs, shutting down and saving the best arcs to file")
 						csv_string = best_arcs_list.get_list_as_csv_data()
 						best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
 						silently_remove_file(best_arcs_filename)
@@ -537,7 +537,15 @@ def train():
 						best_arcs_file.close()
 						break
 					else:
-						print("Maximum accuracy (",max_acc,") achieved in epoch ", last_best, ", which is ", (epoch-last_best)," epochs ago.\nTraining is proceeding normally.")
+						epochs_from_best = epoch - last_best
+						epochs_to_stop = current_threshold - epochs_from_best
+						print("Maximum accuracy (",max_acc,") achieved in epoch ", str(last_best), ", which is ", str(epochs_from_best)," epochs ago.\nIf no better architecture is achieved, training will stop in ",str(epochs_to_stop)," epochs, with a total buffer of ",str(current_threshold)," epochs.\nBacking up the best architectures achieved so far to file.")
+						csv_string = best_arcs_list.get_list_as_csv_data()
+						best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
+						silently_remove_file(best_arcs_filename)
+						best_arcs_file = open(best_arcs_filename, "w")
+						best_arcs_file.write(csv_string)
+						best_arcs_file.close()
 				
 	child_logfile.close()
 	controller_logfile.close()
