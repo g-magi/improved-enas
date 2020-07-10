@@ -112,7 +112,7 @@ class ArcOrderedList():
 				self.storage.pop(0)
 				self.storage.append(temp_arc)
 				found = True
-			elif self.storage[i]["acc"] > acc:
+			elif self.storage[i]["acc"] >= acc:
 				self.storage.insert(i,temp_arc)
 				self.storage.pop(0)
 				found = True
