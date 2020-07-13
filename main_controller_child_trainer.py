@@ -96,7 +96,7 @@ DEFINE_integer("controller_train_every", 1,
 			   "train the controller after this number of epochs")
 DEFINE_boolean("controller_search_whole_channels", True, "")
 DEFINE_boolean("controller_sync_replicas", True, "To sync or not to sync.")
-DEFINE_boolean("controller_training", True, "")
+DEFINE_boolean("controller_training", False, "")
 DEFINE_boolean("controller_use_critic", False, "")
 
 DEFINE_integer("log_every", 50, "How many steps (how many batches) to log") # original 50
