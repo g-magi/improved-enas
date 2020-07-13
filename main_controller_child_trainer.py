@@ -215,9 +215,9 @@ def get_ops(images, labels):
 		"optimizer": child_model.optimizer,
 		"num_train_batches": child_model.num_train_batches,
 		"normal_arc": child_model.current_normal_arc,
-		"normal_arc_tf": child_model.current_normal_arc_tf,
+		"normal_arc_tf": child_model.normal_arc_tf,
 		"reduce_arc": child_model.current_reduce_arc,
-		"reduce_arc_tf": child_model.current_reduce_arc_tf,
+		"reduce_arc_tf": child_model.reduce_arc_tf,
 		"logits": child_model.logits,
 	}
 
