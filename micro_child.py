@@ -669,8 +669,14 @@ class MicroChild(Model):
 		indices = tf.reshape(indices, [-1])
 		num_outs = tf.size(indices)  
 		out = tf.stack(layers, axis=0)  
-		out = tf.gather(out, indices, axis=0)  
-
+		
+		
+		##out = tf.gather(out, indices, axis=0)  
+		partitions_1 = tf.reduce_sum(tf.one_hot(indices, tf.shape(out)[0], dtype='int32'), 0)
+		out = tf.dynamic_partition(out, partitions_1, 2)
+		out = out[1]
+		
+		##
 		inp = prev_layers[0]  
 		if self.data_format == "NHWC":
 			N = tf.shape(inp)[0]
