@@ -47,7 +47,7 @@ DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
 DEFINE_string("data_format","NHWC", "'NHWC or NCHW'")
 DEFINE_string("search_for", "micro","")
 
-DEFINE_integer("batch_size",128,"") #original 128
+DEFINE_integer("batch_size",512,"") #original 128
 DEFINE_integer("num_epochs", 500," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
