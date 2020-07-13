@@ -216,6 +216,7 @@ def get_ops(images, labels):
 		"num_train_batches": child_model.num_train_batches,
 		"normal_arc": child_model.current_normal_arc,
 		"reduce_arc": child_model.current_reduce_arc,
+		"logits": child_model.logits,
 	}
 
 	ops = {
@@ -474,9 +475,10 @@ def train():
 
 						print("Here are 10 architectures")
 						for i in range(50):
-							arc, acc = sess.run([
+							arc, acc, logits = sess.run([
 								controller_ops["sample_arc"],
 								controller_ops["valid_acc"],
+								child_ops["logits"],
 							])
 							
 							if i % 5 == 0:
@@ -494,6 +496,7 @@ def train():
 										print(np.reshape(arc[start: end], [-1]))
 										start = end
 								print("val_acc = {:<6.4f}".format(acc))
+								print("logits type:", type(logits))
 								print("-" * 80)
 							
 							
