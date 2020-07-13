@@ -253,7 +253,9 @@ def get_train_ops(
 
 	grads = tf.gradients(loss, tf_variables)
 	grad_norm = tf.global_norm(grads)
-	print(type(grads))
+	print("-"*80)
+	print("grads type: -> \t",type(grads))
+	print("-"*80)
 	grad_norms = {}
 	for v, g in zip(tf_variables, grads):
 		if v is None or g is None:
