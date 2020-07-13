@@ -693,7 +693,7 @@ class MicroChild(Model):
 		with tf.variable_scope("final_conv"):
 			w = create_weight("w", [self.num_cells + 2, out_filters * out_filters])
 			#w = tf.gather(w, indices, axis=0)
-			partitions = tf.reduce_sum(tf.one_hot(row_inds, tf.shape(w)[0], dtype='int32'), 0)
+			partitions = tf.reduce_sum(tf.one_hot(indices, tf.shape(w)[0], dtype='int32'), 0)
 			w = tf.dynamic_partition(w, partitions, 2)
 			w = w[1]
 			##
