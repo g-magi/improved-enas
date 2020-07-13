@@ -68,11 +68,13 @@ def creat_graph(cell_arc):
 	return G
 
 #!python visCell.py "1 3 0 0 2 1 0 0 1 1 1 0 1 4 0 0 2 0 1 4 0 0 1 2 0 1 0 4 1 0 1 1 1 4 0 1 0 1 0 0"
+# 1,2,1,4,0,1,1,4,0,1,1,3,0,3,1,1,1,1,0,0
+# 1,2,1,1,0,3,0,3,0,4,1,4,0,1,3,1,1,1,0,2
 def main():
 
 	if(len(sys.argv) <= 1):
-		norm_cell = "1 3 0 0 2 1 0 0 1 1 1 0 1 4 0 0 2 0 1 4"
-		redu_cell = "0 0 1 2 0 1 0 4 1 0 1 1 1 4 0 1 0 1 0 0"
+		norm_cell = "1 2 1 4 0 1 1 4 0 1 1 3 0 3 1 1 1 1 0 0"
+		redu_cell = "1 2 1 1 0 3 0 3 0 4 1 4 0 1 3 1 1 1 0 2"
 	else:
 		norm_cell, redu_cell = "", ""
 		for i in range(1, len(sys.argv)/2+1):
