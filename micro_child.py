@@ -826,9 +826,9 @@ class MicroChild(Model):
 		else:
 			fixed_arc = np.array([int(x) for x in self.fixed_arc.split(" ") if x])
 			self.normal_arc = fixed_arc[:4 * self.num_cells]
-			self.normal_arc = tf.convert_to_tensor(self.normal_arc, dtype=int32)
+			self.normal_arc = tf.convert_to_tensor(self.normal_arc, dtype=tf.int32)
 			self.reduce_arc = fixed_arc[4 * self.num_cells:]
-			self.reduce_arc = tf.convert_to_tensor(self.reduce_arc, dtype=int32)
+			self.reduce_arc = tf.convert_to_tensor(self.reduce_arc, dtype=tf.int32)
 
 		self._build_train()
 		self._build_valid()
