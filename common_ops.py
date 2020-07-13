@@ -26,7 +26,7 @@ def stack_lstm(x, prev_c, prev_h, w):
 
 def create_weight(name, shape, initializer=None, trainable=True, seed=None):
 	if initializer is None:
-		initializer = tf.keras.initializers.he_normal(seed=seed)
+		initializer = tf.compat.v1.keras.initializers.he_normal(seed=seed)
 	return tf.get_variable(name, shape, initializer=initializer, trainable=trainable)
 
 
@@ -47,16 +47,16 @@ def batch_norm(x, is_training, name="bn", decay=0.9, epsilon=1e-5,
 	with tf.variable_scope(name, reuse=None if is_training else True):
 		offset = tf.get_variable(
 		  "offset", shape,
-		  initializer=tf.constant_initializer(0.0, dtype=tf.float32))
+		  initializer=tf.constant_initializer(0.0))
 		scale = tf.get_variable(
 		  "scale", shape,
-		  initializer=tf.constant_initializer(1.0, dtype=tf.float32))
+		  initializer=tf.constant_initializer(1.0))
 		moving_mean = tf.get_variable(
 		  "moving_mean", shape, trainable=False,
-		  initializer=tf.constant_initializer(0.0, dtype=tf.float32))
+		  initializer=tf.constant_initializer(0.0))
 		moving_variance = tf.get_variable(
 		  "moving_variance", shape, trainable=False,
-		  initializer=tf.constant_initializer(1.0, dtype=tf.float32))
+		  initializer=tf.constant_initializer(1.0))
 
 	if is_training:
 		x, mean, variance = tf.nn.fused_batch_norm(
