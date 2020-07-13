@@ -215,7 +215,9 @@ def get_ops(images, labels):
 		"optimizer": child_model.optimizer,
 		"num_train_batches": child_model.num_train_batches,
 		"normal_arc": child_model.current_normal_arc,
+		"normal_arc_tf": child_model.current_normal_arc_tf,
 		"reduce_arc": child_model.current_reduce_arc,
+		"reduce_arc_tf": child_model.current_reduce_arc_tf,
 		"logits": child_model.logits,
 	}
 
@@ -314,14 +316,25 @@ def train():
 				config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
 			while True:
-				run_ops = [
-					child_ops["loss"],
-					child_ops["lr"],
-					child_ops["grad_norm"],
-					child_ops["train_acc"],
-					child_ops["train_op"],
-					child_ops["normal_arc"],
-					child_ops["reduce_arc"]]
+				if FLAGS.child_fixed_arc is None:
+					run_ops = [
+						child_ops["loss"],
+						child_ops["lr"],
+						child_ops["grad_norm"],
+						child_ops["train_acc"],
+						child_ops["train_op"],
+						child_ops["normal_arc"],
+						child_ops["reduce_arc"]]
+				else:
+					run_ops = [
+						child_ops["loss"],
+						child_ops["lr"],
+						child_ops["grad_norm"],
+						child_ops["train_acc"],
+						child_ops["train_op"],
+						child_ops["normal_arc_tf"],
+						child_ops["reduce_arc_tf"]]
+					
 				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
 				global_step = sess.run(child_ops["global_step"])
 				normal_train_amt = 0
