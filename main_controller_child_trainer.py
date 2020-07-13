@@ -72,7 +72,7 @@ DEFINE_float("child_l2_reg", 1e-4, "")
 DEFINE_float("child_lr_max", 0.05, "for lr schedule")
 DEFINE_float("child_lr_min", 0.0005, "for lr schedule") #0.0005 original
 DEFINE_string("child_skip_pattern", None, "Must be ['dense', None]")
-DEFINE_string("child_fixed_arc", None, "")
+DEFINE_string("child_fixed_arc", "0 1 1 0 2 2 1 0 1 1 3 1 3 0 3 0 0 3 3 1 0 1 1 4 1 2 2 0 0 0 3 1 2 2 1 0 3 4 1 0", "") # original None
 DEFINE_boolean("child_use_aux_heads", True, "Should we use an aux head")
 DEFINE_boolean("child_sync_replicas", False, "To sync or not to sync.")
 DEFINE_boolean("child_lr_cosine", True, "Use cosine lr schedule")
