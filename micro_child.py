@@ -708,6 +708,7 @@ class MicroChild(Model):
 		print("-" * 80)
 		print("Build train graph")
 		logits = self._model(self.x_train, is_training=True)
+		self.logits = logits
 		log_probs = tf.nn.sparse_softmax_cross_entropy_with_logits(
 			logits=logits, labels=self.y_train)  
 
