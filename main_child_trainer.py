@@ -37,10 +37,10 @@ DEFINE_string("best_arcs_filename","best_arcs.csv","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
-DEFINE_integer("channel",1, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
+DEFINE_integer("channel",3, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
-DEFINE_string("data_source","mnist","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
+DEFINE_string("data_source","cifar10","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
@@ -72,7 +72,7 @@ DEFINE_float("child_l2_reg", 1e-4, "")
 DEFINE_float("child_lr_max", 0.05, "for lr schedule")
 DEFINE_float("child_lr_min", 0.0005, "for lr schedule") #0.0005 original
 DEFINE_string("child_skip_pattern", None, "Must be ['dense', None]")
-DEFINE_string("child_fixed_arc", "0 1 1 0 2 2 1 0 1 1 3 1 3 0 3 0 0 3 3 1 0 1 1 4 1 2 2 0 0 0 3 1 2 2 1 0 3 4 1 0", "") # original None
+DEFINE_string("child_fixed_arc", "1 1 1 2 2 1 1 4 1 1 0 3 0 0 1 0 4 2 3 1 0 2 0 4 0 3 0 0 2 4 2 3 1 0 4 4 0 4 3 1", "") # original None
 DEFINE_boolean("child_use_aux_heads", True, "Should we use an aux head")
 DEFINE_boolean("child_sync_replicas", False, "To sync or not to sync.")
 DEFINE_boolean("child_lr_cosine", True, "Use cosine lr schedule")
