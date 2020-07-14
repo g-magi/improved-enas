@@ -244,9 +244,6 @@ def get_train_ops(
 	  moving_average: store the moving average of parameters
 	"""
 	
-	print("-"*80)
-	print("before l2")
-	print("-"*80)
 	if l2_reg > 0:
 		l2_losses = []
 		for var in tf_variables:
@@ -254,19 +251,8 @@ def get_train_ops(
 		l2_loss = tf.add_n(l2_losses)
 		loss += l2_reg * l2_loss  # loss = loss + 1e-4*l2_loss
 
-	print("-"*80)
-	print("after l2")
-	print("-"*80)
-	print("type loss", type(loss))
-	print("type tf_variables", type(tf_variables))
 	grads = tf.gradients([loss], tf_variables)
-	print("-"*80)
-	print("after grads")
-	print("-"*80)
 	grad_norm = tf.global_norm(grads)
-	print("-"*80)
-	print("after grad norm")
-	print("-"*80)
 	grad_norms = {}
 	for v, g in zip(tf_variables, grads):
 		if v is None or g is None:
