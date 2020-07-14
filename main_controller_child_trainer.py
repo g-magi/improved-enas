@@ -37,17 +37,17 @@ DEFINE_string("best_arcs_filename","best_arcs.csv","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
-DEFINE_integer("channel",1, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
+DEFINE_integer("channel",3, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
-DEFINE_string("data_source","mnist","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
+DEFINE_string("data_source","cifar10","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
 DEFINE_string("data_format","NHWC", "'NHWC or NCHW'")
 DEFINE_string("search_for", "micro","")
 
-DEFINE_integer("batch_size",512,"") #original 128
+DEFINE_integer("batch_size",128,"") #original 128
 DEFINE_integer("num_epochs", 500," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
@@ -96,7 +96,7 @@ DEFINE_integer("controller_train_every", 1,
 			   "train the controller after this number of epochs")
 DEFINE_boolean("controller_search_whole_channels", True, "")
 DEFINE_boolean("controller_sync_replicas", True, "To sync or not to sync.")
-DEFINE_boolean("controller_training", False, "")
+DEFINE_boolean("controller_training", True, "")
 DEFINE_boolean("controller_use_critic", False, "")
 
 DEFINE_integer("log_every", 50, "How many steps (how many batches) to log") # original 50
