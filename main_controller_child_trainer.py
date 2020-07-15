@@ -37,10 +37,10 @@ DEFINE_string("best_arcs_filename","best_arcs.csv","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
-DEFINE_integer("channel",3, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
+DEFINE_integer("channel",1 "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
-DEFINE_string("data_source","cifar10","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
+DEFINE_string("data_source","fashion_mnist","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
@@ -525,9 +525,9 @@ def train():
 					if FLAGS.controller_training:
 						### ONLY DO THIS IF THE CONTROLLER IS BEING TRAINED
 						current_threshold = epoch // 10
+						if current_threshold < 10: current_threshold = 10
 						multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
 						current_threshold = int( (multiplier * 6) * current_threshold)
-						if current_threshold < 10: current_threshold = 10
 						
 						last_best = best_arcs_list.get_last_best_epoch() 
 						max_acc = best_arcs_list.get_best_acc()
