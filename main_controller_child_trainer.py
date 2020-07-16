@@ -311,10 +311,16 @@ def train():
 		print("-" * 80)
 		print("Starting session")
 		config = tf.ConfigProto(allow_soft_placement=True)
-		print("*-"*20,"\nthis is the global step tensor: ",g.get_tensor_by_name('global_step:0'))
+		
+		
 		with tf.train.SingularMonitoredSession(
 				config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
+			
+			### saving graph at start
+			
+			writer = tf.summary.FileWriter("graph_folder", sess.graph)
+			first_time = True
 			while True:
 				if FLAGS.child_fixed_arc is None:
 					run_ops = [
@@ -336,6 +342,9 @@ def train():
 						child_ops["reduce_arc_tf"]]
 					
 				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
+				if first_time:
+					first_time = False
+					writer.close()
 				global_step = sess.run(child_ops["global_step"])
 				normal_train_amt = 0
 				reduce_train_amt = 0
@@ -523,6 +532,11 @@ def train():
 					ops["eval_func"](sess, "test")
 					
 					if FLAGS.controller_training:
+						# saving test
+						
+						
+						##
+							
 						### ONLY DO THIS IF THE CONTROLLER IS BEING TRAINED
 						current_threshold = epoch // 10
 						if current_threshold < 10: current_threshold = 10
