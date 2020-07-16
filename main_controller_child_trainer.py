@@ -317,10 +317,6 @@ def train():
 				config=config, hooks=hooks, checkpoint_dir=FLAGS.output_dir) as sess:
 			start_time = time.time()
 			
-			### saving graph at start
-			
-			writer = tf.summary.FileWriter("graph_folder", sess.graph)
-			first_time = True
 			while True:
 				if FLAGS.child_fixed_arc is None:
 					run_ops = [
@@ -342,9 +338,6 @@ def train():
 						child_ops["reduce_arc_tf"]]
 					
 				loss, lr, gn, tr_acc, _, normal_arc, reduce_arc = sess.run(run_ops)
-				if first_time:
-					first_time = False
-					writer.close()
 				global_step = sess.run(child_ops["global_step"])
 				normal_train_amt = 0
 				reduce_train_amt = 0
