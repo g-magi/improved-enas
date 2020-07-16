@@ -526,7 +526,7 @@ def train():
 					
 					if FLAGS.controller_training:
 						# saving test
-						
+						tf.io.write_graph(sess.graph, '/output/graph', 'graph.pbtxt')
 						
 						##
 							
