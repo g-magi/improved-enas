@@ -305,7 +305,7 @@ def train():
 		checkpoint_saver_hook = tf.train.CheckpointSaverHook(
 			FLAGS.output_dir, save_steps=child_ops["num_train_batches"], saver=saver)
 		hooks = []
-		#hooks = [checkpoint_saver_hook]
+		hooks = [checkpoint_saver_hook]
 		if FLAGS.child_sync_replicas:
 			sync_replicas_hook = child_ops["optimizer"].make_session_run_hook(True)
 			hooks.append(sync_replicas_hook)
@@ -564,7 +564,7 @@ def train():
 								temp_extra_training_epochs = '5'
 							if temp_extra_training_epochs.isnumeric():
 								temp_extra_training_epochs = int(temp_extra_training_epochs)
-							else
+							else:
 								temp_extra_training_epochs = 5
 							if temp_extra_training_epochs == 0:
 								print("input is 0, terminating ENAS.")
