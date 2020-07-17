@@ -17,6 +17,10 @@ from utils import silently_remove_file
 from utils import MovingAverageStructure
 from utils import ArcOrderedList
 
+
+# pip install inputimeout
+from inputimeout import inputimeout, TimeoutOccurred
+
 import data_utils
 
 from micro_controller import MicroController
@@ -276,6 +280,7 @@ def train():
 	mov_avg_training_struct = MovingAverageStructure(10,np.int32)
 	
 	best_arcs_list = ArcOrderedList(list_size = 40)
+	extra_training_epochs = 0
 	
 	
 	
@@ -536,12 +541,13 @@ def train():
 						if current_threshold < 10: current_threshold = 10
 						multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
 						current_threshold = int( (multiplier * 6) * current_threshold)
+						if current_threshold < 50: current_threshold = 50
 						
 						last_best = best_arcs_list.get_last_best_epoch() 
 						max_acc = best_arcs_list.get_best_acc()
 						## check if we reached epoch limit
 						if epoch >= FLAGS.num_epochs:
-							print("Reached upper epoch limit, ENAS is stopping and saving the best arcs to file")
+							print("Reached upper epoch limit, ENAS is saving the best arcs to file")
 							csv_string = best_arcs_list.get_list_as_csv_data()
 							best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
 							silently_remove_file(best_arcs_filename)
@@ -550,15 +556,27 @@ def train():
 							best_arcs_file.close()
 							break
 						## check if accuracy hasn't improved
-						if epoch - last_best >= current_threshold:
-							print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs, shutting down and saving the best arcs to file")
-							csv_string = best_arcs_list.get_list_as_csv_data()
-							best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
-							silently_remove_file(best_arcs_filename)
-							best_arcs_file = open(best_arcs_filename, "w")
-							best_arcs_file.write(csv_string)
-							best_arcs_file.close()
-							break
+						if epoch - last_best >= current_threshold + extra_training_epochs:
+							print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs. Training has been extended by ",str(extra_training_epochs)," epochs. Type how long the training should continue before another prompt (default 5, 0 means stop, 10s timeout):")
+							try:
+								temp_extra_training_epochs = inputimeout(prompt=">>", timeout=10)
+							except TimeoutOccurred:
+								temp_extra_training_epochs = '5'
+							if temp_extra_training_epochs.isnumeric():
+								temp_extra_training_epochs = int(temp_extra_training_epochs)
+							else
+								temp_extra_training_epochs = 5
+							if temp_extra_training_epochs == 0:
+								print("input is 0, terminating ENAS.")
+								csv_string = best_arcs_list.get_list_as_csv_data()
+								best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
+								silently_remove_file(best_arcs_filename)
+								best_arcs_file = open(best_arcs_filename, "w")
+								best_arcs_file.write(csv_string)
+								best_arcs_file.close()
+								break
+							else:
+								extra_training_epochs += temp_extra_training_epochs
 						else:
 							epochs_from_best = epoch - last_best
 							epochs_to_stop = current_threshold - epochs_from_best
