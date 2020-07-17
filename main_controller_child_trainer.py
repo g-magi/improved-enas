@@ -578,6 +578,7 @@ def train():
 							else:
 								extra_training_epochs += temp_extra_training_epochs
 						else:
+							extra_training_epochs = 0
 							epochs_from_best = epoch - last_best
 							epochs_to_stop = current_threshold - epochs_from_best
 							print("Maximum accuracy (",max_acc,") achieved in epoch ", str(last_best), ", which is ", str(epochs_from_best)," epochs ago.\nIf no better architecture is achieved, training will stop in ",str(epochs_to_stop)," epochs, with a total buffer of ",str(current_threshold)," epochs.\nBacking up the best architectures achieved so far to file.")
