@@ -537,11 +537,11 @@ def train():
 						##
 							
 						### ONLY DO THIS IF THE CONTROLLER IS BEING TRAINED
-						current_threshold = epoch // 10
+						current_threshold = epoch // 4
 						if current_threshold < 10: current_threshold = 10
 						multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
-						current_threshold = int( (multiplier * 6) * current_threshold)
-						if current_threshold < 50: current_threshold = 50
+						current_threshold = int( (multiplier * 5) * current_threshold)
+						#if current_threshold < 50: current_threshold = 50
 						
 						last_best = best_arcs_list.get_last_best_epoch() 
 						max_acc = best_arcs_list.get_best_acc()
