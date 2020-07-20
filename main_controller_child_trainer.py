@@ -34,13 +34,14 @@ FLAGS = flags.FLAGS
 
 
 ################## YOU Should write under parameter ######################
-DEFINE_string("output_dir", "./output" , "")
+DEFINE_string("output_dir", "."+os.path.sep+"output" , "")
 DEFINE_string("child_log_filename","child_log.txt","")
 DEFINE_string("controller_log_filename","controller_log.txt","")
+DEFINE_string("architecture_info_filename","arc_info.txt","")
 DEFINE_string("best_arcs_filename","best_arcs.csv","")
-DEFINE_string("train_data_dir", "./data/train", "")
-DEFINE_string("val_data_dir", "./data/valid", "")
-DEFINE_string("test_data_dir", "./data/test", "")
+DEFINE_string("train_data_dir", "."+os.path.sep+"data"+os.path.sep+"train", "")
+DEFINE_string("val_data_dir", "."+os.path.sep+"data"+os.path.sep+"valid", "")
+DEFINE_string("test_data_dir", "."+os.path.sep+"data"+os.path.sep+"test", "")
 DEFINE_integer("channel",3, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
@@ -242,7 +243,7 @@ def train():
 	images = {}
 	labels = {}
 	if FLAGS.data_source is "parents":
-		images, labels = data_utils.parents_get_data(pathTrain = "parents_data/TrainSet.txt", pathTest="parents_data/TestSet.txt")
+		images, labels = data_utils.parents_get_data(pathTrain = "parents_data"+os.path.sep+"TrainSet.txt", pathTest="parents_data"+os.path.sep+"TestSet.txt")
 	elif FLAGS.data_source is "parents_img":
 		images, labels = data_utils._parents_read_images()
 	elif FLAGS.data_source is "cifar10":
@@ -267,12 +268,13 @@ def train():
 
 	g = tf.Graph()
 	## creating log file names and removing old files if present
-	child_log_filename = FLAGS.output_dir+"/"+FLAGS.child_log_filename
+	child_log_filename = FLAGS.output_dir+os.path.sep+FLAGS.child_log_filename
 	silently_remove_file(child_log_filename)
-	controller_log_filename = FLAGS.output_dir+"/"+FLAGS.controller_log_filename
+	controller_log_filename = FLAGS.output_dir+os.path.sep+FLAGS.controller_log_filename
 	silently_remove_file(controller_log_filename)
 	child_logfile = open(child_log_filename, "a+")
 	controller_logfile = open(controller_log_filename, "a+")
+	arc_info_filename = FLAGS.output_dir+os.path.sep+FLAGS.architecture_info_filename
 	##
 	
 	## creating moving averages
@@ -305,7 +307,7 @@ def train():
 		checkpoint_saver_hook = tf.train.CheckpointSaverHook(
 			FLAGS.output_dir, save_steps=child_ops["num_train_batches"], saver=saver)
 		hooks = []
-		hooks = [checkpoint_saver_hook]
+		#hooks = [checkpoint_saver_hook]
 		if FLAGS.child_sync_replicas:
 			sync_replicas_hook = child_ops["optimizer"].make_session_run_hook(True)
 			hooks.append(sync_replicas_hook)
