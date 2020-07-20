@@ -301,7 +301,7 @@ def train():
 	with open(arc_info_filename, "w") as file:
 		json.dump(layers_dict, file)
 	with open(arc_info_filename, 'r') as file:
-	new_d = json.load(file)
+		new_d = json.load(file)
 	print("-"*80,"\nReading arc info dict:\n",new_d,"\n","-"*80)
 	
 	
