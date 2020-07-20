@@ -295,9 +295,10 @@ def train():
 			img_size = img_size//2
 			filters = filters*2
 			current_layer_type = "reduce"
-		print("dims", img_size, "", filters)
+		
 		#current_dims = dims
 		current_layer = "layer_"+str(i)
+		print(current_layer," dims:[", img_size, ",", img_size,",", filters,"]")
 		layers_dict[current_layer] = {}
 		layers_dict[current_layer]["type"] = current_layer_type
 		layers_dict[current_layer]["dims"] = [img_size,img_size,filters]
