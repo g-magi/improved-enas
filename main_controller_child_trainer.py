@@ -288,7 +288,7 @@ def train():
 	dim_3_size = FLAGS.child_out_filters
 	dims = [[FLAGS.img_size][FLAGS.img_size][FLAGS.child_out_filters]]
 	layers_dict = {}
-	for i in range(FLAGS.child_num_layers+2)
+	for i in range(FLAGS.child_num_layers+2):
 		current_layer_type = "normal"
 		if i in pool_layers:
 			dims[0] = dims[0]//2
