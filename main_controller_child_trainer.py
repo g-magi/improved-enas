@@ -36,9 +36,9 @@ FLAGS = flags.FLAGS
 
 ################## YOU Should write under parameter ######################
 DEFINE_string("output_dir", "."+os.path.sep+"output" , "")
-DEFINE_string("child_log_filename","child_log.txt","")
-DEFINE_string("controller_log_filename","controller_log.txt","")
-DEFINE_string("architecture_info_filename","arc_info.txt","")
+DEFINE_string("child_log_filename","child_log.csv","")
+DEFINE_string("controller_log_filename","controller_log.csv","")
+DEFINE_string("architecture_info_filename","arc_info.json","")
 DEFINE_string("best_arcs_filename","best_arcs.csv","")
 DEFINE_string("train_data_dir", "."+os.path.sep+"data"+os.path.sep+"train", "")
 DEFINE_string("val_data_dir", "."+os.path.sep+"data"+os.path.sep+"valid", "")
