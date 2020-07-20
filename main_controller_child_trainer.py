@@ -295,6 +295,7 @@ def train():
 			dims[1] = dims[1]//2
 			dims[2] = dims[2]*2
 			current_layer_type = "reduce"
+		print("dims", dims)
 		current_layer = "layer_"+str(i)
 		layers_dict[current_layer] = {
 			"type": current_layer_type,
