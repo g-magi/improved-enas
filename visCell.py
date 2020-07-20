@@ -73,6 +73,15 @@ def creat_graph(cell_arc):
 			   shape='box',
 			   style='filled')
 	G.add_edge((len(cell_arc)+2)*10+3, (len(cell_arc)+2)*10+4)
+	
+	G.add_node((len(cell_arc)+2)*10+5,
+			   label="H[i+1]",
+			   color='black',
+			   fillcolor='white',
+			   shape='box',
+			   style='filled')
+			   
+	G.add_edge((len(cell_arc)+2)*10+4, (len(cell_arc)+2)*10+5)
 	return G
 
 #!python visCell.py "1 3 0 0 2 1 0 0 1 1 1 0 1 4 0 0 2 0 1 4 0 0 1 2 0 1 0 4 1 0 1 1 1 4 0 1 0 1 0 0"
