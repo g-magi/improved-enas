@@ -286,21 +286,21 @@ def train():
 	pool_distance = FLAGS.child_num_layers //4
 	pool_layers = [pool_distance, 2 * pool_distance + 1, FLAGS.child_num_layers]
 	dim_3_size = FLAGS.child_out_filters
-	dims = [FLAGS.img_size, FLAGS.img_size, FLAGS.child_out_filters]
+	img_size = FLAGS.img_size
+	filters = FLAGS.child_out_filters
 	layers_dict = {}
 	for i in range(FLAGS.child_num_layers+2):
 		current_layer_type = "normal"
 		if i in pool_layers:
-			dims[0] = dims[0]//2
-			dims[1] = dims[1]//2
-			dims[2] = dims[2]*2
+			img_size = img_size//2
+			filters = filters*2
 			current_layer_type = "reduce"
-		print("dims", dims)
+		print("dims", img_size, "", filters)
 		current_dims = dims
 		current_layer = "layer_"+str(i)
 		layers_dict[current_layer] = {}
 		layers_dict[current_layer]["type"] = current_layer_type
-		layers_dict[current_layer]["dims"] = dims
+		layers_dict[current_layer]["dims"] = [img_size,img_size,filters]
 	print(layers_dict,"\n")
 	with open(arc_info_filename, "w") as file:
 		json.dump(layers_dict, file)
