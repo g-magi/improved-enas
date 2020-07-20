@@ -64,7 +64,15 @@ def creat_graph(cell_arc):
 	for i in range(0, len(cell_arc)+2):
 		if not(i*10+3 in output_used) :
 			G.add_edge(i*10+3, (len(cell_arc)+2)*10+3)
-
+	
+	
+	G.add_node((len(cell_arc)+2)*10+4,
+			   label="conv 1x1",
+			   color='black',
+			   fillcolor='yellow',
+			   shape='box',
+			   style='filled')
+	G.add_edge((len(cell_arc)+2)*10+3, (len(cell_arc)+2)*10+4)
 	return G
 
 #!python visCell.py "1 3 0 0 2 1 0 0 1 1 1 0 1 4 0 0 2 0 1 4 0 0 1 2 0 1 0 4 1 0 1 1 1 4 0 1 0 1 0 0"
