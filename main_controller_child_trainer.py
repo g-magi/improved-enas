@@ -19,7 +19,7 @@ from utils import ArcOrderedList
 
 
 # pip install inputimeout
-from inputimeout import inputimeout, TimeoutOccurred
+#from inputimeout import inputimeout, TimeoutOccurred
 
 import data_utils
 
@@ -41,10 +41,10 @@ DEFINE_string("best_arcs_filename","best_arcs.csv","")
 DEFINE_string("train_data_dir", "./data/train", "")
 DEFINE_string("val_data_dir", "./data/valid", "")
 DEFINE_string("test_data_dir", "./data/test", "")
-DEFINE_integer("channel",1, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
+DEFINE_integer("channel",3, "MNIST/fashion_MNIST: 1, Cifar10/Cifar100: 3, parents: 3, parents_img: 6")
 DEFINE_integer("img_size", 32, "enlarge image size")
 DEFINE_integer("n_aug_img",1 , "if 2: num_img: 55000 -> aug_img: 110000, elif 1: False")
-DEFINE_string("data_source","mnist","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
+DEFINE_string("data_source","cifar10","either 'parents', 'mnist', 'cifar10', 'cifar100' 'parents_img', 'fashion_mnist' ")
 ##########################################################################
 
 DEFINE_boolean("reset_output_dir", True, "Delete output_dir if exists.")
@@ -541,7 +541,7 @@ def train():
 						if current_threshold < 10: current_threshold = 10
 						multiplier = 1.0 - mov_avg_accuracy_struct.get_mov_average()
 						current_threshold = int( (multiplier * 5) * current_threshold)
-						#if current_threshold < 50: current_threshold = 50
+						if current_threshold < 100: current_threshold = 100
 						
 						last_best = best_arcs_list.get_last_best_epoch() 
 						max_acc = best_arcs_list.get_best_acc()
@@ -557,26 +557,28 @@ def train():
 							break
 						## check if accuracy hasn't improved
 						if epoch - last_best >= current_threshold + extra_training_epochs:
-							print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs. Training has been extended by ",str(extra_training_epochs)," epochs. Type how long the training should continue before another prompt (default 5, 0 means stop, 10s timeout):")
-							try:
-								temp_extra_training_epochs = inputimeout(prompt=">>", timeout=10)
-							except TimeoutOccurred:
-								temp_extra_training_epochs = '5'
-							if temp_extra_training_epochs.isnumeric():
-								temp_extra_training_epochs = int(temp_extra_training_epochs)
-							else:
-								temp_extra_training_epochs = 5
-							if temp_extra_training_epochs == 0:
-								print("input is 0, terminating ENAS.")
-								csv_string = best_arcs_list.get_list_as_csv_data()
-								best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
-								silently_remove_file(best_arcs_filename)
-								best_arcs_file = open(best_arcs_filename, "w")
-								best_arcs_file.write(csv_string)
-								best_arcs_file.close()
-								break
-							else:
-								extra_training_epochs += temp_extra_training_epochs
+							print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs. ")
+							#print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs. Training has been extended by ",str(extra_training_epochs)," epochs. Type how long the training should continue before another prompt (default 5, 0 means stop, 10s timeout):")
+							#try:
+							#	temp_extra_training_epochs = inputimeout(prompt=">>", timeout=10)
+							#except TimeoutOccurred:
+							#	temp_extra_training_epochs = '5'
+							#if temp_extra_training_epochs.isnumeric():
+							#	temp_extra_training_epochs = int(temp_extra_training_epochs)
+							#else:
+							#	temp_extra_training_epochs = 5
+							#if temp_extra_training_epochs == 0:
+							#	print("input is 0, terminating ENAS.")
+							extra_training_epochs = 0
+							csv_string = best_arcs_list.get_list_as_csv_data()
+							best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
+							silently_remove_file(best_arcs_filename)
+							best_arcs_file = open(best_arcs_filename, "w")
+							best_arcs_file.write(csv_string)
+							best_arcs_file.close()
+							break
+							#else:
+							#	extra_training_epochs += temp_extra_training_epochs
 						else:
 							extra_training_epochs = 0
 							epochs_from_best = epoch - last_best
