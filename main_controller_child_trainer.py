@@ -296,8 +296,10 @@ def train():
 			dims[2] = dims[2]*2
 			current_layer_type = "reduce"
 		current_layer = "layer_"+str(i)
-		layers_dict[current_layer]["type"] = current_layer_type
-		layers_dict[current_layer]["dims"] = dims
+		layers_dict[current_layer] = {
+			"type": current_layer_type,
+			"dims": dims
+			}
 	with open(arc_info_filename, "w") as file:
 		json.dump(layers_dict, file)
 	with open(arc_info_filename, 'r') as file:
