@@ -286,7 +286,7 @@ def train():
 	pool_distance = FLAGS.child_num_layers //4
 	pool_layers = [pool_distance, 2 * pool_distance + 1, FLAGS.child_num_layers]
 	dim_3_size = FLAGS.child_out_filters
-	dims = [[FLAGS.img_size][FLAGS.img_size][FLAGS.child_out_filters]]
+	dims = [FLAGS.img_size, FLAGS.img_size, FLAGS.child_out_filters]
 	layers_dict = {}
 	for i in range(FLAGS.child_num_layers+2):
 		current_layer_type = "normal"
