@@ -307,7 +307,7 @@ def train():
 		json.dump(layers_dict, file)
 	with open(arc_info_filename, 'r') as file:
 		new_d = json.load(file)
-	print("-"*80,"\nReading arc info dict:\n",new_d,"\n","-"*80)
+	#print("-"*80,"\nReading arc info dict:\n",new_d,"\n","-"*80)
 	
 	
 	## creating moving averages
