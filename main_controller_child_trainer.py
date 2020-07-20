@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 import time
+import json
 
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
@@ -272,10 +273,37 @@ def train():
 	silently_remove_file(child_log_filename)
 	controller_log_filename = FLAGS.output_dir+os.path.sep+FLAGS.controller_log_filename
 	silently_remove_file(controller_log_filename)
+	arc_info_filename = FLAGS.output_dir+os.path.sep+FLAGS.architecture_info_filename
+	silently_remove_file(arc_info_filename)
+	
 	child_logfile = open(child_log_filename, "a+")
 	controller_logfile = open(controller_log_filename, "a+")
-	arc_info_filename = FLAGS.output_dir+os.path.sep+FLAGS.architecture_info_filename
+	#arc_infofile = open(arc_info_filename,"a+")
 	##
+	
+	## Saving arc info to file
+	
+	pool_distance = FLAGS.child_num_layers //4
+	pool_layers = [pool_distance, 2 * pool_distance + 1, FLAGS.child_num_layers]
+	dim_3_size = FLAGS.child_out_filters
+	dims = [[FLAGS.img_size][FLAGS.img_size][FLAGS.child_out_filters]]
+	layers_dict = {}
+	for i in range(FLAGS.child_num_layers+2)
+		current_layer_type = "normal"
+		if i in pool_layers:
+			dims[0] = dims[0]//2
+			dims[1] = dims[1]//2
+			dims[2] = dims[2]*2
+			current_layer_type = "reduce"
+		current_layer = "layer_"+str(i)
+		layers_dict[current_layer]["type"] = current_layer_type
+		layers_dict[current_layer]["dims"] = dims
+	with open(arc_info_filename, "w") as file:
+		json.dump(layers_dict, file)
+	with open(arc_info_filename, 'r') as file:
+	new_d = json.load(file)
+	print("-"*80,"\nReading arc info dict:\n",new_d,"\n","-"*80)
+	
 	
 	## creating moving averages
 	mov_avg_accuracy_struct = MovingAverageStructure(10,np.float32)
