@@ -32,3 +32,5 @@ rcell.dot
 rcell.png
 output/best_arcs.csv
 output/arc_info.json
+arc.dot
+arc.png
