@@ -105,16 +105,23 @@ def create_arc_graph(arc_dict):
 		current_layer_name = "layer_"+str(i-1)
 		current_dims = arc_dict[current_layer_name]["dims"]
 		current_type = arc_dict[current_layer_name]["type"]
-		fillcolor = 'darksalmon'
-		print(current_type)
+		current_layer_label = current_layer_name
+		current_layer_dims = str(current_dims[0])+"x"+str(current_dims[1])+"x"+str(current_dims[2])
+		current_layer_label += "\n"
+		current_layer_label += current_layer_dims
+		current_layer_label += "\n"
+		current_layer_label += current_type+" layer"
+		
+		fillcolor = 'coral'
+		shape = 'box'
 		if current_type == "reduce":
-			print("in here")
 			fillcolor = 'lightskyblue'
+			shape = 'box'
 		G.add_node(i,
-			label=current_layer_name,
+			label=current_layer_label,
 			color = 'black',
 			fillcolor = fillcolor,
-			shape = 'box',
+			shape = shape,
 			style = 'filled')
 		G.add_edge(i-1, i)
 	
