@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import csv
 import json
+import ast
 
 def construct_block(graph, num_block, ops):
 
@@ -86,6 +87,46 @@ def creat_graph(cell_arc):
 	G.add_edge((len(cell_arc)+2)*10+4, (len(cell_arc)+2)*10+5)
 	return G
 
+#### CREATING GRAPH FOR ARCHITECTURE
+
+def create_arc_graph(arc_dict):
+	dict_len = len(arc_dict)
+	G = pgv.AGraph(directed=True, strict=True, fontname='Helvetica', arrowtype='open', rankdir='TD')
+	
+	#input node
+	G.add_node(0,
+		label="Input",
+		color = 'black',
+		fillcolor = 'white',
+		shape = 'box',
+		style = 'filled')
+	
+	for i in range(1, dict_len+1):
+		current_layer_name = "layer_"+str(i-1)
+		current_dims = arc_dict[current_layer_name]["dims"]
+		current_type = arc_dict[current_layer_name]["type"]
+		fillcolor = 'darksalmon'
+		print(current_type)
+		if current_type == "reduce":
+			print("in here")
+			fillcolor = 'lightskyblue'
+		G.add_node(i,
+			label=current_layer_name,
+			color = 'black',
+			fillcolor = fillcolor,
+			shape = 'box',
+			style = 'filled')
+		G.add_edge(i-1, i)
+	
+	G.add_node(dict_len+1,
+		label = 'Output',
+		color = 'black',
+		fillcolor = 'white',
+		shape = 'box',
+		style = 'filled')
+	G.add_edge(dict_len, dict_len+1)
+	return G
+
 #!python visCell.py "1 3 0 0 2 1 0 0 1 1 1 0 1 4 0 0 2 0 1 4 0 0 1 2 0 1 0 4 1 0 1 1 1 4 0 1 0 1 0 0"
 # 1,2,1,4,0,1,1,4,0,1,1,3,0,3,1,1,1,1,0,0
 # 1,2,1,1,0,3,0,3,0,4,1,4,0,1,3,1,1,1,0,2
@@ -95,6 +136,7 @@ def main():
 		norm_cell = "1 2 1 4 0 1 1 4 0 1 1 3 0 3 1 1 1 1 0 0"
 		redu_cell = "1 2 1 1 0 3 0 3 0 4 1 4 0 1 3 1 1 1 0 2"
 		arc_info_file = None
+		arc_dict = None
 	else:
 		"""
 		norm_cell, redu_cell = "", ""
@@ -106,23 +148,37 @@ def main():
 		"""
 		arcs_file = sys.argv[1]
 		arc_info_file = sys.argv[2]
-		with open(arcs_file, newline='') as f:
-			reader = csv.reader(f)
+		with open(arcs_file) as f:
+			reader = csv.reader(f, delimiter=";")
 			best_arcs = next(reader)
-			norm_cell = best_arcs[0]
-			redu_cell = best_arcs[1]
-			print("norm_cell: ", norm_cell, "\ntype: ", type(norm_cell))
-			print("redu_cell: ", redu_cell, "\ntype: ", type(redu_cell))
+			norm_cell = ast.literal_eval(best_arcs[0])
+			redu_cell = ast.literal_eval(best_arcs[1])
+			print("norm_cell: ", norm_cell)
+			print("redu_cell: ", redu_cell)
+			print("arc accuracy: ", best_arcs[2])
+		
+		with open(arc_info_file) as f:
+			arc_dict = json.load(f)
+			#print(json.dumps(arc_dict, indent=4, sort_keys=True))
 			
 
-	ncell = np.array([int(x) for x in norm_cell.split(" ") if x])
-	rcell = np.array([int(x) for x in redu_cell.split(" ") if x])
+	#ncell = np.array([int(x) for x in norm_cell.split(" ") if x])
+	#rcell = np.array([int(x) for x in redu_cell.split(" ") if x])
+	ncell = np.array(norm_cell)
+	rcell = np.array(redu_cell)
 
 	ncell = np.reshape(ncell, [-1, 4])
 	rcell = np.reshape(rcell, [-1, 4])
 
 	Gn = creat_graph(ncell)
 	Gr = creat_graph(rcell)
+	Ga = None
+	if arc_dict is not None:
+		Ga = create_arc_graph(arc_dict)
+		Ga.write("arc.dot")
+		vizGa = pgv.AGraph("arc.dot")
+		vizGa.layout(prog='dot')
+		vizGa.draw("arc.png")
 
 	Gn.write("ncell.dot")
 	Gr.write("rcell.dot")
