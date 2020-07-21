@@ -1,6 +1,8 @@
 import pygraphviz as pgv
 import numpy as np
 import sys
+import csv
+import json
 
 def construct_block(graph, num_block, ops):
 
@@ -89,16 +91,29 @@ def creat_graph(cell_arc):
 # 1,2,1,1,0,3,0,3,0,4,1,4,0,1,3,1,1,1,0,2
 def main():
 
-	if(len(sys.argv) <= 1):
+	if(len(sys.argv) < 3):
 		norm_cell = "1 2 1 4 0 1 1 4 0 1 1 3 0 3 1 1 1 1 0 0"
 		redu_cell = "1 2 1 1 0 3 0 3 0 4 1 4 0 1 3 1 1 1 0 2"
+		arc_info_file = None
 	else:
+		"""
 		norm_cell, redu_cell = "", ""
 		for i in range(1, len(sys.argv)/2+1):
 			norm_cell += "{} ".format(sys.argv[i])
 		for i in range(len(sys.argv)/2+1, len(sys.argv)):
 			redu_cell += "{} ".format(sys.argv[i])
 		print("{}\n{}".format(norm_cell, redu_cell))
+		"""
+		arcs_file = sys.argv[1]
+		arc_info_file = sys.argv[2]
+		with open(arcs_file, newline='') as f:
+			reader = csv.reader(f)
+			best_arcs = next(reader)
+			norm_cell = best_arcs[0]
+			redu_cell = best_arcs[1]
+			print("norm_cell: ", norm_cell, "\ntype: ", type(norm_cell))
+			print("redu_cell: ", redu_cell, "\ntype: ", type(redu_cell))
+			
 
 	ncell = np.array([int(x) for x in norm_cell.split(" ") if x])
 	rcell = np.array([int(x) for x in redu_cell.split(" ") if x])
