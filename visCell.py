@@ -157,7 +157,11 @@ def main():
 		arc_info_file = sys.argv[2]
 		with open(arcs_file) as f:
 			reader = csv.reader(f, delimiter=";")
-			best_arcs = next(reader)
+			rows = []
+			for row in reader:
+				if row:
+					rows.append(row)
+			best_arcs = rows[-1]
 			norm_cell = ast.literal_eval(best_arcs[0])
 			redu_cell = ast.literal_eval(best_arcs[1])
 			print("norm_cell: ", norm_cell)
