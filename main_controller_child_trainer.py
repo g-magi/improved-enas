@@ -57,10 +57,10 @@ DEFINE_integer("batch_size",128,"") #original 128
 DEFINE_integer("num_epochs", 500," = (10+ 20+ 40+ 80)") #original 150
 
 DEFINE_integer("child_lr_dec_every", 100, "")
-DEFINE_integer("child_num_layers", 6, "Number of layer. IN this case we will calculate 4 conv and 2 pooling layers") # default 6
+DEFINE_integer("child_num_layers", 14, "Number of layer. IN this case we will calculate 4 conv and 3 pooling layers") # default 6
 DEFINE_integer("child_num_cells", 5, "child_num_cells +2 = Number of DAG'S Nodes") #default 5
 DEFINE_integer("child_filter_size", 5, "")
-DEFINE_integer("child_out_filters", 20, "")
+DEFINE_integer("child_out_filters", 80, "")
 DEFINE_integer("child_out_filters_scale", 1, "")
 DEFINE_integer("child_num_branches", 5, "It should be same with number of kernel operation to calculate.")
 DEFINE_integer("child_num_aggregate", None, "")
