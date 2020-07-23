@@ -720,9 +720,9 @@ class MicroChild(Model):
 		logits = self._model(self.x_train, is_training=True)
 		self.logits = logits
 		log_probs = tf.nn.sparse_softmax_cross_entropy_with_logits(
-			logits=logits, labels=self.y_train)  
+			logits=logits, labels=self.y_train)
 
-		self.loss = tf.reduce_mean(log_probs)  
+		self.loss = tf.reduce_mean(log_probs)
 		self.current_normal_arc = self.normal_arc
 		self.current_reduce_arc = self.reduce_arc
 		
