@@ -124,7 +124,8 @@ def create_arc_graph(arc_dict):
 			shape = shape,
 			style = 'filled')
 		G.add_edge(i-1, i)
-	
+		if i > 1:
+			G.add_edge(i-2, i)
 	G.add_node(dict_len+1,
 		label = 'Output',
 		color = 'black',
