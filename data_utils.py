@@ -295,13 +295,15 @@ def _fashion_mnist_load_data():
 
 ### Metodo per il caricamento di cifar100
 
-def _cifar100_load_data(label_mode = "coarse"):
-	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar100.load_data(label_mode="coarse")
-	
-	num_classes = 100
-	if label_mode is "coarse":
+def _cifar100_load_data(label_mode = "fine"):
+	(X_train, y_train), (X_VT, y_VT) = tf.keras.datasets.cifar100.load_data(label_mode=label_mode)
+	num_classes = 0
+	if label_mode is "fine":
+		num_classes = 100
+	elif label_mode is "coarse":
 		num_classes = 20
-	
+	else:
+		return "error"
 	return _prepare_dataset_data(num_classes,X_train,y_train,X_VT,y_VT)
 
 ###
