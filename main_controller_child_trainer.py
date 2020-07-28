@@ -592,7 +592,7 @@ def train():
 							break
 						## check if accuracy hasn't improved
 						if epoch - last_best >= current_threshold + extra_training_epochs:
-							print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs. ")
+							print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs. Stopping.")
 							#print("Maximum accuracy of ",max_acc," hasn't improved in the last ",str(current_threshold)," epochs. Training has been extended by ",str(extra_training_epochs)," epochs. Type how long the training should continue before another prompt (default 5, 0 means stop, 10s timeout):")
 							#try:
 							#	temp_extra_training_epochs = inputimeout(prompt=">>", timeout=10)
@@ -604,7 +604,7 @@ def train():
 							#	temp_extra_training_epochs = 5
 							#if temp_extra_training_epochs == 0:
 							#	print("input is 0, terminating ENAS.")
-							extra_training_epochs = 0
+							#extra_training_epochs = 0
 							csv_string = best_arcs_list.get_list_as_csv_data()
 							best_arcs_filename = FLAGS.output_dir+"/"+FLAGS.best_arcs_filename
 							silently_remove_file(best_arcs_filename)
